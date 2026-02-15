@@ -7,7 +7,7 @@ export function Viewscreen() {
   // Use a solid color for now (can swap for a texture later)
   const color = '#15152a';
   return (
-    <mesh>
+    <mesh position={[0, 0, 0.025]}>
       <planeGeometry args={[width, height]} />
       <meshBasicMaterial color={color} />
     </mesh>
