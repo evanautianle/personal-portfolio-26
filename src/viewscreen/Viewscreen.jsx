@@ -9,7 +9,8 @@ export function Viewscreen() {
   return (
     <mesh position={[0, 0, 0.025]}>
       <planeGeometry args={[width, height]} />
-      <meshBasicMaterial color={color} />
+      <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.5} />
     </mesh>
+
   );
 }
