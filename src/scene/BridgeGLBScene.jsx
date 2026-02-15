@@ -14,7 +14,8 @@ function BridgeModel({ url, onBounds }) {
   useEffect(() => {
     if (!scene || !ref.current) return;
     const model = ref.current;
-    model.scale.set(100, 100, 100);
+    // Scale down the model (was 100, now 10)
+    model.scale.set(10, 10, 10);
 
     model.traverse((child) => {
       if (child.isMesh && child.material) {
@@ -58,8 +59,8 @@ function CameraSetup({ bounds }) {
     const center = new THREE.Vector3();
     bounds.getCenter(center);
 
-    // Fixed camera position
-    camera.position.set(center.x, center.y + 40, center.z + 720);
+    // Adjusted camera position for new scale
+    camera.position.set(center.x, center.y + 4, center.z + 72);
     camera.lookAt(center);
 
     camera.near = 0.01;
@@ -74,9 +75,10 @@ function CameraSetup({ bounds }) {
    Screen Overlay
 ======================================== */
 function ScreenOverlay() {
+  // Scale down the overlay as well
   return (
-    <Html position={[0, 200, -760]} transform occlude zIndexRange={[0, 0]}>
-      <div style={{ width: "18000px", height: "7000px", background: "#000" }}>
+    <Html position={[0, 20, -76]} transform occlude zIndexRange={[0, 0]}>
+      <div style={{ width: "1800px", height: "700px", background: "#000" }}>
         <Viewscreen />
       </div>
     </Html>

@@ -1,5 +1,12 @@
-import { CanvasRoot } from './CanvasRoot'
+
+import { CanvasRoot } from './CanvasRoot';
+import { Navbar } from '../ui/Navbar';
 
 export function App() {
-  return <CanvasRoot />
+  return (
+    <>
+      <Navbar />
+      <CanvasRoot />
+    </>
+  );
 }
