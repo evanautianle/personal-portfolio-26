@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
-import { Environment, useGLTF, Html } from "@react-three/drei";
+import { Environment, useGLTF, Html, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { Viewscreen } from "../viewscreen/Viewscreen";
 
@@ -75,13 +75,38 @@ function CameraSetup({ bounds }) {
    Screen Overlay
 ======================================== */
 function ScreenOverlay() {
-  // Scale down the overlay as well
+  // Main and two secondary viewscreens
   return (
-    <Html position={[0, 20, -76]} transform occlude zIndexRange={[0, 0]}>
-      <div style={{ width: "1800px", height: "700px", background: "#000" }}>
-        <Viewscreen />
-      </div>
-    </Html>
+    <>
+      {/* Main viewscreen */}
+      <Html position={[0, 20, -76]} transform occlude zIndexRange={[0, 0]}>
+        <div style={{ width: "1800px", height: "700px", background: "#000" }}>
+          <Viewscreen />
+        </div>
+      </Html>
+      {/* Left secondary viewscreen (behind and to the left) */}
+      <Html
+        position={[-50, 20, -76]}
+        rotation={[0, Math.PI / 8, 0]}
+        transform
+        zIndexRange={[0, 0]}
+      >
+        <div style={{ width: "900px", height: "500px", background: "#181a22", border: '4px solid #e87d2f', borderRadius: 24, opacity: 0.95, overflow: 'hidden', boxShadow: '0 0 32px #e87d2faa' }}>
+          <Viewscreen />
+        </div>
+      </Html>
+      {/* Right secondary viewscreen (behind and to the right) */}
+      <Html
+        position={[50, 20, -76]}
+        rotation={[0, -Math.PI / 8, 0]}
+        transform
+        zIndexRange={[0, 0]}
+      >
+        <div style={{ width: "900px", height: "500px", background: "#181a22", border: '4px solid #e87d2f', borderRadius: 24, opacity: 0.95, overflow: 'hidden', boxShadow: '0 0 32px #e87d2faa' }}>
+          <Viewscreen />
+        </div>
+      </Html>
+    </>
   );
 }
 
@@ -104,6 +129,7 @@ export default function BridgeGLBScene({ glbUrl }) {
 
       <Environment preset="city" />
       <ScreenOverlay />
+      <OrbitControls enableDamping makeDefault />
     </Canvas>
   );
 }
