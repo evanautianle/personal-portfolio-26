@@ -12,11 +12,9 @@ export function Hero() {
       }}
     >
       <h1 style={{ fontSize: 28, marginBottom: 8, color: '#fff' }}>
-        Captain's Log
+        screen
       </h1>
-      <p style={{ fontSize: 14, opacity: 0.9 }}>
-        Personal portfolio — Star Trek Bridge
-      </p>
+
     </div>
   )
 }

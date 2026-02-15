@@ -1,35 +1,15 @@
-import { Html } from '@react-three/drei'
-import { ScreenRouter } from './ScreenRouter'
 
-const VIEWSCREEN_WIDTH = 560
-const VIEWSCREEN_HEIGHT = 260
-
+// 3D Viewscreen mesh (plane) with a simple gradient-like material
 export function Viewscreen() {
+  // Size in 3D units (meters)
+  const width = 3.5;
+  const height = 1.4;
+  // Use a solid color for now (can swap for a texture later)
+  const color = '#15152a';
   return (
-    <Html
-      transform
-      position={[0, 0, 0.01]}
-      center
-      style={{
-        width: VIEWSCREEN_WIDTH,
-        height: VIEWSCREEN_HEIGHT,
-        pointerEvents: 'auto',
-        overflow: 'hidden',
-        background: 'linear-gradient(180deg, #0a0a12 0%, #15152a 100%)',
-        borderRadius: 4,
-        border: '2px solid #333',
-      }}
-    >
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          color: '#e0e0e0',
-          fontFamily: 'system-ui, sans-serif',
-        }}
-      >
-        <ScreenRouter />
-      </div>
-    </Html>
-  )
+    <mesh>
+      <planeGeometry args={[width, height]} />
+      <meshBasicMaterial color={color} />
+    </mesh>
+  );
 }
