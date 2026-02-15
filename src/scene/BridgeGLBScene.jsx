@@ -67,25 +67,22 @@ function BridgeModel({ url, onBounds }) {
 Camera Controller
 ================================
 */
-
 function CameraSetup({ bounds }) {
   const { camera, controls } = useThree();
 
   useEffect(() => {
     if (!bounds || !controls) return;
 
-    const size = new THREE.Vector3();
-    bounds.getSize(size);
+    const center = new THREE.Vector3();
+    bounds.getCenter(center);
 
-    const maxDim = Math.max(size.x, size.y, size.z);
+    // Place camera exactly at model center
+    camera.position.copy(center);
 
-    const distance = maxDim * 1.5;
+    // Look slightly forward so we’re not looking at our own pivot
+    camera.position.z += 1;
 
-    // Position camera ABOVE ground looking down slightly
-    camera.position.set(distance, distance * 0.5, distance);
-
-    // IMPORTANT: target ground level center
-    controls.target.set(0, size.y * 0.25, 0);
+    controls.target.copy(center);
 
     camera.near = 0.01;
     camera.far = 1000000;
@@ -98,6 +95,8 @@ function CameraSetup({ bounds }) {
   return null;
 }
 
+
+
 /*
 ================================
 Main Scene
@@ -107,9 +106,10 @@ Main Scene
 function ScreenOverlay() {
   return (
     <Html
-      position={[0, 200, 760]} // Adjust position to fit the scene
+      position={[0, 200, -760]} // Adjust position to fit the scene
       transform
       occlude
+      zIndexRange={[0, 0]} // Ensure it respects depth
     >
       <div style={{ width: "18000px", height: "7000px", background: "#000" }}>
         <Viewscreen />
