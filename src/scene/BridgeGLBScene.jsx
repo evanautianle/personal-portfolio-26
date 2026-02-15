@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, Environment, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
+import { Html } from "@react-three/drei";
+import { Viewscreen } from "../viewscreen/Viewscreen";
 
 /*
 ================================
@@ -102,6 +104,20 @@ Main Scene
 ================================
 */
 
+function ScreenOverlay() {
+  return (
+    <Html
+      position={[0, 200, 760]} // Adjust position to fit the scene
+      transform
+      occlude
+    >
+      <div style={{ width: "18000px", height: "7000px", background: "#000" }}>
+        <Viewscreen />
+      </div>
+    </Html>
+  );
+}
+
 export default function BridgeGLBScene({ glbUrl }) {
   const [bounds, setBounds] = useState(null);
 
@@ -134,6 +150,8 @@ export default function BridgeGLBScene({ glbUrl }) {
       <CameraSetup bounds={bounds} />
 
       <Environment preset="city" />
+
+      <ScreenOverlay />
     </Canvas>
   );
 }
