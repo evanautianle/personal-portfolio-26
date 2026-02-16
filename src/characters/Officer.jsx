@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import OfficerModel from "./OfficerModel";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { DragControls } from "@react-three/drei";
 
@@ -16,6 +16,7 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
   const groupRef = useRef();
   const [state, setState] = useState(STATES.SITTING);
   const [clicked, setClicked] = useState(false);
+  const { gl } = useThree();
 
   // Walking timer and target
   const timerRef = useRef(Math.random() * 15 + 10); // random 10-25s
@@ -24,7 +25,8 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
   const headRef = useRef();
 
   // Handle click to return
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.stopPropagation();
     if (state === STATES.WALKING) {
       setState(STATES.RETURNING);
       targetRef.current = new THREE.Vector3(chairPosition[0], chairPosition[1], chairPosition[2]);
@@ -35,6 +37,16 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
       setClicked(false);
       scaleRef.current = SCALE;
     }, 300);
+  };
+
+  // Pointer cursor handlers
+  const handlePointerOver = (e) => {
+    e.stopPropagation();
+    gl.domElement.style.cursor = "pointer";
+  };
+  const handlePointerOut = (e) => {
+    e.stopPropagation();
+    gl.domElement.style.cursor = "default";
   };
 
   // Drag event handlers
@@ -134,7 +146,14 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
       onDragEnd={handleDragEnd}
       transformGroup
     >
-      <group ref={groupRef} position={chairPosition} onClick={handleClick} scale={[scaleRef.current, scaleRef.current, scaleRef.current]}>
+      <group
+        ref={groupRef}
+        position={chairPosition}
+        onClick={handleClick}
+        onPointerOver={handlePointerOver}
+        onPointerOut={handlePointerOut}
+        scale={[scaleRef.current, scaleRef.current, scaleRef.current]}
+      >
         <OfficerModel uniformColor={uniformColor} headRef={headRef} />
       </group>
     </DragControls>
