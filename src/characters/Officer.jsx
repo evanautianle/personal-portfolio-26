@@ -21,7 +21,7 @@ function isInsideCollisionZone(pos) {
   );
 }
 
-export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cccccc", walkBounds }) {
+export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cccccc", walkBounds, rotation }) {
   const groupRef = useRef();
   const [state, setState] = useState(STATES.SITTING);
   const [clicked, setClicked] = useState(false);
@@ -154,6 +154,7 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
     <group
       ref={groupRef}
       position={chairPosition}
+      rotation={rotation}
       onClick={handleClick}
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}

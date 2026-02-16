@@ -1,4 +1,5 @@
-import Officer from "./Officer";
+import Officer from "../Officer";
+import { crewSpawnPoints } from "../../config/crewSpawnPoints";
 
 const opsBounds = {
   minX: 0,
@@ -10,9 +11,10 @@ const opsBounds = {
 export default function OpsOfficer() {
   return (
     <Officer
-      chairPosition={[1.2, 1.0, -3.5]}
+      chairPosition={crewSpawnPoints.ops.position}
       uniformColor="#ccaa33"
       walkBounds={opsBounds}
+      rotation={crewSpawnPoints.ops.rotation}
     />
   );
 }
