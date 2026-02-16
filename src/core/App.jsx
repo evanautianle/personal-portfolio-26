@@ -6,12 +6,13 @@ import { ControlPanel } from '../ui/ControlPanel';
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { heroSpeedAtom } from '../state/heroSpeedAtom';
 import { navigationAtom } from '../state/navigationAtom';
-import { redAlertAtom } from '../state/redAlertAtom';
+import { alertAtom } from '../state/alertAtom';
 
 export function App() {
   const [speed, setSpeed] = useAtom(heroSpeedAtom);
   const [currentTab, setNavigation] = useAtom(navigationAtom);
-  const [redAlert, setRedAlert] = useAtom(redAlertAtom);
+  const [alert, setAlert] = useAtom(alertAtom);
+  const redAlert = alert.isRedAlert;
   return (
     <>
       <Navbar />
@@ -82,7 +83,7 @@ export function App() {
             margin: 8,
             marginTop: 0,
           }}
-          onClick={() => setRedAlert(!redAlert)}
+          onClick={() => setAlert({ ...alert, isRedAlert: !alert.isRedAlert })}
         >
           {redAlert ? 'Disable Red Alert' : 'Red Alert'}
         </button>

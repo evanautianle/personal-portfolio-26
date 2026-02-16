@@ -1,4 +1,6 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { useAtomValue } from 'jotai';
+import { alertAtom } from '../state/alertAtom';
 import OfficerModel from "./OfficerModel";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
@@ -26,6 +28,16 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
   const [state, setState] = useState(STATES.SITTING);
   const [clicked, setClicked] = useState(false);
   const { gl } = useThree();
+  const alert = useAtomValue(alertAtom);
+  // Red Alert override: force return and lock in chair
+  useEffect(() => {
+    if (alert.isRedAlert) {
+      if (state !== STATES.SITTING && state !== STATES.RETURNING) {
+        setState(STATES.RETURNING);
+        targetRef.current = new THREE.Vector3(chairPosition[0], chairPosition[1], chairPosition[2]);
+      }
+    }
+  }, [alert.isRedAlert, state, chairPosition]);
 
   // Walking timer and target
   const timerRef = useRef(Math.random() * 5 + 3); // random 3-8s
@@ -61,6 +73,30 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
   useFrame((_, delta) => {
     if (!groupRef.current) return;
     let direction = null;
+    // Red Alert: lock in SITTING, disable walking
+    if (alert.isRedAlert) {
+      if (state !== STATES.SITTING) {
+        // If returning, let RETURNING logic run; if not, force RETURNING
+        if (state !== STATES.RETURNING) {
+          setState(STATES.RETURNING);
+          targetRef.current = new THREE.Vector3(chairPosition[0], chairPosition[1], chairPosition[2]);
+        }
+      }
+      // If at chair, lock in SITTING
+      if (state === STATES.RETURNING && groupRef.current && targetRef.current) {
+        const pos = groupRef.current.position;
+        const target = targetRef.current;
+        const current = new THREE.Vector3(pos.x, pos.y, pos.z);
+        if (current.distanceTo(target) < 0.05 * SCALE) {
+          setState(STATES.SITTING);
+          timerRef.current = Math.random() * 5 + 3;
+          targetRef.current = null;
+        }
+      }
+      // Do not allow walking or timer
+      return;
+    }
+    // ...existing code for state machine...
     switch (state) {
       case STATES.SITTING:
         timerRef.current -= delta;
