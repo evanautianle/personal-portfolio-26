@@ -60,7 +60,7 @@ export function Hero() {
       height: '100%',
       position: 'relative',
       overflow: 'hidden',
-      background: 'radial-gradient(ellipse at center, #23234a 0%, #15152a 80%)',
+      background: 'radial-gradient(ellipse at center, #181828 0%, #10101a 70%, #000 100%)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',

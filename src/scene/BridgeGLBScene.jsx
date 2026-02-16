@@ -145,7 +145,7 @@ export default function BridgeGLBScene({ glbUrl }) {
       <ambientLight intensity={0.03} />
 
       {/* Ring-style lights around the bridge */}
-      <pointLight position={[0, 27, -76]} intensity={300.5} distance={30} decay={2} color="#cfe6ff" />
+      <pointLight position={[0, 27, -76]} intensity={700.5} distance={70} decay={2} color="#cfe6ff" />
       <pointLight position={[-45, 20, -76]} intensity={200.8} distance={25} decay={2} color="#cfe6ff" />
       <pointLight position={[45, 20, -76]} intensity={200.8} distance={25} decay={2} color="#cfe6ff" />
 {/* Ring of small point lights around the bridge */}
