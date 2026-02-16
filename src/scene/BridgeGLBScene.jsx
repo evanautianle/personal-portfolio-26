@@ -87,8 +87,8 @@ function CameraSetup({ bounds }) {
 function ScreenOverlay() {
   return (
     <>
-      {/* Main viewscreen */}
-      <Html position={[0, 27, -76]} transform occlude zIndexRange={[0, 0]}>
+      {/* Main viewscreen - made much larger for visibility */}
+      <Html position={[0, 27, -76]} transform zIndexRange={[0, 0]}>
         <div style={{ width: "2200px", height: "1200px", background: "#000" }}>
           <Viewscreen />
         </div>
@@ -132,8 +132,13 @@ function ScreenOverlay() {
 /* ========================================
    Main Scene
 ======================================== */
-export default function BridgeGLBScene({ glbUrl }) {
+export default function BridgeGLBScene({ glbUrl, redAlert }) {
   const [bounds, setBounds] = useState(null);
+
+  // Red alert color
+  const normalColor = "#cfe6ff";
+  const alertColor = "#ff2222";
+  const lightColor = redAlert ? alertColor : normalColor;
 
   return (
     <Canvas
@@ -142,41 +147,38 @@ export default function BridgeGLBScene({ glbUrl }) {
       style={{ width: "100vw", height: "100vh", background: "#101010" }}
     >
       {/* Soft ambient light */}
-      <ambientLight intensity={0.03} />
+      <ambientLight intensity={0.03} color={redAlert ? alertColor : undefined} />
 
       {/* Ring-style lights around the bridge */}
-      <pointLight position={[0, 27, -76]} intensity={700.5} distance={70} decay={2} color="#cfe6ff" />
-      <pointLight position={[-45, 20, -76]} intensity={200.8} distance={25} decay={2} color="#cfe6ff" />
-      <pointLight position={[45, 20, -76]} intensity={200.8} distance={25} decay={2} color="#cfe6ff" />
-{/* Ring of small point lights around the bridge */}
-{Array.from({ length: 16 }).map((_, i) => {
-  const angle = (i / 16) * Math.PI * 2;
-  const radius = 60;
-
-  const x = Math.cos(angle) * radius;
-  const z = Math.sin(angle) * radius;
-
-  return (
-    <pointLight
-      key={i}
-      position={[x, 18, z]}
-      intensity={200}     // balanced brightness
-      distance={120}     // MUST be larger than radius or light won't reach center
-      decay={2}
-      color="#cfe6ff"    // subtle sci-fi blue tint
-      castShadow={false} // keep off for performance with many lights
-    />
-  );
-})}
-
+      <pointLight position={[0, 27, -76]} intensity={700.5} distance={70} decay={2} color={lightColor} />
+      <pointLight position={[-45, 20, -76]} intensity={200.8} distance={25} decay={2} color={lightColor} />
+      <pointLight position={[45, 20, -76]} intensity={200.8} distance={25} decay={2} color={lightColor} />
+      {/* Ring of small point lights around the bridge */}
+      {Array.from({ length: 16 }).map((_, i) => {
+        const angle = (i / 16) * Math.PI * 2;
+        const radius = 60;
+        const x = Math.cos(angle) * radius;
+        const z = Math.sin(angle) * radius;
+        return (
+          <pointLight
+            key={i}
+            position={[x, 18, z]}
+            intensity={200}
+            distance={120}
+            decay={2}
+            color={lightColor}
+            castShadow={false}
+          />
+        );
+      })}
 
       {/* Load the bridge model */}
       <BridgeModel url={glbUrl} onBounds={setBounds} />
 
-      {/* Static camera setup */}
-      <CameraSetup bounds={bounds} />
+      {/* Static camera setup (safe to render even if bounds is null) */}
+      {bounds && <CameraSetup bounds={bounds} />}
 
-      {/* Overlay screens */}
+      {/* Overlay screens always rendered */}
       <ScreenOverlay />
     </Canvas>
   );
