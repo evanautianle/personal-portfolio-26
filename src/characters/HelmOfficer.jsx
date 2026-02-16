@@ -10,14 +10,17 @@ const helmBounds = {
 
 export default function HelmOfficer() {
   // Offset for proper sitting alignment
+  // These values can be tweaked for best visual fit
+  const seatOffsetY = 0.1;
+  const seatOffsetZ = -0.08;
   return (
     <group position={crewSpawnPoints.helm.position} rotation={crewSpawnPoints.helm.rotation}>
-      <group position={[0, 0.1, 0]}>
-        <Officer
-          uniformColor="#cc3344"
-          walkBounds={helmBounds}
-        />
-      </group>
+      <Officer
+        uniformColor="#cc3344"
+        walkBounds={helmBounds}
+        seatOffsetY={seatOffsetY}
+        seatOffsetZ={seatOffsetZ}
+      />
     </group>
   );
 }

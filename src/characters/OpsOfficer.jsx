@@ -10,14 +10,17 @@ const opsBounds = {
 
 export default function OpsOfficer() {
   // Offset for proper sitting alignment
+  // These values can be tweaked for best visual fit
+  const seatOffsetY = 0.1;
+  const seatOffsetZ = -0.08;
   return (
     <group position={crewSpawnPoints.ops.position} rotation={crewSpawnPoints.ops.rotation}>
-      <group position={[0, 0.1, 0]}>
-        <Officer
-          uniformColor="#ccaa33"
-          walkBounds={opsBounds}
-        />
-      </group>
+      <Officer
+        uniformColor="#ccaa33"
+        walkBounds={opsBounds}
+        seatOffsetY={seatOffsetY}
+        seatOffsetZ={seatOffsetZ}
+      />
     </group>
   );
 }

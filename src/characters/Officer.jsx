@@ -23,7 +23,7 @@ function isInsideCollisionZone(pos) {
   );
 }
 
-export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cccccc", walkBounds, rotation }) {
+export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cccccc", walkBounds, rotation, seatOffsetY = 0.1, seatOffsetZ = 0 }) {
   const groupRef = useRef();
   const [state, setState] = useState(STATES.SITTING);
   const [clicked, setClicked] = useState(false);
@@ -186,6 +186,8 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
     }
   });
 
+  // Only apply seat offset when sitting
+  const sitting = state === "sitting";
   return (
     <group
       ref={groupRef}
@@ -196,7 +198,9 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
       onPointerOut={handlePointerOut}
       scale={[scaleRef.current, scaleRef.current, scaleRef.current]}
     >
-      <OfficerModel uniformColor={uniformColor} headRef={headRef} />
+      <group position={[0, sitting ? seatOffsetY : 0, sitting ? seatOffsetZ : 0]}>
+        <OfficerModel uniformColor={uniformColor} headRef={headRef} sitting={sitting} />
+      </group>
     </group>
   );
 }
