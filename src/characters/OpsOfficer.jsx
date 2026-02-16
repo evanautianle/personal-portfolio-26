@@ -1,5 +1,5 @@
-import Officer from "../Officer";
-import { crewSpawnPoints } from "../../config/crewSpawnPoints";
+import Officer from "./Officer";
+import { crewSpawnPoints } from "../config/crewSpawnPoints";
 
 const opsBounds = {
   minX: 0,
