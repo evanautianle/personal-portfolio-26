@@ -10,13 +10,16 @@ const STATES = {
   RETURNING: "returning",
 };
 
-export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cccccc" }) {
+export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cccccc", walkBounds }) {
   const groupRef = useRef();
   const [state, setState] = useState(STATES.SITTING);
+  const [clicked, setClicked] = useState(false);
 
   // Walking timer and target
   const timerRef = useRef(Math.random() * 15 + 10); // random 10-25s
   const targetRef = useRef(null);
+  const scaleRef = useRef(SCALE);
+  const headRef = useRef();
 
   // Handle click to return
   const handleClick = () => {
@@ -24,6 +27,12 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
       setState(STATES.RETURNING);
       targetRef.current = new THREE.Vector3(chairPosition[0], chairPosition[1], chairPosition[2]);
     }
+    setClicked(true);
+    scaleRef.current = SCALE * 1.05;
+    setTimeout(() => {
+      setClicked(false);
+      scaleRef.current = SCALE;
+    }, 300);
   };
 
   useFrame((_, delta) => {
@@ -34,11 +43,19 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
         timerRef.current -= delta;
         if (timerRef.current <= 0) {
           setState(STATES.WALKING);
-          // Generate random target position (unscaled bounds)
-          const minX = chairPosition[0] - 0.7;
-          const maxX = chairPosition[0] + 0.7;
-          const minZ = chairPosition[2] - 1.2;
-          const maxZ = chairPosition[2] + 1.2;
+          // Generate random target position within walkBounds
+          let minX, maxX, minZ, maxZ;
+          if (walkBounds) {
+            minX = walkBounds.minX;
+            maxX = walkBounds.maxX;
+            minZ = walkBounds.minZ;
+            maxZ = walkBounds.maxZ;
+          } else {
+            minX = chairPosition[0] - 0.7;
+            maxX = chairPosition[0] + 0.7;
+            minZ = chairPosition[2] - 1.2;
+            maxZ = chairPosition[2] + 1.2;
+          }
           const x = Math.random() * (maxX - minX) + minX;
           const y = chairPosition[1];
           const z = Math.random() * (maxZ - minZ) + minZ;
@@ -90,11 +107,15 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
       default:
         break;
     }
+    // Optional: slight head tilt when clicked
+    if (headRef.current) {
+      headRef.current.rotation.z = clicked ? 0.25 : 0;
+    }
   });
 
   return (
-    <group ref={groupRef} position={chairPosition} onClick={handleClick} scale={[SCALE, SCALE, SCALE]}>
-      <OfficerModel uniformColor={uniformColor} />
+    <group ref={groupRef} position={chairPosition} onClick={handleClick} scale={[scaleRef.current, scaleRef.current, scaleRef.current]}>
+      <OfficerModel uniformColor={uniformColor} headRef={headRef} />
     </group>
   );
 }

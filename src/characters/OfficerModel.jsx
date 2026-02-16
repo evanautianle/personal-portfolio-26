@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function OfficerModel({ uniformColor = "#cccccc" }) {
+export default function OfficerModel({ uniformColor = "#cccccc", headRef }) {
   // Blocky proportions
   return (
     <group>
@@ -10,7 +10,7 @@ export default function OfficerModel({ uniformColor = "#cccccc" }) {
         <meshStandardMaterial color={uniformColor} />
       </mesh>
       {/* Head */}
-      <mesh position={[0, 1.25, 0]}>
+      <mesh ref={headRef} position={[0, 1.25, 0]}>
         <boxGeometry args={[0.28, 0.28, 0.28]} />
         <meshStandardMaterial color="#ffe0b2" />
       </mesh>
