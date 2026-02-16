@@ -29,8 +29,10 @@ export default function Captain() {
   const spawn = crewSpawnPoints.captain;
   return (
     <group position={spawn.position} rotation={spawn.rotation} scale={[8, 8, 8]}>
-      <OfficerModel uniformColor="#ccaa33" />
-      <PirateHat />
+      <group position={[0, 0.1, 0]}>
+        <OfficerModel uniformColor="#ccaa33" />
+        <PirateHat />
+      </group>
     </group>
   );
 }
