@@ -25,6 +25,7 @@ function isInsideCollisionZone(pos) {
 
 export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cccccc", walkBounds, rotation, seatOffsetY = 0.1, seatOffsetZ = 0 }) {
   const groupRef = useRef();
+  // Officers always spawn sitting
   const [state, setState] = useState(STATES.SITTING);
   const [clicked, setClicked] = useState(false);
   const { gl } = useThree();
@@ -32,15 +33,23 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
   // Red Alert override: force return and lock in chair
   useEffect(() => {
     if (alert.isRedAlert) {
-      if (state !== STATES.SITTING && state !== STATES.RETURNING) {
-        setState(STATES.RETURNING);
-        targetRef.current = new THREE.Vector3(chairPosition[0], chairPosition[1], chairPosition[2]);
+      // Instantly snap to sitting state and chair position
+      setState(STATES.SITTING);
+      if (groupRef.current) {
+        groupRef.current.position.set(chairPosition[0], chairPosition[1], chairPosition[2]);
       }
+      timerRef.current = Math.random() * 5 + 3;
+      targetRef.current = null;
+    } else {
+      // Resume normal activity: start walking
+      setState(STATES.WALKING);
+        timerRef.current = Math.random() * 0.5 + 0.2;
+      targetRef.current = null;
     }
-  }, [alert.isRedAlert, state, chairPosition]);
+  }, [alert.isRedAlert, chairPosition]);
 
   // Walking timer and target
-  const timerRef = useRef(Math.random() * 5 + 3); // random 3-8s
+  const timerRef = useRef(Math.random() * 1 + 0.5); // random 0.5-1.5s
   const targetRef = useRef(null);
   const scaleRef = useRef(SCALE);
   const headRef = useRef();
@@ -98,30 +107,30 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
     }
     // ...existing code for state machine...
     switch (state) {
-      case STATES.SITTING:
-        timerRef.current -= delta;
-        if (timerRef.current <= 0) {
-          setState(STATES.WALKING);
-          // Generate random target position within walkBounds
-          let minX, maxX, minZ, maxZ;
-          if (walkBounds) {
-            minX = walkBounds.minX;
-            maxX = walkBounds.maxX;
-            minZ = walkBounds.minZ;
-            maxZ = walkBounds.maxZ;
-          } else {
-            minX = chairPosition[0] - 0.7;
-            maxX = chairPosition[0] + 0.7;
-            minZ = chairPosition[2] - 1.2;
-            maxZ = chairPosition[2] + 1.2;
-          }
-          const x = Math.random() * (maxX - minX) + minX;
-          const y = chairPosition[1];
-          const z = Math.random() * (maxZ - minZ) + minZ;
-          targetRef.current = new THREE.Vector3(x, y, z);
-        }
-        break;
+      // SITTING is not part of the normal movement cycle
       case STATES.WALKING:
+        // Always have a target to walk to
+        if (!targetRef.current) {
+          // Walk in the direction the officer is currently facing
+          const pos = groupRef.current.position;
+          // Get the forward vector from the current rotation
+          const forward = new THREE.Vector3(0, 0, 1);
+          forward.applyQuaternion(groupRef.current.quaternion);
+          forward.normalize();
+          // Walk a random distance between 6 and 12 units (further)
+          const distance = Math.random() * 6 + 6;
+          const target = new THREE.Vector3(
+            pos.x + forward.x * distance,
+            chairPosition[1],
+            pos.z + forward.z * distance
+          );
+          // Clamp to walk bounds if provided
+          if (walkBounds) {
+            target.x = Math.max(walkBounds.minX, Math.min(walkBounds.maxX, target.x));
+            target.z = Math.max(walkBounds.minZ, Math.min(walkBounds.maxZ, target.z));
+          }
+          targetRef.current = target;
+        }
         if (targetRef.current) {
           const pos = groupRef.current.position;
           const target = targetRef.current;
@@ -136,16 +145,22 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
           if (!isInsideCollisionZone(current)) {
             groupRef.current.position.set(current.x, current.y, current.z);
           }
-          // Smooth rotation toward movement direction
-          if (direction.lengthSq() > 0.001) {
-            const lookAt = new THREE.Vector3(current.x + direction.x, current.y, current.z + direction.z);
-            groupRef.current.lookAt(lookAt);
-          }
+          // No lookAt: keep facing same direction while walking
           if (current.distanceTo(target) < 0.05 * SCALE) {
-            setState(STATES.SITTING);
-            timerRef.current = Math.random() * 5 + 3; // reset timer for next walk
+            if (alert.isRedAlert) {
+              setState(STATES.SITTING);
+            } else {
+              setState(STATES.WALKING);
+            }
+            // Increase timer so they pause longer before changing direction
+            timerRef.current = Math.random() * 2.5 + 2.5; // 2.5 to 5 seconds pause before next walk
             // Do NOT reset position to chairPosition
             targetRef.current = null;
+            // Optionally, rotate to a new random direction after each walk
+            if (!alert.isRedAlert && groupRef.current) {
+              const randomY = Math.random() * Math.PI * 2;
+              groupRef.current.rotation.y = randomY;
+            }
           }
         }
         break;
@@ -170,8 +185,12 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
             groupRef.current.lookAt(lookAt);
           }
           if (current.distanceTo(target) < 0.05 * SCALE) {
-            setState(STATES.SITTING);
-            timerRef.current = Math.random() * 5 + 3; // reset timer for next walk
+            if (alert.isRedAlert) {
+              setState(STATES.SITTING);
+            } else {
+              setState(STATES.WALKING);
+            }
+            timerRef.current = Math.random() * 0.5 + 0.2; // reset timer for next walk
             // Do NOT reset position to chairPosition
             targetRef.current = null;
           }
@@ -198,7 +217,8 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
       onPointerOut={handlePointerOut}
       scale={[scaleRef.current, scaleRef.current, scaleRef.current]}
     >
-      <group position={[0, sitting ? seatOffsetY : 0, sitting ? seatOffsetZ : 0]}>
+      {/* Remove offset for sitting: sit directly on chair */}
+      <group position={[0, 0, 0]}>
         <OfficerModel uniformColor={uniformColor} headRef={headRef} sitting={sitting} />
       </group>
     </group>
