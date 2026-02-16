@@ -3,6 +3,7 @@ import React from "react";
 import { useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 
+
 export default function OfficerModel({ uniformColor = "#cccccc", headRef, sitting = false }) {
   // Refs for limbs and body
   const leftLegRef = useRef();
@@ -11,44 +12,52 @@ export default function OfficerModel({ uniformColor = "#cccccc", headRef, sittin
   const rightArmRef = useRef();
   const bodyRef = useRef();
 
-  // Animate pose
+  // Animate pose for smooth transitions
   useFrame(() => {
     if (sitting) {
-      // Legs: forward and spread
+      // Sitting pose: legs upright and slightly spread, arms relaxed
       if (leftLegRef.current) {
-        leftLegRef.current.rotation.x = Math.PI / 1.5;
-        leftLegRef.current.position.x = -0.16;
-        leftLegRef.current.position.z = 0.18;
+        leftLegRef.current.rotation.x += (0 - leftLegRef.current.rotation.x) * 0.2; // upright
+        leftLegRef.current.rotation.y += (-0.2 - leftLegRef.current.rotation.y) * 0.2; // spread left
+        leftLegRef.current.position.x += (-0.12 - leftLegRef.current.position.x) * 0.2;
+        leftLegRef.current.position.z += (0 - leftLegRef.current.position.z) * 0.2;
       }
       if (rightLegRef.current) {
-        rightLegRef.current.rotation.x = Math.PI / 1.5;
-        rightLegRef.current.position.x = 0.16;
-        rightLegRef.current.position.z = 0.18;
+        rightLegRef.current.rotation.x += (0 - rightLegRef.current.rotation.x) * 0.2; // upright
+        rightLegRef.current.rotation.y += (0.2 - rightLegRef.current.rotation.y) * 0.2; // spread right
+        rightLegRef.current.position.x += (0.12 - rightLegRef.current.position.x) * 0.2;
+        rightLegRef.current.position.z += (0 - rightLegRef.current.position.z) * 0.2;
       }
-      // Arms: slightly forward
-      if (leftArmRef.current) leftArmRef.current.rotation.x = Math.PI / 16;
-      if (rightArmRef.current) rightArmRef.current.rotation.x = Math.PI / 16;
-      // Torso: unchanged
-      if (bodyRef.current) bodyRef.current.scale.y = 1;
-      if (bodyRef.current) bodyRef.current.position.y = 0.7;
+      // Arms: slightly relaxed on sides
+      if (leftArmRef.current) {
+        leftArmRef.current.rotation.x += (-Math.PI / 8 - leftArmRef.current.rotation.x) * 0.2;
+      }
+      if (rightArmRef.current) {
+        rightArmRef.current.rotation.x += (-Math.PI / 8 - rightArmRef.current.rotation.x) * 0.2;
+      }
     } else {
-      // Legs: normal
+      // Smoothly interpolate to standing pose
       if (leftLegRef.current) {
-        leftLegRef.current.rotation.x = 0;
-        leftLegRef.current.position.x = -0.09;
-        leftLegRef.current.position.z = 0;
+        leftLegRef.current.rotation.x += (0 - leftLegRef.current.rotation.x) * 0.2;
+        leftLegRef.current.position.x += (-0.09 - leftLegRef.current.position.x) * 0.2;
+        leftLegRef.current.position.z += (0 - leftLegRef.current.position.z) * 0.2;
       }
       if (rightLegRef.current) {
-        rightLegRef.current.rotation.x = 0;
-        rightLegRef.current.position.x = 0.09;
-        rightLegRef.current.position.z = 0;
+        rightLegRef.current.rotation.x += (0 - rightLegRef.current.rotation.x) * 0.2;
+        rightLegRef.current.position.x += (0.09 - rightLegRef.current.position.x) * 0.2;
+        rightLegRef.current.position.z += (0 - rightLegRef.current.position.z) * 0.2;
       }
-      // Arms: normal
-      if (leftArmRef.current) leftArmRef.current.rotation.x = 0;
-      if (rightArmRef.current) rightArmRef.current.rotation.x = 0;
-      // Torso: normal
-      if (bodyRef.current) bodyRef.current.scale.y = 1;
-      if (bodyRef.current) bodyRef.current.position.y = 0.7;
+      if (leftArmRef.current) {
+        leftArmRef.current.rotation.x += (0 - leftArmRef.current.rotation.x) * 0.2;
+      }
+      if (rightArmRef.current) {
+        rightArmRef.current.rotation.x += (0 - rightArmRef.current.rotation.x) * 0.2;
+      }
+    }
+    // Torso always stays the same
+    if (bodyRef.current) {
+      bodyRef.current.scale.y = 1;
+      bodyRef.current.position.y = 0.7;
     }
   });
 

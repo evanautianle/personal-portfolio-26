@@ -33,17 +33,14 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
   // Red Alert override: force return and lock in chair
   useEffect(() => {
     if (alert.isRedAlert) {
-      // Instantly snap to sitting state and chair position
-      setState(STATES.SITTING);
-      if (groupRef.current) {
-        groupRef.current.position.set(chairPosition[0], chairPosition[1], chairPosition[2]);
-      }
+      // On Red Alert, walk to chair (RETURNING)
+      setState(STATES.RETURNING);
+      targetRef.current = new THREE.Vector3(chairPosition[0], chairPosition[1], chairPosition[2]);
       timerRef.current = Math.random() * 5 + 3;
-      targetRef.current = null;
     } else {
       // Resume normal activity: start walking
       setState(STATES.WALKING);
-        timerRef.current = Math.random() * 0.5 + 0.2;
+      timerRef.current = Math.random() * 0.5 + 0.2;
       targetRef.current = null;
     }
   }, [alert.isRedAlert, chairPosition]);
@@ -82,28 +79,10 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
   useFrame((_, delta) => {
     if (!groupRef.current) return;
     let direction = null;
-    // Red Alert: lock in SITTING, disable walking
-    if (alert.isRedAlert) {
-      if (state !== STATES.SITTING) {
-        // If returning, let RETURNING logic run; if not, force RETURNING
-        if (state !== STATES.RETURNING) {
-          setState(STATES.RETURNING);
-          targetRef.current = new THREE.Vector3(chairPosition[0], chairPosition[1], chairPosition[2]);
-        }
-      }
-      // If at chair, lock in SITTING
-      if (state === STATES.RETURNING && groupRef.current && targetRef.current) {
-        const pos = groupRef.current.position;
-        const target = targetRef.current;
-        const current = new THREE.Vector3(pos.x, pos.y, pos.z);
-        if (current.distanceTo(target) < 0.05 * SCALE) {
-          setState(STATES.SITTING);
-          timerRef.current = Math.random() * 5 + 3;
-          targetRef.current = null;
-        }
-      }
-      // Do not allow walking or timer
-      return;
+    // Red Alert: if not already returning or sitting, start returning to chair
+    if (alert.isRedAlert && state !== STATES.SITTING && state !== STATES.RETURNING) {
+      setState(STATES.RETURNING);
+      targetRef.current = new THREE.Vector3(chairPosition[0], chairPosition[1], chairPosition[2]);
     }
     // ...existing code for state machine...
     switch (state) {
@@ -184,14 +163,10 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
             const lookAt = new THREE.Vector3(current.x + direction.x, current.y, current.z + direction.z);
             groupRef.current.lookAt(lookAt);
           }
-          if (current.distanceTo(target) < 0.05 * SCALE) {
-            if (alert.isRedAlert) {
-              setState(STATES.SITTING);
-            } else {
-              setState(STATES.WALKING);
-            }
+          // If close enough to chair, set to sitting
+          if (current.distanceTo(target) < 0.1) {
+            setState(STATES.SITTING);
             timerRef.current = Math.random() * 0.5 + 0.2; // reset timer for next walk
-            // Do NOT reset position to chairPosition
             targetRef.current = null;
           }
         }
@@ -205,22 +180,18 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
     }
   });
 
-  // Only apply seat offset when sitting
+  // Always show sitting pose when in SITTING state
   const sitting = state === "sitting";
   return (
     <group
       ref={groupRef}
-      position={chairPosition}
       rotation={rotation}
       onClick={handleClick}
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}
       scale={[scaleRef.current, scaleRef.current, scaleRef.current]}
     >
-      {/* Remove offset for sitting: sit directly on chair */}
-      <group position={[0, 0, 0]}>
-        <OfficerModel uniformColor={uniformColor} headRef={headRef} sitting={sitting} />
-      </group>
+      <OfficerModel uniformColor={uniformColor} headRef={headRef} sitting={sitting} />
     </group>
   );
 }
