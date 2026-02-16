@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
-import { Environment, useGLTF, Html, OrbitControls } from "@react-three/drei";
+import { Environment, useGLTF, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { Viewscreen } from "../viewscreen/Viewscreen";
 
@@ -14,7 +14,7 @@ function BridgeModel({ url, onBounds }) {
   useEffect(() => {
     if (!scene || !ref.current) return;
     const model = ref.current;
-    // Scale down the model (was 100, now 10)
+    // Scale down the model
     model.scale.set(10, 10, 10);
 
     model.traverse((child) => {
@@ -59,9 +59,13 @@ function CameraSetup({ bounds }) {
     const center = new THREE.Vector3();
     bounds.getCenter(center);
 
-    // Adjusted camera position for new scale
-    camera.position.set(center.x, center.y + 4, center.z + 72);
-    camera.lookAt(center);
+    // Move camera up
+    camera.position.set(center.x, center.y + 8, center.z + 130); // raise height
+
+    // Tilt camera slightly down by aiming a bit below the model center
+    const lookAtTarget = center.clone();
+    lookAtTarget.y -= 26; // tilt down
+    camera.lookAt(lookAtTarget);
 
     camera.near = 0.01;
     camera.far = 1000000;
@@ -71,11 +75,11 @@ function CameraSetup({ bounds }) {
   return null;
 }
 
+
 /* ========================================
    Screen Overlay
 ======================================== */
 function ScreenOverlay() {
-  // Main and two secondary viewscreens
   return (
     <>
       {/* Main viewscreen */}
@@ -84,7 +88,8 @@ function ScreenOverlay() {
           <Viewscreen />
         </div>
       </Html>
-      {/* Left secondary viewscreen (behind and to the left) */}
+
+      {/* Left secondary viewscreen */}
       <Html
         position={[-50, 20, -76]}
         rotation={[0, Math.PI / 8, 0]}
@@ -95,7 +100,8 @@ function ScreenOverlay() {
           <Viewscreen />
         </div>
       </Html>
-      {/* Right secondary viewscreen (behind and to the right) */}
+
+      {/* Right secondary viewscreen */}
       <Html
         position={[50, 20, -76]}
         rotation={[0, -Math.PI / 8, 0]}
@@ -129,7 +135,7 @@ export default function BridgeGLBScene({ glbUrl }) {
 
       <Environment preset="city" />
       <ScreenOverlay />
-      <OrbitControls enableDamping makeDefault />
+      {/* OrbitControls removed for static camera */}
     </Canvas>
   );
 }
