@@ -17,7 +17,31 @@ export function App() {
       <Navbar />
       <CanvasRoot redAlert={redAlert} />
       <ControlPanel position="left">
-        {/* Left panel content can go here */}
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {['hero', 'about', 'projects', 'contact'].map((route) => (
+            <button
+              key={route}
+              style={{
+                background: '#fff',
+                border: '2px solid #fff',
+                color: '#111',
+                fontWeight: 600,
+                fontSize: 16,
+                padding: '12px 28px',
+                cursor: 'pointer',
+                borderRadius: 24,
+                transition: 'all 0.2s',
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                outline: 'none',
+                margin: 0,
+                boxShadow: currentTab === route ? '0 0 12px #e87d2f' : 'none',
+              }}
+              onClick={() => setNavigation(route)}
+            >
+              {route.charAt(0).toUpperCase() + route.slice(1)}
+            </button>
+          ))}
+        </div>
       </ControlPanel>
       <ControlPanel position="right">
         <button

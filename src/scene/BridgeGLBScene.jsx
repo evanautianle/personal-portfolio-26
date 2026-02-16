@@ -88,8 +88,8 @@ function ScreenOverlay() {
   return (
     <>
       {/* Main viewscreen - made much larger for visibility */}
-      <Html position={[0, 27, -76]} transform zIndexRange={[0, 0]}>
-        <div style={{ width: "2200px", height: "1200px", background: "#000" }}>
+      <Html position={[0, 27.5, -76]} transform zIndexRange={[0, 0]}>
+        <div style={{ width: "2200px", height: "1240px", background: "#000" }}>
           <Viewscreen />
         </div>
       </Html>

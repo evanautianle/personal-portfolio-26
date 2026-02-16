@@ -23,13 +23,13 @@ export function SecondaryScreen({ side }) {
 
   if (content.type === 'image') {
     return (
-      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ width: '100%', height: '100%', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <img src={content.value} alt={route + '-' + side} style={{ maxWidth: '90%', maxHeight: '90%' }} />
       </div>
     );
   }
   return (
-    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 82, textAlign: 'center', padding: 32 }}>
+    <div style={{ width: '100%', height: '100%', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 82, textAlign: 'center', padding: 32 }}>
       {content.value}
     </div>
   );
