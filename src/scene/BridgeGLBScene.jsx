@@ -4,6 +4,8 @@ import { Environment, useGLTF, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { Viewscreen } from "../viewscreen/Viewscreen";
 import { SecondaryScreen } from "../viewscreen/SecondaryScreen";
+import HelmOfficer from "../characters/HelmOfficer";
+import OpsOfficer from "../characters/OpsOfficer";
 
 /* ========================================
    Bridge Model
@@ -174,6 +176,10 @@ export default function BridgeGLBScene({ glbUrl, redAlert }) {
 
       {/* Load the bridge model */}
       <BridgeModel url={glbUrl} onBounds={setBounds} />
+
+      {/* Officer characters */}
+      <HelmOfficer />
+      <OpsOfficer />
 
       {/* Static camera setup (safe to render even if bounds is null) */}
       {bounds && <CameraSetup bounds={bounds} />}
