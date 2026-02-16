@@ -1,10 +1,10 @@
 import Officer from "./Officer";
 
 const helmBounds = {
-  minX: -2.5,
-  maxX: -0.5,
-  minZ: -5,
-  maxZ: -2,
+  minX: -8,
+  maxX: 0,
+  minZ: -12,
+  maxZ: 2,
 };
 
 export default function HelmOfficer() {

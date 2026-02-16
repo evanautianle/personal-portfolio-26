@@ -2,15 +2,24 @@ import React, { useRef, useState } from "react";
 import OfficerModel from "./OfficerModel";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { DragControls } from "@react-three/drei";
+import { NAVIGATION_BOUNDS } from "../scene/navigationBounds";
+import { COLLISION_ZONES } from "../scene/collisionZones";
 
 const SCALE = 8;
 const STATES = {
   SITTING: "sitting",
   WALKING: "walking",
   RETURNING: "returning",
-  DRAGGING: "dragging",
 };
+
+function isInsideCollisionZone(pos) {
+  return COLLISION_ZONES.some(zone =>
+    pos.x > zone.minX &&
+    pos.x < zone.maxX &&
+    pos.z > zone.minZ &&
+    pos.z < zone.maxZ
+  );
+}
 
 export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cccccc", walkBounds }) {
   const groupRef = useRef();
@@ -19,7 +28,7 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
   const { gl } = useThree();
 
   // Walking timer and target
-  const timerRef = useRef(Math.random() * 15 + 10); // random 10-25s
+  const timerRef = useRef(Math.random() * 5 + 3); // random 3-8s
   const targetRef = useRef(null);
   const scaleRef = useRef(SCALE);
   const headRef = useRef();
@@ -47,15 +56,6 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
   const handlePointerOut = (e) => {
     e.stopPropagation();
     gl.domElement.style.cursor = "default";
-  };
-
-  // Drag event handlers
-  const handleDragStart = () => {
-    setState(STATES.DRAGGING);
-  };
-  const handleDragEnd = () => {
-    setState(STATES.WALKING);
-    timerRef.current = Math.random() * 15 + 10;
   };
 
   useFrame((_, delta) => {
@@ -91,8 +91,15 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
           const target = targetRef.current;
           const current = new THREE.Vector3(pos.x, pos.y, pos.z);
           direction = new THREE.Vector3().subVectors(target, current).normalize();
-          current.lerp(target, delta * 0.5);
-          groupRef.current.position.set(current.x, current.y, current.z);
+          current.lerp(target, delta * 1.8); // Faster movement
+          // Clamp to navigation bounds
+          current.x = Math.max(NAVIGATION_BOUNDS.minX, Math.min(NAVIGATION_BOUNDS.maxX, current.x));
+          current.z = Math.max(NAVIGATION_BOUNDS.minZ, Math.min(NAVIGATION_BOUNDS.maxZ, current.z));
+          current.y = chairPosition[1]; // Always stay on same y axis
+          // Prevent collision
+          if (!isInsideCollisionZone(current)) {
+            groupRef.current.position.set(current.x, current.y, current.z);
+          }
           // Smooth rotation toward movement direction
           if (direction.lengthSq() > 0.001) {
             const lookAt = new THREE.Vector3(current.x + direction.x, current.y, current.z + direction.z);
@@ -100,8 +107,8 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
           }
           if (current.distanceTo(target) < 0.05 * SCALE) {
             setState(STATES.SITTING);
-            timerRef.current = Math.random() * 15 + 10;
-            groupRef.current.position.set(chairPosition[0], chairPosition[1], chairPosition[2]);
+            timerRef.current = Math.random() * 5 + 3; // reset timer for next walk
+            // Do NOT reset position to chairPosition
             targetRef.current = null;
           }
         }
@@ -112,8 +119,15 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
           const target = targetRef.current;
           const current = new THREE.Vector3(pos.x, pos.y, pos.z);
           direction = new THREE.Vector3().subVectors(target, current).normalize();
-          current.lerp(target, delta * 0.5);
-          groupRef.current.position.set(current.x, current.y, current.z);
+          current.lerp(target, delta * 1.8); // Faster movement
+          // Clamp to navigation bounds
+          current.x = Math.max(NAVIGATION_BOUNDS.minX, Math.min(NAVIGATION_BOUNDS.maxX, current.x));
+          current.z = Math.max(NAVIGATION_BOUNDS.minZ, Math.min(NAVIGATION_BOUNDS.maxZ, current.z));
+          current.y = chairPosition[1]; // Always stay on same y axis
+          // Prevent collision
+          if (!isInsideCollisionZone(current)) {
+            groupRef.current.position.set(current.x, current.y, current.z);
+          }
           // Smooth rotation toward chair
           if (direction.lengthSq() > 0.001) {
             const lookAt = new THREE.Vector3(current.x + direction.x, current.y, current.z + direction.z);
@@ -121,14 +135,11 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
           }
           if (current.distanceTo(target) < 0.05 * SCALE) {
             setState(STATES.SITTING);
-            timerRef.current = Math.random() * 15 + 10;
-            groupRef.current.position.set(chairPosition[0], chairPosition[1], chairPosition[2]);
+            timerRef.current = Math.random() * 5 + 3; // reset timer for next walk
+            // Do NOT reset position to chairPosition
             targetRef.current = null;
           }
         }
-        break;
-      case STATES.DRAGGING:
-        // DragControls handles position, do not update
         break;
       default:
         break;
@@ -140,22 +151,15 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
   });
 
   return (
-    <DragControls
-      object={groupRef}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-      transformGroup
+    <group
+      ref={groupRef}
+      position={chairPosition}
+      onClick={handleClick}
+      onPointerOver={handlePointerOver}
+      onPointerOut={handlePointerOut}
+      scale={[scaleRef.current, scaleRef.current, scaleRef.current]}
     >
-      <group
-        ref={groupRef}
-        position={chairPosition}
-        onClick={handleClick}
-        onPointerOver={handlePointerOver}
-        onPointerOut={handlePointerOut}
-        scale={[scaleRef.current, scaleRef.current, scaleRef.current]}
-      >
-        <OfficerModel uniformColor={uniformColor} headRef={headRef} />
-      </group>
-    </DragControls>
+      <OfficerModel uniformColor={uniformColor} headRef={headRef} />
+    </group>
   );
 }
