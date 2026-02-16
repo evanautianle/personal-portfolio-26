@@ -2,12 +2,14 @@ import React, { useRef, useState } from "react";
 import OfficerModel from "./OfficerModel";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { DragControls } from "@react-three/drei";
 
 const SCALE = 8;
 const STATES = {
   SITTING: "sitting",
   WALKING: "walking",
   RETURNING: "returning",
+  DRAGGING: "dragging",
 };
 
 export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cccccc", walkBounds }) {
@@ -33,6 +35,15 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
       setClicked(false);
       scaleRef.current = SCALE;
     }, 300);
+  };
+
+  // Drag event handlers
+  const handleDragStart = () => {
+    setState(STATES.DRAGGING);
+  };
+  const handleDragEnd = () => {
+    setState(STATES.WALKING);
+    timerRef.current = Math.random() * 15 + 10;
   };
 
   useFrame((_, delta) => {
@@ -104,6 +115,9 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
           }
         }
         break;
+      case STATES.DRAGGING:
+        // DragControls handles position, do not update
+        break;
       default:
         break;
     }
@@ -114,8 +128,15 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
   });
 
   return (
-    <group ref={groupRef} position={chairPosition} onClick={handleClick} scale={[scaleRef.current, scaleRef.current, scaleRef.current]}>
-      <OfficerModel uniformColor={uniformColor} headRef={headRef} />
-    </group>
+    <DragControls
+      object={groupRef}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      transformGroup
+    >
+      <group ref={groupRef} position={chairPosition} onClick={handleClick} scale={[scaleRef.current, scaleRef.current, scaleRef.current]}>
+        <OfficerModel uniformColor={uniformColor} headRef={headRef} />
+      </group>
+    </DragControls>
   );
 }
