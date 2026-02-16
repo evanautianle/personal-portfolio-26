@@ -15,30 +15,37 @@ function BridgeModel({ url, onBounds }) {
   useEffect(() => {
     if (!scene || !ref.current) return;
     const model = ref.current;
-    // Scale down the model
+
     model.scale.set(10, 10, 10);
 
     model.traverse((child) => {
-      if (child.isMesh && child.material) {
-        const mats = Array.isArray(child.material) ? [child.material].flat() : [child.material];
-        mats.forEach((mat) => {
-          mat.transparent = false;
-          mat.opacity = 1;
-          mat.side = THREE.FrontSide;
-          mat.needsUpdate = true;
-        });
+      if (child.isMesh) {
+        if (!(child.material instanceof THREE.MeshStandardMaterial)) {
+          const oldMat = child.material;
+          child.material = new THREE.MeshStandardMaterial({
+            color: oldMat.color ? oldMat.color : 0xffffff,
+            map: oldMat.map || null,
+            metalness: 0.2,
+            roughness: 0.7,
+          });
+        }
+        child.material.transparent = false;
+        child.material.opacity = 1;
+        child.material.side = THREE.FrontSide;
+        child.material.needsUpdate = true;
+
+        // Enable shadows
+        child.castShadow = true;
+        child.receiveShadow = true;
       }
     });
 
     const box = new THREE.Box3().setFromObject(model);
     const center = new THREE.Vector3();
     box.getCenter(center);
-
-    // Center horizontally only
     model.position.x -= center.x;
     model.position.z -= center.z;
 
-    // Ground model
     const groundedBox = new THREE.Box3().setFromObject(model);
     model.position.y -= groundedBox.min.y;
 
@@ -60,12 +67,10 @@ function CameraSetup({ bounds }) {
     const center = new THREE.Vector3();
     bounds.getCenter(center);
 
-    // Move camera up
-    camera.position.set(center.x, center.y + 8, center.z + 130); // raise height
+    camera.position.set(center.x, center.y + 8, center.z + 130);
 
-    // Tilt camera slightly down by aiming a bit below the model center
     const lookAtTarget = center.clone();
-    lookAtTarget.y -= 26; // tilt down
+    lookAtTarget.y -= 26;
     camera.lookAt(lookAtTarget);
 
     camera.near = 0.01;
@@ -75,7 +80,6 @@ function CameraSetup({ bounds }) {
 
   return null;
 }
-
 
 /* ========================================
    Screen Overlay
@@ -91,25 +95,33 @@ function ScreenOverlay() {
       </Html>
 
       {/* Left secondary viewscreen */}
-      <Html
-        position={[-45, 19.5, -76]}
-        rotation={[0, Math.PI / 5, 0]} // tilt inwards more
-        transform
-        zIndexRange={[0, 0]}
-      >
-        <div style={{ width: "1050px", height: "900px", background: "#181a22", borderRadius: 24, opacity: 0.95, overflow: 'hidden' }}>
+      <Html position={[-45, 19.5, -76]} rotation={[0, Math.PI / 5, 0]} transform zIndexRange={[0, 0]}>
+        <div
+          style={{
+            width: "1050px",
+            height: "900px",
+            background: "#111",
+            borderRadius: 24,
+            opacity: 0.95,
+            overflow: "hidden",
+          }}
+        >
           <SecondaryScreen side="left" />
         </div>
       </Html>
 
       {/* Right secondary viewscreen */}
-      <Html
-        position={[44.5, 20.5, -76]}
-        rotation={[0, -Math.PI / 5, 0]} // tilt inwards more
-        transform
-        zIndexRange={[0, 0]}
-      >
-        <div style={{ width: "1050px", height: "900px", background: "#181a22", borderRadius: 24, opacity: 0.95, overflow: 'hidden' }}>
+      <Html position={[44.5, 20.5, -76]} rotation={[0, -Math.PI / 5, 0]} transform zIndexRange={[0, 0]}>
+        <div
+          style={{
+            width: "1050px",
+            height: "900px",
+            background: "#111",
+            borderRadius: 24,
+            opacity: 0.95,
+            overflow: "hidden",
+          }}
+        >
           <SecondaryScreen side="right" />
         </div>
       </Html>
@@ -125,18 +137,47 @@ export default function BridgeGLBScene({ glbUrl }) {
 
   return (
     <Canvas
+      shadows
       camera={{ fov: 35, near: 0.01, far: 1000000 }}
-      style={{ width: "100vw", height: "100vh", background: "#e0e0e0" }}
+      style={{ width: "100vw", height: "100vh", background: "#101010" }}
     >
-      <ambientLight intensity={0.8} />
-      <directionalLight position={[100, 100, 100]} intensity={1.2} />
+      {/* Soft ambient light */}
+      <ambientLight intensity={0.03} />
 
+      {/* Ring-style lights around the bridge */}
+      <pointLight position={[0, 27, -76]} intensity={300.5} distance={30} decay={2} color="#cfe6ff" />
+      <pointLight position={[-45, 20, -76]} intensity={200.8} distance={25} decay={2} color="#cfe6ff" />
+      <pointLight position={[45, 20, -76]} intensity={200.8} distance={25} decay={2} color="#cfe6ff" />
+{/* Ring of small point lights around the bridge */}
+{Array.from({ length: 16 }).map((_, i) => {
+  const angle = (i / 16) * Math.PI * 2;
+  const radius = 60;
+
+  const x = Math.cos(angle) * radius;
+  const z = Math.sin(angle) * radius;
+
+  return (
+    <pointLight
+      key={i}
+      position={[x, 18, z]}
+      intensity={200}     // balanced brightness
+      distance={120}     // MUST be larger than radius or light won't reach center
+      decay={2}
+      color="#cfe6ff"    // subtle sci-fi blue tint
+      castShadow={false} // keep off for performance with many lights
+    />
+  );
+})}
+
+
+      {/* Load the bridge model */}
       <BridgeModel url={glbUrl} onBounds={setBounds} />
+
+      {/* Static camera setup */}
       <CameraSetup bounds={bounds} />
 
-      <Environment preset="city" />
+      {/* Overlay screens */}
       <ScreenOverlay />
-      {/* OrbitControls removed for static camera */}
     </Canvas>
   );
 }

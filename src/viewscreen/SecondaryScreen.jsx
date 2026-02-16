@@ -10,7 +10,7 @@ const leftContent = {
 };
 
 const rightContent = {
-  hero: { type: 'image', value: '/assets/secondary/hero-right.png' },
+  hero: { type: 'image', value: '/assets/secondary/ship1.png' },
   about: { type: 'image', value: '/assets/secondary/about-right.png' },
   projects: { type: 'text', value: 'Right: Project status' },
   contact: { type: 'image', value: '/assets/secondary/contact-right.png' }
