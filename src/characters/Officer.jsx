@@ -68,7 +68,7 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
   });
 
   return (
-    <group ref={groupRef} position={chairPosition} onClick={handleClick}>
+    <group ref={groupRef} position={chairPosition} onClick={handleClick} scale={[8, 8, 8]}>
       <OfficerModel uniformColor={uniformColor} />
     </group>
   );
