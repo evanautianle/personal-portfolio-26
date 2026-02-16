@@ -83,32 +83,32 @@ function ScreenOverlay() {
   return (
     <>
       {/* Main viewscreen */}
-      <Html position={[0, 20, -76]} transform occlude zIndexRange={[0, 0]}>
-        <div style={{ width: "1800px", height: "700px", background: "#000" }}>
+      <Html position={[0, 27, -76]} transform occlude zIndexRange={[0, 0]}>
+        <div style={{ width: "2200px", height: "1200px", background: "#000" }}>
           <Viewscreen />
         </div>
       </Html>
 
       {/* Left secondary viewscreen */}
       <Html
-        position={[-50, 20, -76]}
-        rotation={[0, Math.PI / 8, 0]}
+        position={[-45, 19.5, -76]}
+        rotation={[0, Math.PI / 5, 0]} // tilt inwards more
         transform
         zIndexRange={[0, 0]}
       >
-        <div style={{ width: "900px", height: "500px", background: "#181a22", border: '4px solid #e87d2f', borderRadius: 24, opacity: 0.95, overflow: 'hidden', boxShadow: '0 0 32px #e87d2faa' }}>
+        <div style={{ width: "1050px", height: "900px", background: "#181a22", borderRadius: 24, opacity: 0.95, overflow: 'hidden', boxShadow: '0 0 32px #e87d2faa' }}>
           <Viewscreen />
         </div>
       </Html>
 
       {/* Right secondary viewscreen */}
       <Html
-        position={[50, 20, -76]}
-        rotation={[0, -Math.PI / 8, 0]}
+        position={[44.5, 20.5, -76]}
+        rotation={[0, -Math.PI / 5, 0]} // tilt inwards more
         transform
         zIndexRange={[0, 0]}
       >
-        <div style={{ width: "900px", height: "500px", background: "#181a22", border: '4px solid #e87d2f', borderRadius: 24, opacity: 0.95, overflow: 'hidden', boxShadow: '0 0 32px #e87d2faa' }}>
+        <div style={{ width: "1050px", height: "900px", background: "#181a22", borderRadius: 24, opacity: 0.95, overflow: 'hidden', boxShadow: '0 0 32px #e87d2faa' }}>
           <Viewscreen />
         </div>
       </Html>
