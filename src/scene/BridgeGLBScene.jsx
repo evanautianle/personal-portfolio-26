@@ -3,6 +3,7 @@ import { Canvas, useThree } from "@react-three/fiber";
 import { Environment, useGLTF, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { Viewscreen } from "../viewscreen/Viewscreen";
+import { SecondaryScreen } from "../viewscreen/SecondaryScreen";
 
 /* ========================================
    Bridge Model
@@ -96,8 +97,8 @@ function ScreenOverlay() {
         transform
         zIndexRange={[0, 0]}
       >
-        <div style={{ width: "1050px", height: "900px", background: "#181a22", borderRadius: 24, opacity: 0.95, overflow: 'hidden', boxShadow: '0 0 32px #e87d2faa' }}>
-          <Viewscreen />
+        <div style={{ width: "1050px", height: "900px", background: "#181a22", borderRadius: 24, opacity: 0.95, overflow: 'hidden' }}>
+          <SecondaryScreen side="left" />
         </div>
       </Html>
 
@@ -108,8 +109,8 @@ function ScreenOverlay() {
         transform
         zIndexRange={[0, 0]}
       >
-        <div style={{ width: "1050px", height: "900px", background: "#181a22", borderRadius: 24, opacity: 0.95, overflow: 'hidden', boxShadow: '0 0 32px #e87d2faa' }}>
-          <Viewscreen />
+        <div style={{ width: "1050px", height: "900px", background: "#181a22", borderRadius: 24, opacity: 0.95, overflow: 'hidden' }}>
+          <SecondaryScreen side="right" />
         </div>
       </Html>
     </>

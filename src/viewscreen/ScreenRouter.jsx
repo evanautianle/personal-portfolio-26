@@ -33,13 +33,13 @@ export function ScreenRouter() {
 
   const titleStyle = {
     textAlign: 'center',
-    fontSize: 72,
+    fontSize: 120, // sized up
     fontWeight: 900,
     color: '#e87d2f',
-    marginBottom: 48,
-    letterSpacing: 4,
+    marginBottom: 64,
+    letterSpacing: 6,
     textTransform: 'uppercase',
-    textShadow: '0 4px 32px #000a, 0 1px 0 #fff2',
+    textShadow: '0 6px 48px #000a, 0 2px 0 #fff2',
     lineHeight: 1.1,
     userSelect: 'none',
   };
@@ -60,7 +60,6 @@ export function ScreenRouter() {
         pointerEvents: 'auto', // allow clicks
       }}
     >
-      <div style={titleStyle}>{label}</div>
       <SectionComponent />
     </div>
   );
