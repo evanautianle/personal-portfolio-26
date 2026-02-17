@@ -109,7 +109,7 @@ export function App() {
             textTransform: 'uppercase',
             textAlign: 'center',
           }}>
-            Warp Controls
+            Action Panel
           </div>
           <button
             style={{
