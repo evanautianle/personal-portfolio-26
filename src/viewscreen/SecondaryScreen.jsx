@@ -3,14 +3,14 @@ import { navigationAtom } from '../state/navigationAtom';
 
 // Content for left and right screens per route
 const leftContent = {
-  hero: { type: 'image', value: '/assets/secondary/panel1.png' },
+  home: { type: 'image', value: '/assets/secondary/panel1.png' },
   about: { type: 'image', value: '/assets/secondary/panel2.png' },
   projects: { type: 'text', value: 'Left: Project status' },
   contact: { type: 'image', value: '/assets/secondary/contact-left.png' }
 };
 
 const rightContent = {
-  hero: { type: 'image', value: '/assets/secondary/ship1.png' },
+  home: { type: 'image', value: '/assets/secondary/ship1.png' },
   about: { type: 'image', value: '/assets/secondary/about-right.png' },
   projects: { type: 'text', value: 'Right: Project status' },
   contact: { type: 'image', value: '/assets/secondary/contact-right.png' }

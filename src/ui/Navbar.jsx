@@ -2,7 +2,7 @@ import { useSetAtom, useAtomValue } from 'jotai';
 import { navigationAtom } from '../state/navigationAtom';
 
 const navItems = [
-  { label: 'Hero', route: 'hero' },
+  { label: 'Home', route: 'home' },
   { label: 'About', route: 'about' },
   { label: 'Projects', route: 'projects' },
   { label: 'Contact', route: 'contact' },

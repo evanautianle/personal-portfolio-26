@@ -1,48 +1,45 @@
 import { useAtomValue } from 'jotai';
+import { useEffect, useRef, useState } from 'react';
 import { navigationAtom } from '../state/navigationAtom';
-import { Hero } from './sections/Hero';
+import { Home } from './sections/Home';
 import { About } from './sections/About';
 import { Projects } from './sections/Projects';
 import { Contact } from './sections/Contact';
+import { WarpTransition } from './WarpTransition';
+
 
 export function ScreenRouter() {
   const route = useAtomValue(navigationAtom);
+  const [showWarp, setShowWarp] = useState(false);
+  const [pendingRoute, setPendingRoute] = useState(route);
+
+  // Track route changes
+  useEffect(() => {
+    if (route !== pendingRoute) {
+      setShowWarp(true);
+      setTimeout(() => {
+        setShowWarp(false);
+        setPendingRoute(route);
+      }, 1200); // match WarpTransition duration
+    }
+  }, [route, pendingRoute]);
 
   let SectionComponent;
-  let label;
-
-  switch (route) {
+  switch (pendingRoute) {
     case 'about':
       SectionComponent = About;
-      label = 'About';
       break;
     case 'projects':
       SectionComponent = Projects;
-      label = 'Projects';
       break;
     case 'contact':
       SectionComponent = Contact;
-      label = 'Contact';
       break;
-    case 'hero':
+    case 'home':
     default:
-      SectionComponent = Hero;
-      label = 'Hero';
+      SectionComponent = Home;
       break;
   }
-
-  const titleStyle = {
-    textAlign: 'center',
-    fontSize: 120, // sized up
-    fontWeight: 900,
-    color: '#e87d2f',
-    marginBottom: 64,
-    letterSpacing: 6,
-    textTransform: 'uppercase',
-    textShadow: '0 6px 48px #000a, 0 2px 0 #fff2',
-    lineHeight: 1.1,
-    userSelect: 'none',
-  };
 
   return (
     <div
@@ -52,15 +49,16 @@ export function ScreenRouter() {
         left: 0,
         width: '100%',
         height: '100%',
-        zIndex: 10, // ensure it's above the canvas
+        zIndex: 10,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        pointerEvents: 'auto', // allow clicks
+        pointerEvents: 'auto',
       }}
     >
-      <SectionComponent />
+      {showWarp && <WarpTransition />}
+      {!showWarp && <SectionComponent />}
     </div>
   );
 }

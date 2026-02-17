@@ -1,5 +1,6 @@
 import { CruiseStarfield } from '../CruiseStarfield';
-export function Projects() {
+
+export function Home() {
   return (
     <div style={{
       width: '100%',
@@ -15,18 +16,16 @@ export function Projects() {
       <div style={{
         position: 'relative',
         zIndex: 2,
-        width: '100%',
-        height: '100%',
-        padding: 24,
-        overflow: 'auto',
+        color: '#fff',
+        fontSize: 96,
+        fontWeight: 900,
+        textShadow: '0 0 64px #00f8, 0 4px 0 #000a',
+        letterSpacing: 4,
+        textAlign: 'center',
+        padding: 48,
+        background: 'rgba(0,0,0,0.18)',
+        borderRadius: 32,
       }}>
-        <h2 style={{ fontSize: 22, marginBottom: 12, color: '#fff' }}>
-          Projects
-        </h2>
-        <p style={{ fontSize: 14, lineHeight: 1.5, opacity: 0.9 }}>
-          Your projects will appear here. List your work with links and
-          descriptions.
-        </p>
       </div>
     </div>
   );

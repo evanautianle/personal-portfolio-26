@@ -40,7 +40,7 @@ export function App() {
           }}>
             Plot a Course
           </div>
-          {['hero', 'about', 'projects', 'contact'].map((route) => (
+            {['home', 'about', 'projects', 'contact'].map((route) => (
             <button
               key={route}
               style={{
@@ -60,7 +60,7 @@ export function App() {
               }}
               onClick={() => setPendingTab(route)}
             >
-              {route.charAt(0).toUpperCase() + route.slice(1)}
+                {route === 'home' ? 'Home' : route.charAt(0).toUpperCase() + route.slice(1)}
             </button>
           ))}
         </div>
@@ -68,27 +68,28 @@ export function App() {
       <ControlPanel position="right">
         <button
           style={{
-            background: '#fff',
+            background: pendingTab !== currentTab ? '#fff' : '#eee',
             border: '2px solid #fff',
-            color: '#111',
+            color: pendingTab !== currentTab ? '#111' : '#aaa',
             fontWeight: 600,
             fontSize: 16,
             padding: '12px 28px',
-            cursor: 'pointer',
+            cursor: pendingTab !== currentTab ? 'pointer' : 'not-allowed',
             borderRadius: 24,
             transition: 'all 0.2s',
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
             outline: 'none',
             margin: 8,
           }}
+          disabled={pendingTab === currentTab}
           onClick={() => {
-            setSpeed(speed === 'warp' ? 'cruise' : 'warp');
-            if (speed !== 'warp' && currentTab !== pendingTab) {
-              setNavigation(pendingTab);
+            if (pendingTab !== currentTab) {
+              setSpeed('warp');
+              setNavigation(pendingTab === 'home' ? 'home' : pendingTab);
             }
           }}
         >
-          {speed === 'warp' ? 'Cruise Mode' : 'Engage Warp!'}
+          Engage Warp!
         </button>
         <button
           style={{

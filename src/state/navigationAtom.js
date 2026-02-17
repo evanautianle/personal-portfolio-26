@@ -1,3 +1,3 @@
 import { atom } from 'jotai'
 
-export const navigationAtom = atom('hero')
+export const navigationAtom = atom('home')

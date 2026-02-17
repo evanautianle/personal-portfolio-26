@@ -6,7 +6,7 @@ export function CaptainPanel({ side }) {
   const startZ = -0.12
 
   const buttons = [
-    { label: 'Hero', route: 'hero' },
+     { label: 'Home', route: 'home' },
     { label: 'About', route: 'about' },
     { label: 'Projects', route: 'projects' },
     { label: 'Contact', route: 'contact' },
