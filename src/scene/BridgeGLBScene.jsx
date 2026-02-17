@@ -17,8 +17,6 @@ function BridgeModel({ url, onBounds }) {
     if (!scene || !ref.current) return;
     const model = ref.current;
 
-    model.scale.set(10, 10, 10);
-
     model.traverse((child) => {
       if (child.isMesh) {
         if (!(child.material instanceof THREE.MeshStandardMaterial)) {
@@ -68,10 +66,10 @@ function CameraSetup({ bounds }) {
     const center = new THREE.Vector3();
     bounds.getCenter(center);
 
-    camera.position.set(center.x, center.y + 11, center.z + 130);
+    camera.position.set(center.x, center.y + 1.1, center.z + 13);
 
     const lookAtTarget = center.clone();
-    lookAtTarget.y -= 20;
+    lookAtTarget.y -= 2;
     camera.lookAt(lookAtTarget);
 
     camera.near = 0.01;
@@ -86,17 +84,24 @@ function CameraSetup({ bounds }) {
    Screen Overlay
 ======================================== */
 function ScreenOverlay() {
+  const SCREEN_SCALE = 0.1;
   return (
     <>
       {/* Main viewscreen - made much larger for visibility */}
-      <Html position={[1.5, 31, -80]} transform zIndexRange={[0, 0]}>
+      <Html position={[0.15, 3.1, -8]} transform zIndexRange={[0, 0]} scale={SCREEN_SCALE}>
         <div style={{ width: "2550px", height: "1440px", background: "#000" }}>
           <Viewscreen />
         </div>
       </Html>
 
       {/* Left side screen (static image) */}
-      <Html position={[-90, 7, -76]} rotation={[0, Math.PI / 2.3, 0]} transform zIndexRange={[0, 0]}>
+      <Html
+        position={[-9, 0.7, -7.6]}
+        rotation={[0, Math.PI / 2.3, 0]}
+        transform
+        zIndexRange={[0, 0]}
+        scale={SCREEN_SCALE}
+      >
         <div
           style={{
             width: "2100px",
@@ -115,7 +120,13 @@ function ScreenOverlay() {
       </Html>
 
       {/* Left secondary viewscreen */}
-      <Html position={[-50.5, 23.5, -76]} rotation={[0, Math.PI / 5, 0]} transform zIndexRange={[0, 0]}>
+      <Html
+        position={[-5.05, 2.35, -7.6]}
+        rotation={[0, Math.PI / 5, 0]}
+        transform
+        zIndexRange={[0, 0]}
+        scale={SCREEN_SCALE}
+      >
         <div
           style={{
             width: "1100px",
@@ -131,7 +142,13 @@ function ScreenOverlay() {
       </Html>
 
       {/* Right secondary viewscreen */}
-      <Html position={[53.5, 22.5, -76]} rotation={[0, -Math.PI / 5, 0]} transform zIndexRange={[0, 0]}>
+      <Html
+        position={[5.35, 2.25, -7.6]}
+        rotation={[0, -Math.PI / 5, 0]}
+        transform
+        zIndexRange={[0, 0]}
+        scale={SCREEN_SCALE}
+      >
         <div
           style={{
             width: "1100px",
@@ -147,7 +164,13 @@ function ScreenOverlay() {
       </Html>
 
       {/* Right side screen (static image) */}
-      <Html position={[91.5, 8, -76]} rotation={[0, -Math.PI / 2.3, 0]} transform zIndexRange={[0, 0]}>
+      <Html
+        position={[9.15, 0.8, -7.6]}
+        rotation={[0, -Math.PI / 2.3, 0]}
+        transform
+        zIndexRange={[0, 0]}
+        scale={SCREEN_SCALE}
+      >
         <div
           style={{
             width: "2050px",
@@ -189,21 +212,21 @@ export default function BridgeGLBScene({ glbUrl, redAlert }) {
       <ambientLight intensity={0.03} color={redAlert ? alertColor : undefined} />
 
       {/* Ring-style lights around the bridge */}
-      <pointLight position={[0, 27, -76]} intensity={700.5} distance={70} decay={2} color={lightColor} />
-      <pointLight position={[-45, 20, -76]} intensity={200.8} distance={25} decay={2} color={lightColor} />
-      <pointLight position={[45, 20, -76]} intensity={200.8} distance={25} decay={2} color={lightColor} />
+      <pointLight position={[0, 2.7, -7.6]} intensity={7.005} distance={7} decay={2} color={lightColor} />
+      <pointLight position={[-4.5, 2, -7.6]} intensity={2.008} distance={2.5} decay={2} color={lightColor} />
+      <pointLight position={[4.5, 2, -7.6]} intensity={2.008} distance={2.5} decay={2} color={lightColor} />
       {/* Ring of small point lights around the bridge */}
       {Array.from({ length: 16 }).map((_, i) => {
         const angle = (i / 16) * Math.PI * 2;
-        const radius = 60;
+        const radius = 6;
         const x = Math.cos(angle) * radius;
         const z = Math.sin(angle) * radius;
         return (
           <pointLight
             key={i}
-            position={[x, 18, z]}
-            intensity={200}
-            distance={120}
+            position={[x, 1.8, z]}
+            intensity={2}
+            distance={12}
             decay={2}
             color={lightColor}
             castShadow={false}

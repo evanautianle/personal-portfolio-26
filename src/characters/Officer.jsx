@@ -7,7 +7,7 @@ import * as THREE from "three";
 import { NAVIGATION_BOUNDS } from "../scene/navigationBounds";
 import { COLLISION_ZONES } from "../scene/collisionZones";
 
-const SCALE = 8;
+const SCALE = 0.8;
 const STATES = {
   SITTING: "sitting",
   WALKING: "walking",
@@ -35,7 +35,7 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
       groupRef.current.position.set(
         chairPosition[0],
         chairPosition[1],
-        chairPosition[2] - 4
+        chairPosition[2] - 0.4
       );
     }
   }, [chairPosition]);
@@ -109,7 +109,7 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
           forward.applyQuaternion(groupRef.current.quaternion);
           forward.normalize();
           // Walk a random distance between 6 and 12 units (further)
-          const distance = Math.random() * 6 + 6;
+          const distance = Math.random() * 0.6 + 0.6;
           const target = new THREE.Vector3(
             pos.x + forward.x * distance,
             chairPosition[1],
@@ -176,7 +176,7 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
             groupRef.current.lookAt(lookAt);
           }
           // If close enough to chair, set to sitting
-          if (current.distanceTo(target) < 0.1) {
+          if (current.distanceTo(target) < 0.01) {
             setState(STATES.SITTING);
             timerRef.current = Math.random() * 0.5 + 0.2; // reset timer for next walk
             targetRef.current = null;

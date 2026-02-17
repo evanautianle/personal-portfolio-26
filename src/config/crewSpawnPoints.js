@@ -1,14 +1,14 @@
 export const crewSpawnPoints = {
   captain: {
-    position: [1, -1, 27],
+    position: [0.1, -0.1, 2.7],
     rotation: [0, Math.PI, 0],
   },
   helm: {
-    position: [-17, 0, -24],
+    position: [-1.7, 0, -2.4],
     rotation: [0, 0, 0],
   },
   ops: {
-    position: [17, 0, -24],
+    position: [1.7, 0, -2.4],
     rotation: [0, 0, 0],
   },
 };

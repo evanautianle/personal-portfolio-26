@@ -1,6 +1,6 @@
 export const NAVIGATION_BOUNDS = {
-  minX: -8,
-  maxX: 8,
-  minZ: -12,
-  maxZ: 2
+  minX: -0.8,
+  maxX: 0.8,
+  minZ: -1.2,
+  maxZ: 0.2
 };
