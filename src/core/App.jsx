@@ -1,31 +1,52 @@
 
+import React from 'react';
 import { CanvasRoot } from './CanvasRoot';
 import { Navbar } from '../ui/Navbar';
-
 import { ControlPanel } from '../ui/ControlPanel';
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { heroSpeedAtom } from '../state/heroSpeedAtom';
 import { navigationAtom } from '../state/navigationAtom';
 import { alertAtom } from '../state/alertAtom';
 
+
+import { useState } from 'react';
+
 export function App() {
   const [speed, setSpeed] = useAtom(heroSpeedAtom);
   const [currentTab, setNavigation] = useAtom(navigationAtom);
   const [alert, setAlert] = useAtom(alertAtom);
   const redAlert = alert.isRedAlert;
+  const [pendingTab, setPendingTab] = useState(currentTab);
+
+  // When currentTab changes externally, update pendingTab
+  React.useEffect(() => {
+    setPendingTab(currentTab);
+  }, [currentTab]);
+
   return (
     <>
       <Navbar />
       <CanvasRoot redAlert={redAlert} />
       <ControlPanel position="left">
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{
+            fontWeight: 700,
+            fontSize: 18,
+            marginBottom: 8,
+            letterSpacing: 1,
+            color: '#e87d2f',
+            textTransform: 'uppercase',
+            textAlign: 'center',
+          }}>
+            Plot a Course
+          </div>
           {['hero', 'about', 'projects', 'contact'].map((route) => (
             <button
               key={route}
               style={{
-                background: '#fff',
+                background: pendingTab === route ? '#e87d2f' : '#fff',
                 border: '2px solid #fff',
-                color: '#111',
+                color: pendingTab === route ? '#fff' : '#111',
                 fontWeight: 600,
                 fontSize: 16,
                 padding: '12px 28px',
@@ -35,9 +56,9 @@ export function App() {
                 fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                 outline: 'none',
                 margin: 0,
-                boxShadow: currentTab === route ? '0 0 12px #e87d2f' : 'none',
+                boxShadow: pendingTab === route ? '0 0 12px #e87d2f' : 'none',
               }}
-              onClick={() => setNavigation(route)}
+              onClick={() => setPendingTab(route)}
             >
               {route.charAt(0).toUpperCase() + route.slice(1)}
             </button>
@@ -62,7 +83,9 @@ export function App() {
           }}
           onClick={() => {
             setSpeed(speed === 'warp' ? 'cruise' : 'warp');
-            if (currentTab !== 'hero') setNavigation('hero');
+            if (speed !== 'warp' && currentTab !== pendingTab) {
+              setNavigation(pendingTab);
+            }
           }}
         >
           {speed === 'warp' ? 'Cruise Mode' : 'Engage Warp!'}
