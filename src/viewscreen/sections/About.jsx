@@ -1,31 +1,48 @@
 import { CruiseStarfield } from '../CruiseStarfield';
 export function About() {
   return (
-    <div style={{
-      width: '100%',
-      height: '100%',
-      position: 'relative',
-      overflow: 'hidden',
-      background: 'radial-gradient(ellipse at center, #181828 0%, #10101a 70%, #000 100%)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}>
-      <CruiseStarfield />
-      <div style={{
-        position: 'relative',
-        zIndex: 2,
+    <div
+      style={{
         width: '100%',
         height: '100%',
-        padding: 100,
-        overflow: 'auto',
-      }}>
-        <h2 style={{ fontSize: 200, marginBottom: 12, color: '#fff' }}>ABOUT ME</h2>
-        <p style={{ fontSize: 14, lineHeight: 1.5, opacity: 0.9 }}>
-          This is the about section. You can add your bio, skills, and background
-          here. The bridge view is from the captain's chair — use the control
-          panel to navigate.
-        </p>
+        position: 'relative',
+        overflow: 'hidden',
+        background: 'radial-gradient(ellipse at center, #181828 0%, #10101a 70%, #000 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <CruiseStarfield />
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 2,
+          color: '#fff',
+          textAlign: 'center',
+          background: 'rgba(0,0,0,0.22)',
+          borderRadius: 72,
+          padding: '128px 192px',
+          border: '10px solid #fff',
+          boxShadow: '0 16px 128px #000a',
+          fontFamily: 'inherit',
+          minWidth: 1280,
+          maxWidth: 1920,
+          margin: '0 auto',
+        }}
+      >
+        <span
+          style={{
+            fontSize: 104,
+            fontWeight: 800,
+            letterSpacing: 8,
+            textTransform: 'uppercase',
+            color: '#fff',
+            display: 'block',
+          }}
+        >
+          Sector 2345 - About
+        </span>
       </div>
     </div>
   );
