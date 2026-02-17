@@ -68,10 +68,10 @@ function CameraSetup({ bounds }) {
     const center = new THREE.Vector3();
     bounds.getCenter(center);
 
-    camera.position.set(center.x, center.y + 8, center.z + 130);
+    camera.position.set(center.x, center.y + 11, center.z + 130);
 
     const lookAtTarget = center.clone();
-    lookAtTarget.y -= 26;
+    lookAtTarget.y -= 20;
     camera.lookAt(lookAtTarget);
 
     camera.near = 0.01;
@@ -89,18 +89,18 @@ function ScreenOverlay() {
   return (
     <>
       {/* Main viewscreen - made much larger for visibility */}
-      <Html position={[0, 27.5, -76]} transform zIndexRange={[0, 0]}>
-        <div style={{ width: "2200px", height: "1240px", background: "#000" }}>
+      <Html position={[1.5, 31, -80]} transform zIndexRange={[0, 0]}>
+        <div style={{ width: "2550px", height: "1440px", background: "#000" }}>
           <Viewscreen />
         </div>
       </Html>
 
       {/* Left secondary viewscreen */}
-      <Html position={[-45, 19.5, -76]} rotation={[0, Math.PI / 5, 0]} transform zIndexRange={[0, 0]}>
+      <Html position={[-50.5, 23.5, -76]} rotation={[0, Math.PI / 5, 0]} transform zIndexRange={[0, 0]}>
         <div
           style={{
-            width: "1050px",
-            height: "900px",
+            width: "1100px",
+            height: "950px",
             background: "#111",
             borderRadius: 24,
             opacity: 0.95,
@@ -112,11 +112,11 @@ function ScreenOverlay() {
       </Html>
 
       {/* Right secondary viewscreen */}
-      <Html position={[44.5, 20.5, -76]} rotation={[0, -Math.PI / 5, 0]} transform zIndexRange={[0, 0]}>
+      <Html position={[53.5, 22.5, -76]} rotation={[0, -Math.PI / 5, 0]} transform zIndexRange={[0, 0]}>
         <div
           style={{
-            width: "1050px",
-            height: "900px",
+            width: "1100px",
+            height: "950px",
             background: "#111",
             borderRadius: 24,
             opacity: 0.95,
@@ -144,7 +144,7 @@ export default function BridgeGLBScene({ glbUrl, redAlert }) {
   return (
     <Canvas
       shadows
-      camera={{ fov: 35, near: 0.01, far: 1000000 }}
+      camera={{ fov: 38, near: 0.01, far: 1000000 }}
       style={{ width: "100vw", height: "100vh", background: "#101010" }}
     >
       {/* Soft ambient light */}
