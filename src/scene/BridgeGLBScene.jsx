@@ -101,7 +101,7 @@ function ScreenOverlay() {
           style={{
             width: "1100px",
             height: "950px",
-            background: "#111",
+            background: "linear-gradient(135deg, #4b2067 0%, #7c3aed 60%, #1a0826 100%)",
             borderRadius: 24,
             opacity: 0.95,
             overflow: "hidden",
@@ -117,7 +117,7 @@ function ScreenOverlay() {
           style={{
             width: "1100px",
             height: "950px",
-            background: "#111",
+            background: "linear-gradient(135deg, #4b2067 0%, #7c3aed 60%, #1a0826 100%)",
             borderRadius: 24,
             opacity: 0.95,
             overflow: "hidden",
