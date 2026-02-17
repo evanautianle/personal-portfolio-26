@@ -17,10 +17,10 @@ export function About() {
         zIndex: 2,
         width: '100%',
         height: '100%',
-        padding: 24,
+        padding: 100,
         overflow: 'auto',
       }}>
-        <h2 style={{ fontSize: 22, marginBottom: 12, color: '#fff' }}>About</h2>
+        <h2 style={{ fontSize: 200, marginBottom: 12, color: '#fff' }}>ABOUT ME</h2>
         <p style={{ fontSize: 14, lineHeight: 1.5, opacity: 0.9 }}>
           This is the about section. You can add your bio, skills, and background
           here. The bridge view is from the captain's chair — use the control

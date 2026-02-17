@@ -34,7 +34,7 @@ export function App() {
             fontSize: 18,
             marginBottom: 8,
             letterSpacing: 1,
-            color: '#e87d2f',
+            color: '#fff',
             textTransform: 'uppercase',
             textAlign: 'center',
           }}>
@@ -44,8 +44,8 @@ export function App() {
             <button
               key={route}
               style={{
-                background: pendingTab === route ? '#e87d2f' : '#fff',
-                border: '2px solid #fff',
+                background: pendingTab === route ? '#111' : '#fff',
+                border: '2px solid #111',
                 color: pendingTab === route ? '#fff' : '#111',
                 fontWeight: 600,
                 fontSize: 16,
@@ -56,7 +56,7 @@ export function App() {
                 fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                 outline: 'none',
                 margin: 0,
-                boxShadow: pendingTab === route ? '0 0 12px #e87d2f' : 'none',
+                boxShadow: pendingTab === route ? '0 0 12px #111' : 'none',
               }}
               onClick={() => setPendingTab(route)}
             >
