@@ -11,15 +11,15 @@ export function ControlPanel({ position = 'left', children }) {
         right: isLeft ? 'auto' : 38,
         background: '#1a1a1a',
         borderRadius: 40,
-        padding: '32px 68px',
+        padding: '20px 20px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         gap: 24,
         boxShadow: '0 12px 48px rgba(0, 0, 0, 0.35)',
         zIndex: 1000,
-        minWidth: 320,
-        minHeight: 150,
+        width: 350,
+        height: 220,
       }}
     >
       {children}

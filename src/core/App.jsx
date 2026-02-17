@@ -28,14 +28,15 @@ export function App() {
       <Navbar />
       <CanvasRoot redAlert={redAlert} />
       <ControlPanel position="left">
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, alignItems: 'stretch', height: '100%', width: '100%' }}>
           <div style={{
             fontWeight: 700,
-            fontSize: 18,
-            marginBottom: 8,
-            letterSpacing: 1,
-            color: '#e87d2f',
+            fontSize: 13,
+            marginBottom: 4,
+            letterSpacing: 0.5,
+            color: '#fff',
             textTransform: 'uppercase',
+            gridColumn: 'span 2',
             textAlign: 'center',
           }}>
             Plot a Course
@@ -44,19 +45,22 @@ export function App() {
             <button
               key={route}
               style={{
-                background: pendingTab === route ? '#e87d2f' : '#fff',
+                background: pendingTab === route ? '#222' : '#fff',
                 border: '2px solid #fff',
                 color: pendingTab === route ? '#fff' : '#111',
                 fontWeight: 600,
-                fontSize: 16,
-                padding: '12px 28px',
+                fontSize: 18,
+                padding: '0',
                 cursor: 'pointer',
-                borderRadius: 24,
+                borderRadius: 12,
                 transition: 'all 0.2s',
                 fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                 outline: 'none',
                 margin: 0,
-                boxShadow: pendingTab === route ? '0 0 12px #e87d2f' : 'none',
+                boxShadow: pendingTab === route ? '0 0 4px #fff' : 'none',
+                width: '100%',
+                height: '100%',
+                minHeight: 60,
               }}
               onClick={() => setPendingTab(route)}
             >
@@ -66,51 +70,70 @@ export function App() {
         </div>
       </ControlPanel>
       <ControlPanel position="right">
-        <button
-          style={{
-            background: pendingTab !== currentTab ? '#fff' : '#eee',
-            border: '2px solid #fff',
-            color: pendingTab !== currentTab ? '#111' : '#aaa',
-            fontWeight: 600,
-            fontSize: 16,
-            padding: '12px 28px',
-            cursor: pendingTab !== currentTab ? 'pointer' : 'not-allowed',
-            borderRadius: 24,
-            transition: 'all 0.2s',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-            outline: 'none',
-            margin: 8,
-          }}
-          disabled={pendingTab === currentTab}
-          onClick={() => {
-            if (pendingTab !== currentTab) {
-              setSpeed('warp');
-              setNavigation(pendingTab === 'home' ? 'home' : pendingTab);
-            }
-          }}
-        >
-          Engage Warp!
-        </button>
-        <button
-          style={{
-            background: redAlert ? '#c00' : '#fff',
-            border: '2px solid #c00',
-            color: redAlert ? '#fff' : '#c00',
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12, alignItems: 'stretch', height: '100%', width: '100%' }}>
+          <div style={{
             fontWeight: 700,
-            fontSize: 16,
-            padding: '12px 28px',
-            cursor: 'pointer',
-            borderRadius: 24,
-            transition: 'all 0.2s',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-            outline: 'none',
-            margin: 8,
-            marginTop: 0,
-          }}
-          onClick={() => setAlert({ ...alert, isRedAlert: !alert.isRedAlert })}
-        >
-          {redAlert ? 'Disable Red Alert' : 'Red Alert'}
-        </button>
+            fontSize: 13,
+            marginBottom: 4,
+            letterSpacing: 0.5,
+            color: '#fff',
+            textTransform: 'uppercase',
+            textAlign: 'center',
+          }}>
+            Warp Controls
+          </div>
+          <button
+            style={{
+              background: pendingTab !== currentTab ? '#222' : '#eee',
+              border: '2px solid #fff',
+              color: pendingTab !== currentTab ? '#111' : '#aaa',
+              fontWeight: 600,
+              fontSize: 18,
+              padding: '0',
+              cursor: pendingTab !== currentTab ? 'pointer' : 'not-allowed',
+              borderRadius: 12,
+              transition: 'all 0.2s',
+              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+              outline: 'none',
+              margin: 0,
+              boxShadow: pendingTab !== currentTab ? '0 0 4px #fff' : 'none',
+              width: '100%',
+              minHeight: 60,
+            }}
+            disabled={pendingTab === currentTab}
+            onClick={() => {
+              if (pendingTab !== currentTab) {
+                setSpeed('warp');
+                setNavigation(pendingTab === 'home' ? 'home' : pendingTab);
+              }
+            }}
+          >
+            Engage Warp!
+          </button>
+          <button
+            style={{
+              background: redAlert ? '#c00' : '#fff',
+              border: '2px solid #c00',
+              color: redAlert ? '#fff' : '#c00',
+              fontWeight: 700,
+              fontSize: 18,
+              padding: '0',
+              cursor: 'pointer',
+              borderRadius: 12,
+              transition: 'all 0.2s',
+              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+              outline: 'none',
+              margin: 0,
+              marginTop: 0,
+              boxShadow: redAlert ? '0 0 4px #c00' : 'none',
+              width: '100%',
+              minHeight: 60,
+            }}
+            onClick={() => setAlert({ ...alert, isRedAlert: !alert.isRedAlert })}
+          >
+            {redAlert ? 'Disable Red Alert' : 'Red Alert'}
+          </button>
+        </div>
       </ControlPanel>
     </>
   );
