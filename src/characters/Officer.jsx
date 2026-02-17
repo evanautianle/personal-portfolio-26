@@ -25,8 +25,20 @@ function isInsideCollisionZone(pos) {
 
 export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cccccc", walkBounds, rotation, seatOffsetY = 0.1, seatOffsetZ = 0 }) {
   const groupRef = useRef();
-  // Officers always spawn sitting
-  const [state, setState] = useState(STATES.SITTING);
+  // Officers start away from the chair so you see the return and sitting animation
+  const [state, setState] = useState(STATES.WALKING);
+
+  // On mount, place officer away from the chair
+  useEffect(() => {
+    if (groupRef.current) {
+      // Place 4 units behind the chair
+      groupRef.current.position.set(
+        chairPosition[0],
+        chairPosition[1],
+        chairPosition[2] - 4
+      );
+    }
+  }, [chairPosition]);
   const [clicked, setClicked] = useState(false);
   const { gl } = useThree();
   const alert = useAtomValue(alertAtom);
