@@ -95,6 +95,25 @@ function ScreenOverlay() {
         </div>
       </Html>
 
+      {/* Left side screen (static image) */}
+      <Html position={[-90, 7, -76]} rotation={[0, Math.PI / 2.3, 0]} transform zIndexRange={[0, 0]}>
+        <div
+          style={{
+            width: "2100px",
+            height: "450px",
+            background: "#111",
+            borderRadius: 24,
+            opacity: 0.92,
+            overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <img src="/assets/side/side-left.png" alt="side-left" style={{ maxWidth: "95%", maxHeight: "95%" }} />
+        </div>
+      </Html>
+
       {/* Left secondary viewscreen */}
       <Html position={[-50.5, 23.5, -76]} rotation={[0, Math.PI / 5, 0]} transform zIndexRange={[0, 0]}>
         <div
@@ -124,6 +143,25 @@ function ScreenOverlay() {
           }}
         >
           <SecondaryScreen side="right" />
+        </div>
+      </Html>
+
+      {/* Right side screen (static image) */}
+      <Html position={[91.5, 8, -76]} rotation={[0, -Math.PI / 2.3, 0]} transform zIndexRange={[0, 0]}>
+        <div
+          style={{
+            width: "2050px",
+            height: "450px",
+            background: "#111",
+            borderRadius: 24,
+            opacity: 0.92,
+            overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <img src="/assets/side/side-right.png" alt="side-right" style={{ maxWidth: "95%", maxHeight: "95%" }} />
         </div>
       </Html>
     </>
