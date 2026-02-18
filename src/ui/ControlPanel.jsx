@@ -10,15 +10,15 @@ export function ControlPanel({ position = 'left', children }) {
         left: isLeft ? 28 : 'auto',
         right: isLeft ? 'auto' : 28,
         background: '#111',
-        padding: 20,
+          padding: '32px 20px 20px 20px', // Add top padding to both panels
         display: 'flex',
         flexDirection: 'column',
         gap: 12,
         minHeight: 0,
         boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
         zIndex: 1000,
-        width: 260,
-        height: 280,
+        width: 350,
+        height: 250,
       }}
     >
       {children}
