@@ -17,7 +17,7 @@ export function useDialogueStack(captainImage, helmImage) {
         captainTimeout = 3200;
         helmTimeout = 3200;
       } else if (e.detail.type === "engage") {
-        captainText = "Engage.";
+        captainText = "Go to Warp Factor 5, Engage.";
         helmText = "Going to warp.";
         captainTimeout = 2600;
         helmTimeout = 2600;
