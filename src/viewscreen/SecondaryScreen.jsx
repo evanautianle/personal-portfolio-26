@@ -1,82 +1,175 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useAtomValue } from 'jotai';
+import React, { useEffect, useState } from 'react';
+import { useAtomValue, useAtom } from 'jotai';
 import { heroSpeedAtom } from '../state/heroSpeedAtom';
 import { navigationAtom } from '../state/navigationAtom';
-import { useAtom } from 'jotai';
 
 export function SecondaryScreen({ side }) {
+  if (side !== 'left') {
+    return <div style={{ width: '100%', height: '100%', background: '#050505' }} />;
+  }
+
   const speed = useAtomValue(heroSpeedAtom);
   const [currentTab] = useAtom(navigationAtom);
   const [pendingTab, setPendingTab] = useState(currentTab);
-  const [charging, setCharging] = useState(false);
   const [chargePercent, setChargePercent] = useState(0);
-  const chargingRef = useRef(false);
+  const [state, setState] = useState('standby'); // 'standby', 'charging', 'ready', 'draining'
 
-  // Listen for course plotting (pendingTab !== currentTab triggers charging)
+  // Listen for course plotting
   useEffect(() => {
-    // Listen for course plotting from App (pendingTab changes)
-    const handler = (route) => {
-      setPendingTab(route);
-    };
-    // Listen for tab change events (simulate App's pendingTab logic)
+    const handler = (route) => setPendingTab(route);
     window.addEventListener('pendingTabChange', (e) => handler(e.detail));
-    return () => {
-      window.removeEventListener('pendingTabChange', (e) => handler(e.detail));
-    };
+    return () => window.removeEventListener('pendingTabChange', (e) => handler(e.detail));
   }, []);
 
-  // Start charging when pendingTab !== currentTab
+  // Listen for engage command
   useEffect(() => {
-    if (pendingTab !== currentTab && !chargingRef.current) {
-      setCharging(true);
-      chargingRef.current = true;
-      setChargePercent(0);
-    }
-    // Reset when tab is switched (pendingTab === currentTab)
-    if (pendingTab === currentTab && chargingRef.current) {
-      setCharging(false);
-      setChargePercent(0);
-      chargingRef.current = false;
-    }
-  }, [pendingTab, currentTab]);
+    const handleEngage = (e) => {
+      if (e.detail?.type === 'engage' && state === 'ready') {
+        setState('draining');
+      }
+    };
+    window.addEventListener('captain-speech', handleEngage);
+    return () => window.removeEventListener('captain-speech', handleEngage);
+  }, [state]);
 
-  // Animate charging from 0 to 100%
+  // Handle state transitions
   useEffect(() => {
-    if (!charging) return;
-    if (chargePercent >= 100) return;
+    // Start charging if plotting a new course
+    if (pendingTab !== currentTab && state === 'standby') {
+      setChargePercent(0);
+      setState('charging');
+    }
+    // Cancel charging if back to current tab
+    if (pendingTab === currentTab && state === 'charging') {
+      setChargePercent(0);
+      setState('standby');
+    }
+  }, [pendingTab, currentTab, state]);
+
+  // Charging effect
+  useEffect(() => {
+    if (state !== 'charging') return;
+
     const interval = setInterval(() => {
-      setChargePercent((prev) => {
-        if (prev >= 100) {
+      setChargePercent(prev => {
+        const next = prev + 2;
+        if (next >= 100) {
           clearInterval(interval);
+          setState('ready');
           return 100;
         }
-        return prev + 2;
+        return next;
       });
     }, 30);
-    return () => clearInterval(interval);
-  }, [charging, chargePercent]);
 
-  // UI
-  let display;
-  if (charging) {
-    display = (
-      <div style={{ width: '100%', textAlign: 'center' }}>
-        <div style={{ fontSize: 38, marginBottom: 16 }}>Warp Coils Charging</div>
-        <div style={{ fontSize: 64, fontWeight: 700 }}>{chargePercent}%</div>
-        <div style={{ marginTop: 24, width: '80%', marginLeft: '10%', height: 18, background: '#222', borderRadius: 12, overflow: 'hidden', boxShadow: '0 0 8px #0ff8' }}>
-          <div style={{ width: `${chargePercent}%`, height: '100%', background: 'linear-gradient(90deg, #0ff, #0ff8, #fff 80%)', transition: 'width 0.1s' }} />
-        </div>
-      </div>
-    );
-  } else {
-    display = (
-      <div style={{ fontSize: 38, textAlign: 'center' }}>Standby</div>
-    );
-  }
+    return () => clearInterval(interval);
+  }, [state]);
+
+  // Draining effect
+  useEffect(() => {
+    if (state !== 'draining') return;
+
+    const interval = setInterval(() => {
+      setChargePercent(prev => {
+        const next = prev - 2;
+        if (next <= 0) {
+          clearInterval(interval);
+          setState('standby');
+          return 0;
+        }
+        return next;
+      });
+    }, 40);
+
+    return () => clearInterval(interval);
+  }, [state]);
+
+  // Warp core label
+  let label = '';
+  if (state === 'charging') label = 'Warp Core Charging';
+  else if (state === 'ready') label = 'WARP DRIVE READY';
+  else if (state === 'draining') label = 'Warp Core Draining';
+  else label = 'Warp Core Standby';
 
   return (
-    <div style={{ width: '100%', height: '100%', background: '#050505', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 48, textAlign: 'center', padding: 32 }}>
-      {display}
+    <div style={{
+      width: '100%',
+      height: '100%',
+      background: '#050505',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: '#fff',
+      fontSize: 48,
+      textAlign: 'center',
+      padding: 32,
+      filter: 'grayscale(1)',
+    }}>
+      <div style={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ fontSize: 64, marginBottom: 32, letterSpacing: 3, color: '#0ff', textShadow: '0 0 32px #0ff8, 0 0 8px #fff' }}>
+          {label}
+        </div>
+        <div style={{ fontSize: 120, fontWeight: 900, color: chargePercent === 100 ? '#fff' : '#0ff', textShadow: chargePercent === 100 ? '0 0 48px #fff, 0 0 16px #0ff' : '0 0 32px #0ff8' }}>
+          {chargePercent}%
+        </div>
+        <div style={{
+          marginTop: 48,
+          width: '90%',
+          minWidth: 320,
+          maxWidth: 900,
+          height: 260,
+          background: 'radial-gradient(ellipse at center, #0ff 0%, #0ff8 60%, #222 100%)',
+          borderRadius: 130,
+          boxShadow: '0 0 128px 32px #0ff8, 0 0 0 16px #222 inset',
+          position: 'relative',
+          overflow: 'hidden',
+          border: '8px solid #0ff',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <div style={{
+            width: `${chargePercent}%`,
+            height: '100%',
+            background: 'repeating-linear-gradient(90deg, #0ff 0 40px, #fff 40px 80px, #0ff8 80px 120px)',
+            boxShadow: '0 0 64px 16px #0ff8',
+            borderRadius: 130,
+            transition: 'width 0.2s cubic-bezier(.4,2,.6,1)',
+            border: '4px solid #fff8',
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            zIndex: 2,
+            opacity: 0.97,
+          }} />
+          <div style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            width: '100%',
+            height: '100%',
+            background: 'radial-gradient(ellipse at center, #0ff8 0%, #0ff2 60%, transparent 100%)',
+            zIndex: 1,
+            pointerEvents: 'none',
+          }} />
+          <div style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            width: '100%',
+            height: '100%',
+            zIndex: 3,
+            pointerEvents: 'none',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          }}>
+            {[...Array(10)].map((_, i) => (
+              <div key={i} style={{ width: '100%', height: 10, background: 'rgba(255,255,255,0.13)', borderRadius: 5 }} />
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
