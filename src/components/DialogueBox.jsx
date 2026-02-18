@@ -3,9 +3,9 @@ import React from 'react';
 export function DialogueBox({ text, speaker, imageUrl }) {
   return (
     <div style={{
-      background: '#222',
+      background: '#000',
+      opacity: 0.65,
       color: '#fff',
-      borderRadius: 8,
       padding: '16px 20px',
       boxShadow: '0 2px 12px #0008',
       display: 'flex',
