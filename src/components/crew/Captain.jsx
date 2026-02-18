@@ -10,7 +10,7 @@ export default function Captain() {
   return (
     <group position={spawn.position} rotation={spawn.rotation} scale={[0.8, 0.8, 0.8]}>
       <group position={[0, seatOffsetY, seatOffsetZ]}>
-        <OfficerModel uniformColor="#ccaa33" sitting={true} />
+        <OfficerModel uniformColor="#cc3344" sitting={true} />
       </group>
     </group>
   );

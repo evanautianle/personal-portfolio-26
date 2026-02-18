@@ -14,7 +14,7 @@ export default function OpsOfficer() {
   const seatOffsetZ = -0.008;
   return (
     <Officer
-      uniformColor="#ccaa33"
+      uniformColor="#cc3344"
       chairPosition={crewSpawnPoints.ops.position}
       rotation={crewSpawnPoints.ops.rotation}
       seatOffsetY={seatOffsetY}
