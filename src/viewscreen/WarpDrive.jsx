@@ -3,11 +3,7 @@ import { useAtomValue, useAtom } from 'jotai';
 import { heroSpeedAtom } from '../state/heroSpeedAtom';
 import { navigationAtom } from '../state/navigationAtom';
 
-export function SecondaryScreen({ side }) {
-  if (side !== 'left') {
-    return <div style={{ width: '100%', height: '100%', background: '#050505' }} />;
-  }
-
+export function WarpDrive() {
   const speed = useAtomValue(heroSpeedAtom);
   const [currentTab] = useAtom(navigationAtom);
   const [pendingTab, setPendingTab] = useState(currentTab);

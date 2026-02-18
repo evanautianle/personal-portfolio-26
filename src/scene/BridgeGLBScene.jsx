@@ -3,7 +3,8 @@ import { Canvas, useThree } from "@react-three/fiber";
 import { Environment, useGLTF, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { Viewscreen } from "../viewscreen/Viewscreen";
-import { SecondaryScreen } from "../viewscreen/SecondaryScreen";
+import { WarpDrive } from "../viewscreen/WarpDrive";
+import { Map } from "../viewscreen/Map";
 import CrewManager from "../components/crew/CrewManager";
 
 
@@ -157,7 +158,7 @@ function ScreenOverlay() {
             overflow: "hidden",
           }}
         >
-          <SecondaryScreen side="left" />
+          <WarpDrive />
         </div>
       </Html>
 
@@ -178,7 +179,7 @@ function ScreenOverlay() {
             overflow: "hidden",
           }}
         >
-          <SecondaryScreen side="right" />
+          <Map />
         </div>
       </Html>
 
