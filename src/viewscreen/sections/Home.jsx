@@ -41,6 +41,7 @@ export function Home() {
             color: '#fff',
             display: 'block',
           }}
+          
         >
           Sector 674 - Home
         </span>
