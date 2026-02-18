@@ -8,6 +8,7 @@ import { Map } from "../viewscreen/Map";
 import CrewManager from "../components/crew/CrewManager";
 
 
+
 /* ========================================
    Bridge Model
 ======================================== */
@@ -303,6 +304,10 @@ export default function BridgeGLBScene({ glbUrl, redAlert }) {
           />
         );
       })}
+
+
+      {/* Navigation bounds visualization (hidden by default) */}
+      {/* <NavigationBoundsBox color="#00ff88" opacity={0.25} /> */}
 
       {/* Load the bridge model */}
       <BridgeModel url={glbUrl} onBounds={setBounds} />
