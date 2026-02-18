@@ -71,6 +71,7 @@ function DialogueBox({ text, speaker = "CAPTAIN", imageUrl, style }) {
 }
 
 import React from 'react';
+import { useDialogueStack } from './useDialogueStack';
 import { CanvasRoot } from './CanvasRoot';
 import { Navbar } from '../ui/Navbar';
 import { ControlPanel } from '../ui/ControlPanel';
@@ -91,51 +92,10 @@ export function App() {
   const [alert, setAlert] = useAtom(alertAtom);
   const redAlert = alert.isRedAlert;
   const [pendingTab, setPendingTab] = useState(currentTab);
-  // Dialogue stack: array of {id, text, speaker, imageUrl}
-  const [dialogueStack, setDialogueStack] = React.useState([]);
   // Optionally, you could set a real image URL here
   const captainImage = undefined; // e.g. '/assets/crew/captain.png'
   const helmImage = undefined; // e.g. '/assets/crew/helm.png'
-
-  // Listen for captain-speech events and stack dialogues (captain and helmsman)
-  React.useEffect(() => {
-    function handleSpeechEvent(e) {
-      if (!e.detail || !e.detail.type) return;
-      let captainText = "";
-      let helmText = "";
-      let captainTimeout = 2500;
-      let helmTimeout = 2500;
-      if (e.detail.type === "plot-course") {
-        captainText = "Helm, lay in a course for sector " + (e.detail.sector || "2813") + ".";
-        helmText = "Aye Captain, course plotted.";
-        captainTimeout = 3200;
-        helmTimeout = 3200;
-      } else if (e.detail.type === "engage") {
-        captainText = "Engage.";
-        helmText = "Going to warp.";
-        captainTimeout = 2600;
-        helmTimeout = 2600;
-      }
-      if (captainText) {
-        const id = Date.now() + Math.random();
-        setDialogueStack(prev => [...prev, { id, text: captainText, speaker: "CAPTAIN", imageUrl: captainImage }]);
-        setTimeout(() => {
-          setDialogueStack(prev => prev.filter(d => d.id !== id));
-        }, captainTimeout);
-      }
-      if (helmText) {
-        const id = Date.now() + Math.random();
-        setTimeout(() => {
-          setDialogueStack(prev => [...prev, { id, text: helmText, speaker: "HELMSMAN", imageUrl: helmImage }]);
-          setTimeout(() => {
-            setDialogueStack(prev => prev.filter(d => d.id !== id));
-          }, helmTimeout);
-        }, 600); // Helmsman responds with more delay
-      }
-    }
-    window.addEventListener("captain-speech", handleSpeechEvent);
-    return () => window.removeEventListener("captain-speech", handleSpeechEvent);
-  }, []);
+  const [dialogueStack, setDialogueStack] = useDialogueStack(captainImage, helmImage);
 
   // When currentTab changes externally, update pendingTab
   React.useEffect(() => {
