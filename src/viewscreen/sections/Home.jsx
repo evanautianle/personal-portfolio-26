@@ -17,31 +17,36 @@ export function Home() {
       <CruiseStarfield />
       <div
         style={{
-          position: 'relative',
+          position: 'absolute',
+          left: 64,
+          top: 64,
           zIndex: 2,
           color: '#fff',
-          textAlign: 'center',
+          textAlign: 'left',
           background: 'rgba(0,0,0,0.22)',
-          borderRadius: 72,
-          padding: '128px 192px',
-          border: '10px solid #fff',
-          boxShadow: '0 16px 128px #000a',
+          borderRadius: 40,
+          padding: '48px 72px',
+          border: '4px solid #fff',
+          boxShadow: '0 12px 64px #000a',
           fontFamily: 'inherit',
-          minWidth: 1280,
-          maxWidth: 1920,
-          margin: '0 auto',
+          minWidth: 'unset',
+          maxWidth: 'none',
+          width: 'calc(100% - 128px)',
         }}
       >
         <span
           style={{
-            fontSize: 104,
+            fontSize: 80,
             fontWeight: 800,
-            letterSpacing: 8,
+            letterSpacing: 6,
             textTransform: 'uppercase',
             color: '#fff',
             display: 'block',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            lineHeight: 1.1,
           }}
-
         >
           Sector 2814 - Home
         </span>
