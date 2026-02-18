@@ -94,7 +94,7 @@ function ScreenOverlay() {
         </div>
       </Html>
 
-      {/* Left side screen (static image) */}
+      {/* Left side screen - GitHub logo and link */}
       <Html
         position={[-9, 0.7, -7.6]}
         rotation={[0, Math.PI / 2.3, 0]}
@@ -102,7 +102,10 @@ function ScreenOverlay() {
         zIndexRange={[0, 0]}
         scale={SCREEN_SCALE}
       >
-        <div
+        <a
+          href="https://github.com/evanautianle"
+          target="_blank"
+          rel="noopener noreferrer"
           style={{
             width: "2100px",
             height: "450px",
@@ -113,10 +116,27 @@ function ScreenOverlay() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            textDecoration: "none",
           }}
         >
-          <img src="/assets/side/side-left.png" alt="side-left" style={{ maxWidth: "95%", maxHeight: "95%" }} />
-        </div>
+          <img
+            src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+            alt="GitHub Logo"
+            style={{ width: 220, height: 220, marginRight: 32 }}
+          />
+          <span
+            style={{
+              color: '#fff',
+              fontSize: 100,
+              fontWeight: 700,
+              letterSpacing: 2,
+              textShadow: '0 2px 8px #000a',
+              fontFamily: 'inherit',
+            }}
+          >
+            GITHUB ACCESS TERMINAL
+          </span>
+        </a>
       </Html>
 
       {/* Left secondary viewscreen */}
@@ -131,7 +151,6 @@ function ScreenOverlay() {
           style={{
             width: "1100px",
             height: "950px",
-            background: "linear-gradient(135deg, #4b2067 0%, #7c3aed 60%, #1a0826 100%)",
             borderRadius: 24,
             opacity: 0.95,
             overflow: "hidden",
@@ -153,7 +172,6 @@ function ScreenOverlay() {
           style={{
             width: "1100px",
             height: "950px",
-            background: "linear-gradient(135deg, #4b2067 0%, #7c3aed 60%, #1a0826 100%)",
             borderRadius: 24,
             opacity: 0.95,
             overflow: "hidden",
@@ -163,7 +181,7 @@ function ScreenOverlay() {
         </div>
       </Html>
 
-      {/* Right side screen (static image) */}
+      {/* Right side screen - LinkedIn logo and link, styled like left */}
       <Html
         position={[9.15, 0.8, -7.6]}
         rotation={[0, -Math.PI / 2.3, 0]}
@@ -171,9 +189,12 @@ function ScreenOverlay() {
         zIndexRange={[0, 0]}
         scale={SCREEN_SCALE}
       >
-        <div
+        <a
+          href="https://www.linkedin.com/in/evanautianle"
+          target="_blank"
+          rel="noopener noreferrer"
           style={{
-            width: "2050px",
+            width: "2100px",
             height: "450px",
             background: "#111",
             borderRadius: 24,
@@ -182,10 +203,35 @@ function ScreenOverlay() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            textDecoration: "none",
           }}
         >
-          <img src="/assets/side/side-right.png" alt="side-right" style={{ maxWidth: "95%", maxHeight: "95%" }} />
-        </div>
+          <svg
+            width="220"
+            height="220"
+            viewBox="0 0 448 448"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ marginRight: 32 }}
+          >
+            <path d="M100.28 448H7.4V148.9h92.88zm-46.44-338.7c-29.5 0-53.36-24-53.36-53.5C.48 26.1 24.34 2 53.84 2c29.5 0 53.36 24.1 53.36 53.8 0 29.5-23.86 53.5-53.36 53.5zm394.34 338.7h-92.68V302.4c0-34.7-12.4-58.4-43.4-58.4-23.7 0-37.8 16-44 31.4-2.3 5.6-2.8 13.4-2.8 21.3v151.3h-92.68s1.2-245.7 0-270.1h92.68v38.3c-.2.3-.5.7-.7 1h.7v-1c12.3-19 34.3-46.1 83.5-46.1 60.9 0 106.7 39.8 106.7 125.4V448z"
+              fill="white"
+              fillOpacity="0.92"
+            />
+          </svg>
+          <span
+            style={{
+              color: '#fff',
+              fontSize: 100,
+              fontWeight: 700,
+              letterSpacing: 2,
+              textShadow: '0 2px 8px #000a',
+              fontFamily: 'inherit',
+            }}
+          >
+            LINKEDIN ACCESS TERMINAL
+          </span>
+        </a>
       </Html>
     </>
   );
