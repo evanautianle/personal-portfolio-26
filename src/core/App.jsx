@@ -3,7 +3,6 @@ import React from 'react';
 import { CanvasRoot } from './CanvasRoot';
 import { Navbar } from '../ui/Navbar';
 import { ControlPanel } from '../ui/ControlPanel';
-import { FunControlPanel } from '../ui/FunControlPanel';
 import { Viewscreen } from '../viewscreen/Viewscreen';
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { heroSpeedAtom } from '../state/heroSpeedAtom';
@@ -30,104 +29,77 @@ export function App() {
     <>
       <Navbar />
       <CanvasRoot redAlert={redAlert} />
-      <FunControlPanel>
-        {/* Fun button and panel title removed */}
-          <button
-            style={{
-              background: redAlert ? '#c00' : '#fff',
-              border: '2px solid #c00',
-              color: redAlert ? '#fff' : '#c00',
-              fontWeight: 700,
-              fontSize: 18,
-              padding: '0',
-              cursor: 'pointer',
-              borderRadius: 12,
-              transition: 'all 0.2s',
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-              outline: 'none',
-              margin: 0,
-              marginTop: 0,
-              boxShadow: redAlert ? '0 0 4px #c00' : 'none',
-              width: '100%',
-              minHeight: 40,
-            }}
-            onClick={() => setAlert({ ...alert, isRedAlert: !alert.isRedAlert })}
-          >
-            {redAlert ? 'Disable Red Alert' : 'Red Alert'}
-          </button>
-      </FunControlPanel>
       <ControlPanel position="left">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, alignItems: 'stretch', height: '100%', width: '100%' }}>
-          <div style={{
-            fontWeight: 700,
-            fontSize: 13,
-            marginBottom: 4,
-            letterSpacing: 0.5,
-            color: '#fff',
-            textTransform: 'uppercase',
-            gridColumn: 'span 2',
-            textAlign: 'center',
-          }}>
-            Plot a Course
-          </div>
-            {['home', 'about', 'projects', 'contact'].map((route) => (
-            <button
-              key={route}
-              style={{
-                background: pendingTab === route ? '#222' : '#fff',
-                border: '2px solid #fff',
-                color: pendingTab === route ? '#fff' : '#111',
-                fontWeight: 600,
-                fontSize: 18,
-                padding: '0',
-                cursor: 'pointer',
-                borderRadius: 12,
-                transition: 'all 0.2s',
-                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                outline: 'none',
-                margin: 0,
-                boxShadow: pendingTab === route ? '0 0 4px #fff' : 'none',
-                width: '100%',
-                height: '100%',
-                minHeight: 60,
-              }}
-              onClick={() => setPendingTab(route)}
-            >
+        <div
+          style={{
+            fontSize: 11,
+            color: pendingTab !== currentTab ? '#fff' : '#666',
+            marginBottom: 6,
+            minHeight: 16,
+            transition: 'color 0.2s',
+            fontFamily: 'system-ui, sans-serif',
+          }}
+        >
+          {pendingTab !== currentTab ? 'Course plotted' : 'Plot a course'}
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, flex: 1, minHeight: 0 }}>
+          {['home', 'about', 'projects', 'contact'].map((route) => {
+            const active = pendingTab === route;
+            return (
+              <button
+                key={route}
+                style={{
+                  flex: 1,
+                  minHeight: 44,
+                  background: active ? '#fff' : 'transparent',
+                  border: '1px solid #333',
+                  color: active ? '#111' : '#fff',
+                  fontWeight: 500,
+                  fontSize: 13,
+                  padding: '0 14px',
+                  cursor: 'pointer',
+                  fontFamily: 'system-ui, sans-serif',
+                  outline: 'none',
+                  margin: 0,
+                  textAlign: 'left',
+                  transition: 'background 0.15s, color 0.15s',
+                }}
+                onClick={() => setPendingTab(route)}
+              >
                 {route === 'home' ? 'Home' : route.charAt(0).toUpperCase() + route.slice(1)}
-            </button>
-          ))}
+              </button>
+            );
+          })}
         </div>
       </ControlPanel>
       <ControlPanel position="right">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12, alignItems: 'stretch', height: '100%', width: '100%' }}>
-          <div style={{
-            fontWeight: 700,
-            fontSize: 13,
-            marginBottom: 4,
-            letterSpacing: 0.5,
-            color: '#fff',
-            textTransform: 'uppercase',
-            textAlign: 'center',
-          }}>
-            Action Panel
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, flex: 1, minHeight: 0 }}>
+          <div
+            style={{
+              fontSize: 11,
+              color: pendingTab !== currentTab ? '#fff' : '#666',
+              minHeight: 16,
+              transition: 'color 0.2s',
+              fontFamily: 'system-ui, sans-serif',
+            }}
+          >
+            {pendingTab !== currentTab ? 'Ready to engage' : 'Plot a course first'}
           </div>
           <button
             style={{
-              background: pendingTab !== currentTab ? '#222' : '#eee',
-              border: '2px solid #fff',
-              color: pendingTab !== currentTab ? '#111' : '#aaa',
-              fontWeight: 600,
-              fontSize: 18,
-              padding: '0',
-              cursor: pendingTab !== currentTab ? 'pointer' : 'not-allowed',
-              borderRadius: 12,
-              transition: 'all 0.2s',
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+              flex: 1,
+              minHeight: 80,
+              background: pendingTab === currentTab ? '#333' : '#fff',
+              border: '1px solid #333',
+              color: pendingTab === currentTab ? '#666' : '#111',
+              fontWeight: 500,
+              fontSize: 14,
+              padding: 0,
+              cursor: pendingTab === currentTab ? 'not-allowed' : 'pointer',
+              fontFamily: 'system-ui, sans-serif',
               outline: 'none',
               margin: 0,
-              boxShadow: pendingTab !== currentTab ? '0 0 4px #fff' : 'none',
-              width: '100%',
-              minHeight: 60,
+              transition: 'background 0.15s, color 0.15s',
             }}
             disabled={pendingTab === currentTab}
             onClick={() => {
@@ -137,31 +109,50 @@ export function App() {
               }
             }}
           >
-            Engage Warp!
+            Engage
           </button>
-          <button
-            style={{
-              background: '#fff',
-              border: '2px solid #fff',
-              color: '#222',
-              fontWeight: 700,
-              fontSize: 18,
-              padding: '0',
-              cursor: 'pointer',
-              borderRadius: 12,
-              transition: 'all 0.2s',
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-              outline: 'none',
-              margin: 0,
-              marginTop: 0,
-              boxShadow: '0 0 4px #fff',
-              width: '100%',
-              minHeight: 60,
-            }}
-            onClick={() => setEnhancedScreen(true)}
-          >
-            Enhance Screen
-          </button>
+          <div style={{ display: 'flex', gap: 8, flex: 1, minHeight: 60 }}>
+            <button
+              style={{
+                flex: 1,
+                border: '1px solid #333',
+                background: redAlert ? '#fff' : 'transparent',
+                color: redAlert ? '#111' : '#fff',
+                fontWeight: 500,
+                fontSize: 12,
+                cursor: 'pointer',
+                fontFamily: 'system-ui, sans-serif',
+                outline: 'none',
+                margin: 0,
+                padding: 0,
+                transition: 'background 0.15s, color 0.15s',
+              }}
+              onClick={() => setAlert({ ...alert, isRedAlert: !alert.isRedAlert })}
+              title={redAlert ? 'Disable Red Alert' : 'Red Alert'}
+            >
+              Alert
+            </button>
+            <button
+              style={{
+                flex: 1,
+                border: '1px solid #333',
+                background: 'transparent',
+                color: '#fff',
+                fontWeight: 500,
+                fontSize: 12,
+                cursor: 'pointer',
+                fontFamily: 'system-ui, sans-serif',
+                outline: 'none',
+                margin: 0,
+                padding: 0,
+                transition: 'background 0.15s, color 0.15s',
+              }}
+              onClick={() => setEnhancedScreen(true)}
+            >
+              Enhance
+            </button>
+          </div>
+        </div>
                 {enhancedScreen && (
                   <div
                     style={{
@@ -200,14 +191,13 @@ export function App() {
                           right: 18,
                           zIndex: 2100,
                           background: '#fff',
-                          color: '#222',
-                          border: '2px solid #fff',
-                          borderRadius: 12,
-                          fontWeight: 700,
-                          fontSize: 18,
-                          padding: '6px 18px',
+                          color: '#111',
+                          border: '1px solid #333',
+                          fontWeight: 500,
+                          fontSize: 13,
+                          padding: '8px 18px',
                           cursor: 'pointer',
-                          boxShadow: '0 0 4px #fff',
+                          fontFamily: 'system-ui, sans-serif',
                         }}
                         onClick={() => setEnhancedScreen(false)}
                       >
@@ -220,8 +210,6 @@ export function App() {
                     </div>
                   </div>
                 )}
-          {/* Red Alert button moved to FunControlPanel */}
-        </div>
       </ControlPanel>
     </>
   );

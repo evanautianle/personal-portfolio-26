@@ -6,20 +6,19 @@ export function ControlPanel({ position = 'left', children }) {
     <div
       style={{
         position: 'fixed',
-        bottom: 38,
-        left: isLeft ? 38 : 'auto',
-        right: isLeft ? 'auto' : 38,
-        background: '#1a1a1a',
-        borderRadius: 40,
-        padding: '20px 20px',
+        bottom: 28,
+        left: isLeft ? 28 : 'auto',
+        right: isLeft ? 'auto' : 28,
+        background: '#111',
+        padding: 20,
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        gap: 24,
-        boxShadow: '0 12px 48px rgba(0, 0, 0, 0.35)',
+        gap: 12,
+        minHeight: 0,
+        boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
         zIndex: 1000,
-        width: 350,
-        height: 220,
+        width: 260,
+        height: 280,
       }}
     >
       {children}
