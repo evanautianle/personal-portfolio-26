@@ -6,6 +6,7 @@ import { Viewscreen } from "../viewscreen/Viewscreen";
 import { SecondaryScreen } from "../viewscreen/SecondaryScreen";
 import CrewManager from "../components/crew/CrewManager";
 
+
 /* ========================================
    Bridge Model
 ======================================== */
@@ -242,6 +243,28 @@ function ScreenOverlay() {
 ======================================== */
 export default function BridgeGLBScene({ glbUrl, redAlert }) {
   const [bounds, setBounds] = useState(null);
+  const [captainSpeech, setCaptainSpeech] = useState("");
+  const speechTimeout = useRef();
+
+  // Listen for custom events from the UI for plotting course and engage
+  useEffect(() => {
+    function handleSpeechEvent(e) {
+      if (!e.detail || !e.detail.type) return;
+      if (speechTimeout.current) clearTimeout(speechTimeout.current);
+      if (e.detail.type === "plot-course") {
+        setCaptainSpeech("Helm, lay in a course for sector " + (e.detail.sector || "2813") + ".");
+        speechTimeout.current = setTimeout(() => setCaptainSpeech(""), 2500);
+      } else if (e.detail.type === "engage") {
+        setCaptainSpeech("Engage.");
+        speechTimeout.current = setTimeout(() => setCaptainSpeech(""), 2000);
+      }
+    }
+    window.addEventListener("captain-speech", handleSpeechEvent);
+    return () => {
+      window.removeEventListener("captain-speech", handleSpeechEvent);
+      if (speechTimeout.current) clearTimeout(speechTimeout.current);
+    };
+  }, []);
 
   // Red alert color
   const normalColor = "#cfe6ff";
@@ -284,7 +307,7 @@ export default function BridgeGLBScene({ glbUrl, redAlert }) {
       <BridgeModel url={glbUrl} onBounds={setBounds} />
 
       {/* CrewManager spawns all crew */}
-      <CrewManager />
+      <CrewManager captainSpeech={captainSpeech} />
 
       {/* Static camera setup (safe to render even if bounds is null) */}
       {bounds && <CameraSetup bounds={bounds} />}

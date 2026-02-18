@@ -2,8 +2,6 @@ import React from "react";
 import OfficerModel from "../../characters/OfficerModel";
 import { crewSpawnPoints } from "../../config/crewSpawnPoints";
 
-
-
 export default function Captain() {
   const spawn = crewSpawnPoints.captain;
   // Captain is always sitting, so always apply offset

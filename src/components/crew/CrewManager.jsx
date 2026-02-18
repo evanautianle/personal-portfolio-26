@@ -3,10 +3,10 @@ import Captain from "./Captain";
 import HelmOfficer from "../../characters/HelmOfficer";
 import OpsOfficer from "../../characters/OpsOfficer";
 
-export default function CrewManager() {
+export default function CrewManager({ captainSpeech }) {
   return (
     <>
-      <Captain />
+      <Captain speech={captainSpeech} />
       <HelmOfficer />
       <OpsOfficer />
     </>

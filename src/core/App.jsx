@@ -1,3 +1,74 @@
+// Dialogue box styled like the provided reference
+function DialogueBox({ text, speaker = "CAPTAIN", imageUrl, style }) {
+  if (!text) return null;
+  return (
+    <div style={{
+      background: '#222',
+      color: '#fff',
+      borderRadius: 0,
+      boxShadow: '0 2px 16px #000a',
+      minWidth: 210,
+      maxWidth: '60vw',
+      display: 'flex',
+      alignItems: 'stretch',
+      overflow: 'visible',
+      ...style,
+    }}>
+      {/* Character image */}
+      <div style={{
+        width: 60,
+        height: 60,
+        background: '#111',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        borderRight: '1px solid #181818',
+        flexShrink: 0,
+      }}>
+        {imageUrl ? (
+          <img src={imageUrl} alt={speaker} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        ) : (
+          <span style={{ color: '#888', fontSize: 48 }}>👤</span>
+        )}
+        {/* Name tab above image */}
+        <div style={{
+          position: 'absolute',
+          top: -18,
+          left: 0,
+          width: '100%',
+          background: '#181818',
+          color: '#fff',
+          fontWeight: 700,
+          fontSize: 10,
+          letterSpacing: 0.5,
+          padding: '2px 0',
+          textAlign: 'center',
+          borderTopLeftRadius: 3,
+          borderTopRightRadius: 3,
+          borderBottom: '1px solid #222',
+        }}>{speaker}</div>
+      </div>
+      {/* Dialogue text */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0 18px',
+        minHeight: 60,
+        fontSize: 19,
+        fontWeight: 400,
+        background: '#222',
+        whiteSpace: 'pre-line',
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0,
+        borderTopLeftRadius: 0,
+        borderBottomLeftRadius: 0,
+      }}>
+        {text}
+      </div>
+    </div>
+  );
+}
 
 import React from 'react';
 import { CanvasRoot } from './CanvasRoot';
@@ -12,13 +83,43 @@ import { alertAtom } from '../state/alertAtom';
 
 import { useState } from 'react';
 
+
 export function App() {
-    const [enhancedScreen, setEnhancedScreen] = useState(false);
+  const [enhancedScreen, setEnhancedScreen] = useState(false);
   const [speed, setSpeed] = useAtom(heroSpeedAtom);
   const [currentTab, setNavigation] = useAtom(navigationAtom);
   const [alert, setAlert] = useAtom(alertAtom);
   const redAlert = alert.isRedAlert;
   const [pendingTab, setPendingTab] = useState(currentTab);
+  // Dialogue stack: array of {id, text, speaker, imageUrl}
+  const [dialogueStack, setDialogueStack] = React.useState([]);
+  // Optionally, you could set a real image URL here
+  const captainImage = undefined; // e.g. '/assets/crew/captain.png'
+
+  // Listen for captain-speech events and stack dialogues
+  React.useEffect(() => {
+    function handleSpeechEvent(e) {
+      if (!e.detail || !e.detail.type) return;
+      let text = "";
+      let timeout = 2500;
+      if (e.detail.type === "plot-course") {
+        text = "Helm, lay in a course for sector " + (e.detail.sector || "2813") + ".";
+        timeout = 2500;
+      } else if (e.detail.type === "engage") {
+        text = "Engage.";
+        timeout = 2000;
+      }
+      if (text) {
+        const id = Date.now() + Math.random();
+        setDialogueStack(prev => [...prev, { id, text, speaker: "CAPTAIN", imageUrl: captainImage }]);
+        setTimeout(() => {
+          setDialogueStack(prev => prev.filter(d => d.id !== id));
+        }, timeout);
+      }
+    }
+    window.addEventListener("captain-speech", handleSpeechEvent);
+    return () => window.removeEventListener("captain-speech", handleSpeechEvent);
+  }, []);
 
   // When currentTab changes externally, update pendingTab
   React.useEffect(() => {
@@ -29,12 +130,30 @@ export function App() {
     <>
       <Navbar />
       <CanvasRoot redAlert={redAlert} />
+      {/* Stack dialogue boxes, newest at the bottom */}
+      <div style={{
+        position: 'fixed',
+        left: '50%',
+        bottom: 48,
+        transform: 'translateX(-50%)',
+        display: 'flex',
+        flexDirection: 'column-reverse',
+        gap: 12,
+        zIndex: 2000,
+        pointerEvents: 'none',
+        width: 'auto',
+        alignItems: 'center',
+      }}>
+        {dialogueStack.map((d) => (
+          <DialogueBox key={d.id} text={d.text} speaker={d.speaker} imageUrl={d.imageUrl} />
+        ))}
+      </div>
       <ControlPanel position="left">
         <div
           style={{
             fontSize: 11,
             color: pendingTab !== currentTab ? '#fff' : '#666',
-            marginBottom: 6,
+            marginBottom: 15,
             minHeight: 16,
             transition: 'color 0.2s',
             fontFamily: 'system-ui, sans-serif',
@@ -64,7 +183,10 @@ export function App() {
                   textAlign: 'left',
                   transition: 'background 0.15s, color 0.15s',
                 }}
-                onClick={() => setPendingTab(route)}
+                onClick={() => {
+                  setPendingTab(route);
+                  window.dispatchEvent(new CustomEvent("captain-speech", { detail: { type: "plot-course", sector: route } }));
+                }}
               >
                 {route === 'home' ? 'Home' : route.charAt(0).toUpperCase() + route.slice(1)}
               </button>
@@ -106,6 +228,7 @@ export function App() {
               if (pendingTab !== currentTab) {
                 setSpeed('warp');
                 setNavigation(pendingTab === 'home' ? 'home' : pendingTab);
+                window.dispatchEvent(new CustomEvent("captain-speech", { detail: { type: "engage" } }));
               }
             }}
           >
@@ -153,63 +276,63 @@ export function App() {
             </button>
           </div>
         </div>
-                {enhancedScreen && (
-                  <div
-                    style={{
-                      position: 'fixed',
-                      top: 0,
-                      left: 0,
-                      width: '100vw',
-                      height: '100vh',
-                      background: 'rgba(0,0,0,0.92)',
-                      zIndex: 2000,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: '92vw',
-                        height: '92vh',
-                        maxWidth: 1920,
-                        maxHeight: 1080,
-                        background: '#181828',
-                        borderRadius: 24,
-                        boxShadow: '0 0 64px #000a',
-                        overflow: 'hidden',
-                        position: 'relative',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <button
-                        style={{
-                          position: 'absolute',
-                          top: 18,
-                          right: 18,
-                          zIndex: 2100,
-                          background: '#fff',
-                          color: '#111',
-                          border: '1px solid #333',
-                          fontWeight: 500,
-                          fontSize: 13,
-                          padding: '8px 18px',
-                          cursor: 'pointer',
-                          fontFamily: 'system-ui, sans-serif',
-                        }}
-                        onClick={() => setEnhancedScreen(false)}
-                      >
-                        Close
-                      </button>
-                      {/* Main viewscreen popup */}
-                      <div style={{ width: '100%', height: '100%' }}>
-                        <Viewscreen />
-                      </div>
-                    </div>
-                  </div>
-                )}
+        {enhancedScreen && (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              background: 'rgba(0,0,0,0.92)',
+              zIndex: 2000,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <div
+              style={{
+                width: '92vw',
+                height: '92vh',
+                maxWidth: 1920,
+                maxHeight: 1080,
+                background: '#181828',
+                borderRadius: 24,
+                boxShadow: '0 0 64px #000a',
+                overflow: 'hidden',
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <button
+                style={{
+                  position: 'absolute',
+                  top: 18,
+                  right: 18,
+                  zIndex: 2100,
+                  background: '#fff',
+                  color: '#111',
+                  border: '1px solid #333',
+                  fontWeight: 500,
+                  fontSize: 13,
+                  padding: '8px 18px',
+                  cursor: 'pointer',
+                  fontFamily: 'system-ui, sans-serif',
+                }}
+                onClick={() => setEnhancedScreen(false)}
+              >
+                Close
+              </button>
+              {/* Main viewscreen popup */}
+              <div style={{ width: '100%', height: '100%' }}>
+                <Viewscreen />
+              </div>
+            </div>
+          </div>
+        )}
       </ControlPanel>
     </>
   );
