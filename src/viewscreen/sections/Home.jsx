@@ -41,9 +41,9 @@ export function Home() {
             color: '#fff',
             display: 'block',
           }}
-          
+
         >
-          Sector 674 - Home
+          Sector 2814 - Home
         </span>
       </div>
     </div>

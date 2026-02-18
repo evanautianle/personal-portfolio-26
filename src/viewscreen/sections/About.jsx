@@ -41,7 +41,7 @@ export function About() {
             display: 'block',
           }}
         >
-          Sector 2345 - About
+          Sector 2813 - About
         </span>
       </div>
     </div>

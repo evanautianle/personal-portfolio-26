@@ -41,7 +41,7 @@ export function Projects() {
             display: 'block',
           }}
         >
-          Sector 1417 - Projects
+          Sector 674 - Projects
         </span>
       </div>
     </div>
