@@ -141,10 +141,11 @@ export function App() {
         gap: 12,
         zIndex: 2000,
         pointerEvents: 'none',
-        width: 'auto',
-        alignItems: 'center',
+        width: 480,
+        maxWidth: '80vw',
+        alignItems: 'flex-start',
       }}>
-        {dialogueStack.map((d) => (
+        {[...dialogueStack].reverse().map((d) => (
           <DialogueBox key={d.id} text={d.text} speaker={d.speaker} imageUrl={d.imageUrl} />
         ))}
       </div>
