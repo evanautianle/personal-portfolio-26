@@ -31,6 +31,11 @@ export function App() {
     setPendingTab(currentTab);
   }, [currentTab]);
 
+  // Dispatch event when pendingTab changes (for SecondaryScreen)
+  React.useEffect(() => {
+    window.dispatchEvent(new CustomEvent('pendingTabChange', { detail: pendingTab }));
+  }, [pendingTab]);
+
   return (
     <>
       <Navbar />
