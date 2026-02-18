@@ -95,26 +95,42 @@ export function App() {
   const [dialogueStack, setDialogueStack] = React.useState([]);
   // Optionally, you could set a real image URL here
   const captainImage = undefined; // e.g. '/assets/crew/captain.png'
+  const helmImage = undefined; // e.g. '/assets/crew/helm.png'
 
-  // Listen for captain-speech events and stack dialogues
+  // Listen for captain-speech events and stack dialogues (captain and helmsman)
   React.useEffect(() => {
     function handleSpeechEvent(e) {
       if (!e.detail || !e.detail.type) return;
-      let text = "";
-      let timeout = 2500;
+      let captainText = "";
+      let helmText = "";
+      let captainTimeout = 2500;
+      let helmTimeout = 2500;
       if (e.detail.type === "plot-course") {
-        text = "Helm, lay in a course for sector " + (e.detail.sector || "2813") + ".";
-        timeout = 2500;
+        captainText = "Helm, lay in a course for sector " + (e.detail.sector || "2813") + ".";
+        helmText = "Aye Captain, course plotted.";
+        captainTimeout = 2500;
+        helmTimeout = 2500;
       } else if (e.detail.type === "engage") {
-        text = "Engage.";
-        timeout = 2000;
+        captainText = "Engage.";
+        helmText = "Going to warp.";
+        captainTimeout = 2000;
+        helmTimeout = 2000;
       }
-      if (text) {
+      if (captainText) {
         const id = Date.now() + Math.random();
-        setDialogueStack(prev => [...prev, { id, text, speaker: "CAPTAIN", imageUrl: captainImage }]);
+        setDialogueStack(prev => [...prev, { id, text: captainText, speaker: "CAPTAIN", imageUrl: captainImage }]);
         setTimeout(() => {
           setDialogueStack(prev => prev.filter(d => d.id !== id));
-        }, timeout);
+        }, captainTimeout);
+      }
+      if (helmText) {
+        const id = Date.now() + Math.random();
+        setTimeout(() => {
+          setDialogueStack(prev => [...prev, { id, text: helmText, speaker: "HELMSMAN", imageUrl: helmImage }]);
+          setTimeout(() => {
+            setDialogueStack(prev => prev.filter(d => d.id !== id));
+          }, helmTimeout);
+        }, 400); // Helmsman responds shortly after captain
       }
     }
     window.addEventListener("captain-speech", handleSpeechEvent);
@@ -133,7 +149,7 @@ export function App() {
       {/* Stack dialogue boxes, newest at the bottom */}
       <div style={{
         position: 'fixed',
-        left: '50%',
+        left: '40%',
         bottom: 48,
         transform: 'translateX(-50%)',
         display: 'flex',
@@ -227,9 +243,11 @@ export function App() {
             disabled={pendingTab === currentTab}
             onClick={() => {
               if (pendingTab !== currentTab) {
-                setSpeed('warp');
-                setNavigation(pendingTab === 'home' ? 'home' : pendingTab);
                 window.dispatchEvent(new CustomEvent("captain-speech", { detail: { type: "engage" } }));
+                setTimeout(() => {
+                  setSpeed('warp');
+                  setNavigation(pendingTab === 'home' ? 'home' : pendingTab);
+                }, 1100); // Delay to allow helmsman dialogue first
               }
             }}
           >
