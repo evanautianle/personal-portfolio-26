@@ -11,82 +11,66 @@ const navItems = [
 export function Navbar() {
   const setNavigation = useSetAtom(navigationAtom);
   const current = useAtomValue(navigationAtom);
-  
+
   return (
     <nav
       style={{
         position: 'fixed',
-        top: 24,
-        left: '50%',
-        transform: 'translateX(-50%)',
-        background: '#1a1a1a',
-        borderRadius: 50,
-        padding: '12px 20px',
+        top: 20,
+        left: 20,
+        right: 20,
+        height: 64,
+        background: '#0a0a0a',
+        padding: '8px',
         display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+        alignItems: 'stretch',
+        boxSizing: 'border-box',
         zIndex: 1000,
+        fontFamily:
+          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       }}
     >
       <div
         style={{
-          width: 36,
-          height: 36,
-          borderRadius: '50%',
-          background: '#fff',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginRight: 8,
-          cursor: 'pointer',
+          width: '100%',
+          gap: 8, // space between buttons
         }}
       >
-        <span style={{ fontSize: 20 }}>👤</span>
-      </div>
+        {navItems.map(({ label, route }) => {
+          const active = current === route;
 
-      {navItems.map(({ label, route }) => (
-        <button
-          key={route}
-          onClick={() => setNavigation(route)}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            color: current === route ? '#fff' : '#a0a0a0',
-            fontWeight: 500,
-            fontSize: 14,
-            padding: '8px 16px',
-            cursor: 'pointer',
-            borderRadius: 20,
-            transition: 'all 0.2s ease',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-          }}
-          onMouseOver={e => {
-            e.currentTarget.style.color = '#fff';
-            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-          }}
-          onMouseOut={e => {
-            e.currentTarget.style.color = current === route ? '#fff' : '#a0a0a0';
-            e.currentTarget.style.background = 'transparent';
-          }}
-        >
-          {label}
-        </button>
-      ))}
-
-      <div
-        style={{
-          background: '#fff',
-          color: '#1a1a1a',
-          padding: '8px 20px',
-          borderRadius: 20,
-          fontSize: 14,
-          fontWeight: 500,
-          marginLeft: 8,
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-        }}
-      >
-        your@email.com
+          return (
+            <button
+              key={route}
+              onClick={() => setNavigation(route)}
+              style={{
+                flex: 1,
+                background: active ? '#e8e8e8' : 'transparent',
+                border: '1px solid #2a2a2a',
+                borderRadius: 0,
+                color: active ? '#111' : '#e0e0e0',
+                fontSize: 15,
+                fontWeight: 400,
+                padding: '12px 20px',
+                cursor: 'pointer',
+                textAlign: 'left',
+                display: 'flex',
+                alignItems: 'center',
+                boxSizing: 'border-box',
+                transition: 'background 0.15s ease, color 0.15s ease',
+              }}
+              onMouseEnter={(e) => {
+                if (!active) e.currentTarget.style.background = '#111';
+              }}
+              onMouseLeave={(e) => {
+                if (!active) e.currentTarget.style.background = 'transparent';
+              }}
+            >
+              {label}
+            </button>
+          );
+        })}
       </div>
     </nav>
   );
