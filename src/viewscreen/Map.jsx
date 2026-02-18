@@ -3,20 +3,20 @@ import { useAtomValue } from 'jotai';
 import { navigationAtom } from '../state/navigationAtom';
 
 const TABS = [
-  { key: 'home', label: 'Home', x: 0.35, y: 0.30 },
-  { key: 'about', label: 'About', x: 0.70, y: 0.35 },
-  { key: 'projects', label: 'Projects', x: 0.60, y: 0.70 },
-  { key: 'contact', label: 'Contact', x: 0.25, y: 0.65 },
+  { key: 'home', label: 'SECTOR 2814', x: 0.35, y: 0.25 },
+  { key: 'about', label: 'SECTOR 2813', x: 0.70, y: 0.40 },
+  { key: 'projects', label: 'SECTOR 674', x: 0.60, y: 0.75 },
+  { key: 'contact', label: 'SECTOR 1517', x: 0.25, y: 0.60 },
 ];
 
 export function Map() {
   const currentTab = useAtomValue(navigationAtom);
-  const size = 820;
+  const size = 990;
   const center = size / 2;
   const maxRadius = size * 0.45;
-
-  const rings = 8;
+  const rings = 4; // fewer rings
   const radialLines = 12;
+  const planetRadius = 34;
 
   return (
     <div
@@ -30,20 +30,9 @@ export function Map() {
       }}
     >
       <svg width={size} height={size} style={{ display: 'block' }}>
-        <defs>
-          {/* Slightly stronger but tight glow */}
-          <filter id="tightGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
         {/* Concentric Rings */}
         {Array.from({ length: rings }).map((_, i) => {
-          const r = (i + 1) * (maxRadius / rings);
+          const r = ((i + 1) / rings) * maxRadius;
           return (
             <circle
               key={`ring-${i}`}
@@ -51,8 +40,9 @@ export function Map() {
               cy={center}
               r={r}
               fill="none"
-              stroke="#333"
-              strokeWidth={1.5}
+              stroke="#fff"
+              strokeWidth={2}
+              opacity={0.3}
             />
           );
         })}
@@ -69,34 +59,9 @@ export function Map() {
               y1={center}
               x2={x}
               y2={y}
-              stroke="#2a2a2a"
-              strokeWidth={1.5}
-            />
-          );
-        })}
-
-        {/* Spiral Arms */}
-        {Array.from({ length: 3 }).map((_, armIndex) => {
-          const points = [];
-          const turns = 2.5;
-          const step = 0.1;
-
-          for (let t = 0; t < turns * Math.PI; t += step) {
-            const radius = (t / (turns * Math.PI)) * maxRadius;
-            const angle = t + armIndex * ((2 * Math.PI) / 3);
-            const x = center + Math.cos(angle) * radius;
-            const y = center + Math.sin(angle) * radius;
-            points.push(`${x},${y}`);
-          }
-
-          return (
-            <polyline
-              key={`spiral-${armIndex}`}
-              points={points.join(' ')}
-              fill="none"
-              stroke="#444"
-              strokeWidth={1.8}
-              opacity={0.7}
+              stroke="#555"
+              strokeWidth={2}
+              opacity={0.3}
             />
           );
         })}
@@ -110,26 +75,47 @@ export function Map() {
           opacity={0.9}
         />
 
-        {/* Tabs */}
-        {TABS.map(tab => (
-          <text
-            key={tab.key}
-            x={tab.x * size}
-            y={tab.y * size}
-            textAnchor="middle"
-            fontWeight={tab.key === currentTab ? 900 : 700}
-            fontSize={54}  // 🔥 bigger text
-            fill={tab.key === currentTab ? '#fff' : '#ccc'}
-            filter={tab.key === currentTab ? 'url(#tightGlow)' : undefined}
-            style={{
-              letterSpacing: 4,
-              userSelect: 'none',
-              transition: 'all 0.3s ease',
-            }}
-          >
-            {tab.label}
-          </text>
-        ))}
+        {/* Labels + Planets */}
+        {TABS.map(tab => {
+          const x = tab.x * size;
+          const y = tab.y * size;
+          const isActive = tab.key === currentTab;
+
+          return (
+            <g key={tab.key}>
+              {/* Label */}
+              <text
+                x={x}
+                y={y}
+                textAnchor="middle"
+                fontWeight={isActive ? 900 : 700}
+                fontSize={80} // increased font size
+                fill={isActive ? '#fff' : '#ccc'}
+                style={{
+                  letterSpacing: 2,
+                  userSelect: 'none',
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                {tab.label}
+              </text>
+
+              {/* Planet */}
+              <circle
+                cx={x}
+                cy={y + 50}
+                r={planetRadius}
+                fill={isActive ? '#fff' : '#000'} // white if active
+                stroke="#fff"
+                strokeWidth={2}
+                style={{
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                }}
+              />
+            </g>
+          );
+        })}
       </svg>
     </div>
   );

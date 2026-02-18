@@ -7,8 +7,11 @@ export function WarpDrive() {
   const speed = useAtomValue(heroSpeedAtom);
   const [currentTab] = useAtom(navigationAtom);
   const [pendingTab, setPendingTab] = useState(currentTab);
-  const [chargePercent, setChargePercent] = useState(0);
-  const [state, setState] = useState('standby'); // 'standby', 'charging', 'ready', 'draining'
+
+  const [warpPercent, setWarpPercent] = useState(0);
+  const [warpState, setWarpState] = useState('standby'); // 'standby', 'charging', 'ready', 'draining'
+  const [pulseOffset, setPulseOffset] = useState(0);
+  const [impulseOpacity, setImpulseOpacity] = useState(1); // For fade transition
 
   // Listen for course plotting
   useEffect(() => {
@@ -20,72 +23,105 @@ export function WarpDrive() {
   // Listen for engage command
   useEffect(() => {
     const handleEngage = (e) => {
-      if (e.detail?.type === 'engage' && state === 'ready') {
-        setState('draining');
+      if (e.detail?.type === 'engage' && warpState === 'ready') {
+        setWarpState('draining');
       }
     };
     window.addEventListener('captain-speech', handleEngage);
     return () => window.removeEventListener('captain-speech', handleEngage);
-  }, [state]);
+  }, [warpState]);
 
   // Handle state transitions
   useEffect(() => {
-    // Start charging if plotting a new course
-    if (pendingTab !== currentTab && state === 'standby') {
-      setChargePercent(0);
-      setState('charging');
+    if (pendingTab !== currentTab && warpState === 'standby') {
+      setWarpPercent(0);
+      setWarpState('charging');
     }
-    // Cancel charging if back to current tab
-    if (pendingTab === currentTab && state === 'charging') {
-      setChargePercent(0);
-      setState('standby');
+    if (pendingTab === currentTab && warpState === 'charging') {
+      setWarpPercent(0);
+      setWarpState('standby');
     }
-  }, [pendingTab, currentTab, state]);
+  }, [pendingTab, currentTab, warpState]);
 
-  // Charging effect
+  // Warp charging
   useEffect(() => {
-    if (state !== 'charging') return;
-
+    if (warpState !== 'charging') return;
     const interval = setInterval(() => {
-      setChargePercent(prev => {
+      setWarpPercent(prev => {
         const next = prev + 2;
         if (next >= 100) {
           clearInterval(interval);
-          setState('ready');
+          setWarpState('ready');
           return 100;
         }
         return next;
       });
     }, 30);
-
     return () => clearInterval(interval);
-  }, [state]);
+  }, [warpState]);
 
-  // Draining effect
+  // Warp draining
   useEffect(() => {
-    if (state !== 'draining') return;
-
+    if (warpState !== 'draining') return;
     const interval = setInterval(() => {
-      setChargePercent(prev => {
+      setWarpPercent(prev => {
         const next = prev - 2;
         if (next <= 0) {
           clearInterval(interval);
-          setState('standby');
+          setWarpState('standby');
           return 0;
         }
         return next;
       });
     }, 40);
-
     return () => clearInterval(interval);
-  }, [state]);
+  }, [warpState]);
 
-  // Warp core label
-  let label = '';
-  if (state === 'charging') label = 'Warp Core Charging';
-  else if (state === 'ready') label = 'WARP DRIVE READY';
-  else if (state === 'draining') label = 'Warp Core Draining';
-  else label = 'Warp Core Standby';
+  // Impulse engine pulse animation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const engaged = warpState !== 'draining';
+      setPulseOffset(prev => (prev >= 100 ? 0 : prev + (engaged ? 2 : 0)));
+      setImpulseOpacity(prev => engaged ? Math.min(prev + 0.05, 1) : Math.max(prev - 0.05, 0));
+    }, 50);
+    return () => clearInterval(interval);
+  }, [warpState]);
+
+  const labelStyle = {
+    fontSize: 72,
+    marginBottom: 16,
+    letterSpacing: 4,
+    color: '#0ff',
+    fontWeight: 900,
+  };
+
+  const warpLabel = (() => {
+    if (warpState === 'charging') return 'WARP CORE CHARGING';
+    if (warpState === 'ready') return 'WARP CORE READY';
+    if (warpState === 'draining') return 'WARP CORE ENGAGED';
+    return 'WARP CORE STANDBY';
+  })();
+
+  const impulseEngaged = warpState !== 'draining';
+  const impulseLabel = `IMPULSE ENGINE ${impulseEngaged ? 'ENGAGED' : 'STANDBY'}`;
+
+  // Warp Core grid for smooth charging
+  const rows = 10;
+  const cols = 20;
+  const warpBlocks = [];
+  const totalBlocks = rows * cols;
+  const filledBlocks = Math.round((warpPercent / 100) * totalBlocks);
+
+  for (let i = 0; i < totalBlocks; i++) {
+    warpBlocks.push(
+      <div key={i} style={{
+        width: `${100 / cols}%`,
+        height: `${100 / rows}%`,
+        background: i < filledBlocks ? '#0ff' : 'rgba(15,255,255,0.1)',
+        transition: 'background 0.2s linear'
+      }} />
+    );
+  }
 
   return (
     <div style={{
@@ -101,69 +137,54 @@ export function WarpDrive() {
       padding: 32,
       filter: 'grayscale(1)',
     }}>
-      <div style={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ fontSize: 64, marginBottom: 32, letterSpacing: 3, color: '#0ff', textShadow: '0 0 32px #0ff8, 0 0 8px #fff' }}>
-          {label}
+      <div style={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+
+        {/* --- Impulse Engine --- */}
+        <div style={labelStyle}>{impulseLabel}</div>
+        <div style={{
+          marginBottom: 48,
+          width: '80%',
+          minWidth: 320,
+          maxWidth: 900,
+          height: 120,
+          background: '#111',
+          borderRadius: 60,
+          position: 'relative',
+          overflow: 'hidden',
+          border: '4px solid #0ff',
+        }}>
+          {impulseEngaged && (
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: `${-100 + pulseOffset}%`,
+              width: '200%',
+              height: '100%',
+              opacity: impulseOpacity,
+              background: 'linear-gradient(90deg, transparent, #0ff4, #0ff, #0ff4, transparent)',
+              transition: 'opacity 0.2s linear',
+            }} />
+          )}
         </div>
-        <div style={{ fontSize: 120, fontWeight: 900, color: chargePercent === 100 ? '#fff' : '#0ff', textShadow: chargePercent === 100 ? '0 0 48px #fff, 0 0 16px #0ff' : '0 0 32px #0ff8' }}>
-          {chargePercent}%
-        </div>
+
+        {/* --- Warp Core --- */}
+        <div style={labelStyle}>{warpLabel}</div>
         <div style={{
           marginTop: 48,
           width: '90%',
           minWidth: 320,
           maxWidth: 900,
           height: 260,
-          background: 'radial-gradient(ellipse at center, #0ff 0%, #0ff8 60%, #222 100%)',
-          borderRadius: 130,
-          boxShadow: '0 0 128px 32px #0ff8, 0 0 0 16px #222 inset',
-          position: 'relative',
+          background: '#111',
+          borderRadius: 20,
+          display: 'grid',
+          gridTemplateRows: `repeat(${rows}, 1fr)`,
+          gridTemplateColumns: `repeat(${cols}, 1fr)`,
+          gap: '2px',
           overflow: 'hidden',
-          border: '8px solid #0ff',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          border: '4px solid #0ff',
         }}>
-          <div style={{
-            width: `${chargePercent}%`,
-            height: '100%',
-            background: 'repeating-linear-gradient(90deg, #0ff 0 40px, #fff 40px 80px, #0ff8 80px 120px)',
-            boxShadow: '0 0 64px 16px #0ff8',
-            borderRadius: 130,
-            transition: 'width 0.2s cubic-bezier(.4,2,.6,1)',
-            border: '4px solid #fff8',
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            zIndex: 2,
-            opacity: 0.97,
-          }} />
-          <div style={{
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            width: '100%',
-            height: '100%',
-            background: 'radial-gradient(ellipse at center, #0ff8 0%, #0ff2 60%, transparent 100%)',
-            zIndex: 1,
-            pointerEvents: 'none',
-          }} />
-          <div style={{
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            width: '100%',
-            height: '100%',
-            zIndex: 3,
-            pointerEvents: 'none',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-          }}>
-            {[...Array(10)].map((_, i) => (
-              <div key={i} style={{ width: '100%', height: 10, background: 'rgba(255,255,255,0.13)', borderRadius: 5 }} />
-            ))}
-          </div>
+          {warpBlocks}
         </div>
       </div>
     </div>
