@@ -77,7 +77,7 @@ export function WarpTransition({ onEnd, duration = 1200 }) {
       left: 0,
       zIndex: 9999,
       pointerEvents: 'none',
-      background: 'radial-gradient(ellipse at center, #181828 0%, #10101a 70%, #000 100%)',
+      background: 'radial-gradient(ellipse at center, #222 0%, #000 80%)',
     }}>
       <canvas
         ref={canvasRef}

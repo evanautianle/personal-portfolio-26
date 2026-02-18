@@ -7,7 +7,7 @@ export function About() {
         height: '100%',
         position: 'relative',
         overflow: 'hidden',
-        background: 'radial-gradient(ellipse at center, #181828 0%, #10101a 70%, #000 100%)',
+        background: 'radial-gradient(ellipse at center, #222 0%, #000 80%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

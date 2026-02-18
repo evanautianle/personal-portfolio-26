@@ -9,7 +9,7 @@ export function Viewscreen() {
       style={{
         width: '100%',
         height: '100%',
-        background: 'linear-gradient(135deg, #15152a 60%, #23234a 100%)',
+        background: 'linear-gradient(135deg, #222 60%, #888 100%)',
         color: '#fff',
         position: 'relative',
         borderRadius: 16,
