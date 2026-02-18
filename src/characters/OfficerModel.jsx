@@ -7,7 +7,7 @@ import { useFrame } from "@react-three/fiber";
 // (must be after refs are defined)
 
 
-export default function OfficerModel({ uniformColor = "#cccccc", headRef, sitting = false }) {
+export default function OfficerModel({ uniformColor = "#cccccc", headRef, sitting = false, clicked = false }) {
   // Refs for limbs and body
   const leftLegRef = useRef();
   const rightLegRef = useRef();
@@ -20,23 +20,29 @@ export default function OfficerModel({ uniformColor = "#cccccc", headRef, sittin
     if (sitting) {
       // Sitting pose: legs upright and slightly spread, arms relaxed
       if (leftLegRef.current) {
-        leftLegRef.current.rotation.x += (0 - leftLegRef.current.rotation.x) * 0.2; // upright
-        leftLegRef.current.rotation.y += (-0.2 - leftLegRef.current.rotation.y) * 0.2; // spread left
+        leftLegRef.current.rotation.x += (0 - leftLegRef.current.rotation.x) * 0.2;
+        leftLegRef.current.rotation.y += (-0.2 - leftLegRef.current.rotation.y) * 0.2;
         leftLegRef.current.position.x += (-0.12 - leftLegRef.current.position.x) * 0.2;
         leftLegRef.current.position.z += (0 - leftLegRef.current.position.z) * 0.2;
       }
       if (rightLegRef.current) {
-        rightLegRef.current.rotation.x += (0 - rightLegRef.current.rotation.x) * 0.2; // upright
-        rightLegRef.current.rotation.y += (0.2 - rightLegRef.current.rotation.y) * 0.2; // spread right
+        rightLegRef.current.rotation.x += (0 - rightLegRef.current.rotation.x) * 0.2;
+        rightLegRef.current.rotation.y += (0.2 - rightLegRef.current.rotation.y) * 0.2;
         rightLegRef.current.position.x += (0.12 - rightLegRef.current.position.x) * 0.2;
         rightLegRef.current.position.z += (0 - rightLegRef.current.position.z) * 0.2;
       }
-      // Arms: slightly relaxed on sides
+      // Arms: slightly relaxed on sides, but if clicked, do a 'cute' animation
       if (leftArmRef.current) {
-        leftArmRef.current.rotation.x += (-Math.PI / 8 - leftArmRef.current.rotation.x) * 0.2;
+        leftArmRef.current.rotation.x += ((clicked ? -Math.PI / 3 : -Math.PI / 8) - leftArmRef.current.rotation.x) * 0.3;
+        leftArmRef.current.rotation.z += ((clicked ? 0.5 : 0) - leftArmRef.current.rotation.z) * 0.3;
       }
       if (rightArmRef.current) {
-        rightArmRef.current.rotation.x += (-Math.PI / 8 - rightArmRef.current.rotation.x) * 0.2;
+        rightArmRef.current.rotation.x += ((clicked ? -Math.PI / 3 : -Math.PI / 8) - rightArmRef.current.rotation.x) * 0.3;
+        rightArmRef.current.rotation.z += ((clicked ? -0.5 : 0) - rightArmRef.current.rotation.z) * 0.3;
+      }
+      // Head: tilt for click
+      if (headRef && headRef.current) {
+        headRef.current.rotation.z += ((clicked ? 0.25 : 0) - headRef.current.rotation.z) * 0.3;
       }
     } else {
       // Smoothly interpolate to standing pose
@@ -52,9 +58,14 @@ export default function OfficerModel({ uniformColor = "#cccccc", headRef, sittin
       }
       if (leftArmRef.current) {
         leftArmRef.current.rotation.x += (0 - leftArmRef.current.rotation.x) * 0.2;
+        leftArmRef.current.rotation.z += (0 - leftArmRef.current.rotation.z) * 0.2;
       }
       if (rightArmRef.current) {
         rightArmRef.current.rotation.x += (0 - rightArmRef.current.rotation.x) * 0.2;
+        rightArmRef.current.rotation.z += (0 - rightArmRef.current.rotation.z) * 0.2;
+      }
+      if (headRef && headRef.current) {
+        headRef.current.rotation.z += (0 - headRef.current.rotation.z) * 0.2;
       }
     }
     // Torso always stays the same

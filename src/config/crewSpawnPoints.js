@@ -4,11 +4,11 @@ export const crewSpawnPoints = {
     rotation: [0, Math.PI, 0],
   },
   helm: {
-    position: [-1.7, 0, -2.4],
-    rotation: [0, 0, 0],
+    position: [-1.6, 0, -3],
+    rotation: [0, Math.PI, 0],
   },
   ops: {
-    position: [1.7, 0, -2.4],
-    rotation: [0, 0, 0],
+    position: [1.9, 0, -3],
+    rotation: [0, Math.PI, 0],
   },
 };

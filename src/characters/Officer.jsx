@@ -7,11 +7,12 @@ import * as THREE from "three";
 import { NAVIGATION_BOUNDS } from "../scene/navigationBounds";
 import { COLLISION_ZONES } from "../scene/collisionZones";
 
+
 const SCALE = 0.8;
-const STATES = {
-  SITTING: "sitting",
-  WALKING: "walking",
-  RETURNING: "returning",
+const OfficerState = {
+  SITTING: "SITTING",
+  CLICKED: "CLICKED",
+  RETURNING: "RETURNING",
 };
 
 function isInsideCollisionZone(pos) {
@@ -23,59 +24,57 @@ function isInsideCollisionZone(pos) {
   );
 }
 
-export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cccccc", walkBounds, rotation, seatOffsetY = 0.1, seatOffsetZ = 0 }) {
+
+export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cccccc", rotation, seatOffsetY = 0.1, seatOffsetZ = 0 }) {
   const groupRef = useRef();
-  // Officers start away from the chair so you see the return and sitting animation
-  const [state, setState] = useState(STATES.WALKING);
-
-  // On mount, place officer away from the chair
-  useEffect(() => {
-    if (groupRef.current) {
-      // Place 4 units behind the chair
-      groupRef.current.position.set(
-        chairPosition[0],
-        chairPosition[1],
-        chairPosition[2] - 0.4
-      );
-    }
-  }, [chairPosition]);
-  const [clicked, setClicked] = useState(false);
-  const { gl } = useThree();
-  const alert = useAtomValue(alertAtom);
-  // Red Alert override: force return and lock in chair
-  useEffect(() => {
-    if (alert.isRedAlert) {
-      // On Red Alert, walk to chair (RETURNING)
-      setState(STATES.RETURNING);
-      targetRef.current = new THREE.Vector3(chairPosition[0], chairPosition[1], chairPosition[2]);
-      timerRef.current = Math.random() * 5 + 3;
-    } else {
-      // Resume normal activity: start walking
-      setState(STATES.WALKING);
-      timerRef.current = Math.random() * 0.5 + 0.2;
-      targetRef.current = null;
-    }
-  }, [alert.isRedAlert, chairPosition]);
-
-  // Walking timer and target
-  const timerRef = useRef(Math.random() * 1 + 0.5); // random 0.5-1.5s
-  const targetRef = useRef(null);
+  const [state, setState] = useState(OfficerState.SITTING);
+  const { gl, camera } = useThree();
   const scaleRef = useRef(SCALE);
   const headRef = useRef();
+  // Store the officer's original rotation (from spawn)
+  const originalY = rotation ? rotation[1] : 0;
+  const [targetY, setTargetY] = useState(originalY);
 
-  // Handle click to return
-  const handleClick = (e) => {
-    e.stopPropagation();
-    if (state === STATES.WALKING) {
-      setState(STATES.RETURNING);
-      targetRef.current = new THREE.Vector3(chairPosition[0], chairPosition[1], chairPosition[2]);
+  // Always lock officer to chair position
+  useEffect(() => {
+    if (groupRef.current) {
+      groupRef.current.position.set(
+        chairPosition[0],
+        chairPosition[1] + seatOffsetY,
+        chairPosition[2] + seatOffsetZ
+      );
     }
-    setClicked(true);
+  }, [chairPosition, seatOffsetY, seatOffsetZ]);
+
+  // Calculate the angle to face the camera
+  function getCameraAngle() {
+    if (!groupRef.current || !camera) return originalY;
+    const officerPos = groupRef.current.position.clone();
+    const camPos = camera.position.clone();
+    const targetDir = new THREE.Vector3(camPos.x - officerPos.x, 0, camPos.z - officerPos.z).normalize();
+    return Math.atan2(targetDir.x, targetDir.z);
+  }
+
+  function playClickAnimation(onComplete) {
     scaleRef.current = SCALE * 1.05;
     setTimeout(() => {
-      setClicked(false);
       scaleRef.current = SCALE;
-    }, 300);
+      if (onComplete) onComplete();
+    }, 400);
+  }
+
+  const handleClick = (e) => {
+    e.stopPropagation();
+    // Set target rotation to camera
+    setTargetY(getCameraAngle());
+    setState(OfficerState.CLICKED);
+    playClickAnimation(() => {
+      // Wait 1 second before returning
+      setTimeout(() => {
+        setTargetY(originalY); // Always set targetY to original when returning
+        setState(OfficerState.RETURNING);
+      }, 1000);
+    });
   };
 
   // Pointer cursor handlers
@@ -88,122 +87,52 @@ export default function Officer({ chairPosition = [0, 0, 0], uniformColor = "#cc
     gl.domElement.style.cursor = "default";
   };
 
-  useFrame((_, delta) => {
+
+  useFrame(() => {
     if (!groupRef.current) return;
-    let direction = null;
-    // Red Alert: if not already returning or sitting, start returning to chair
-    if (alert.isRedAlert && state !== STATES.SITTING && state !== STATES.RETURNING) {
-      setState(STATES.RETURNING);
-      targetRef.current = new THREE.Vector3(chairPosition[0], chairPosition[1], chairPosition[2]);
+    // Smoothly rotate to targetY
+    let currentY = groupRef.current.rotation.y;
+    // Ensure shortest path
+    let delta = targetY - currentY;
+    if (delta > Math.PI) delta -= Math.PI * 2;
+    if (delta < -Math.PI) delta += Math.PI * 2;
+    groupRef.current.rotation.y += delta * 0.07;
+
+    // When returning, check if close to originalY
+    if (state === OfficerState.RETURNING) {
+      // Always keep targetY = originalY while returning
+      if (Math.abs(currentY - originalY) < 0.04) {
+        groupRef.current.rotation.y = originalY;
+        setTargetY(originalY);
+        setState(OfficerState.SITTING);
+      } else {
+        setTargetY(originalY);
+      }
     }
-    // ...existing code for state machine...
-    switch (state) {
-      // SITTING is not part of the normal movement cycle
-      case STATES.WALKING:
-        // Always have a target to walk to
-        if (!targetRef.current) {
-          // Walk in the direction the officer is currently facing
-          const pos = groupRef.current.position;
-          // Get the forward vector from the current rotation
-          const forward = new THREE.Vector3(0, 0, 1);
-          forward.applyQuaternion(groupRef.current.quaternion);
-          forward.normalize();
-          // Walk a random distance between 6 and 12 units (further)
-          const distance = Math.random() * 0.6 + 0.6;
-          const target = new THREE.Vector3(
-            pos.x + forward.x * distance,
-            chairPosition[1],
-            pos.z + forward.z * distance
-          );
-          // Clamp to walk bounds if provided
-          if (walkBounds) {
-            target.x = Math.max(walkBounds.minX, Math.min(walkBounds.maxX, target.x));
-            target.z = Math.max(walkBounds.minZ, Math.min(walkBounds.maxZ, target.z));
-          }
-          targetRef.current = target;
-        }
-        if (targetRef.current) {
-          const pos = groupRef.current.position;
-          const target = targetRef.current;
-          const current = new THREE.Vector3(pos.x, pos.y, pos.z);
-          direction = new THREE.Vector3().subVectors(target, current).normalize();
-          current.lerp(target, delta * 1.8); // Faster movement
-          // Clamp to navigation bounds
-          current.x = Math.max(NAVIGATION_BOUNDS.minX, Math.min(NAVIGATION_BOUNDS.maxX, current.x));
-          current.z = Math.max(NAVIGATION_BOUNDS.minZ, Math.min(NAVIGATION_BOUNDS.maxZ, current.z));
-          current.y = chairPosition[1]; // Always stay on same y axis
-          // Prevent collision
-          if (!isInsideCollisionZone(current)) {
-            groupRef.current.position.set(current.x, current.y, current.z);
-          }
-          // No lookAt: keep facing same direction while walking
-          if (current.distanceTo(target) < 0.05 * SCALE) {
-            if (alert.isRedAlert) {
-              setState(STATES.SITTING);
-            } else {
-              setState(STATES.WALKING);
-            }
-            // Increase timer so they pause longer before changing direction
-            timerRef.current = Math.random() * 2.5 + 2.5; // 2.5 to 5 seconds pause before next walk
-            // Do NOT reset position to chairPosition
-            targetRef.current = null;
-            // Optionally, rotate to a new random direction after each walk
-            if (!alert.isRedAlert && groupRef.current) {
-              const randomY = Math.random() * Math.PI * 2;
-              groupRef.current.rotation.y = randomY;
-            }
-          }
-        }
-        break;
-      case STATES.RETURNING:
-        if (targetRef.current) {
-          const pos = groupRef.current.position;
-          const target = targetRef.current;
-          const current = new THREE.Vector3(pos.x, pos.y, pos.z);
-          direction = new THREE.Vector3().subVectors(target, current).normalize();
-          current.lerp(target, delta * 1.8); // Faster movement
-          // Clamp to navigation bounds
-          current.x = Math.max(NAVIGATION_BOUNDS.minX, Math.min(NAVIGATION_BOUNDS.maxX, current.x));
-          current.z = Math.max(NAVIGATION_BOUNDS.minZ, Math.min(NAVIGATION_BOUNDS.maxZ, current.z));
-          current.y = chairPosition[1]; // Always stay on same y axis
-          // Prevent collision
-          if (!isInsideCollisionZone(current)) {
-            groupRef.current.position.set(current.x, current.y, current.z);
-          }
-          // Smooth rotation toward chair
-          if (direction.lengthSq() > 0.001) {
-            const lookAt = new THREE.Vector3(current.x + direction.x, current.y, current.z + direction.z);
-            groupRef.current.lookAt(lookAt);
-          }
-          // If close enough to chair, set to sitting
-          if (current.distanceTo(target) < 0.01) {
-            setState(STATES.SITTING);
-            timerRef.current = Math.random() * 0.5 + 0.2; // reset timer for next walk
-            targetRef.current = null;
-          }
-        }
-        break;
-      default:
-        break;
-    }
-    // Optional: slight head tilt when clicked
-    if (headRef.current) {
-      headRef.current.rotation.z = clicked ? 0.25 : 0;
+
+    // Optional: subtle idle movement (polish)
+    if (state === OfficerState.SITTING && headRef.current) {
+      // Occasionally nudge head toward camera for life
+      if (Math.random() < 0.002) {
+        headRef.current.rotation.y += (Math.random() - 0.5) * 0.2;
+      } else {
+        headRef.current.rotation.y *= 0.9;
+      }
     }
   });
 
-  // Always show sitting pose when in SITTING state
-  const sitting = state === "sitting";
+  // Only show sitting pose when in SITTING or CLICKED state
+  const sitting = state === OfficerState.SITTING || state === OfficerState.CLICKED;
+  const clicked = state === OfficerState.CLICKED;
   return (
     <group
       ref={groupRef}
-      rotation={rotation}
       onClick={handleClick}
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}
       scale={[scaleRef.current, scaleRef.current, scaleRef.current]}
     >
-      <OfficerModel uniformColor={uniformColor} headRef={headRef} sitting={sitting} />
+      <OfficerModel uniformColor={uniformColor} headRef={headRef} sitting={sitting} clicked={clicked} />
     </group>
   );
 }
