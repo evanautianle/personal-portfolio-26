@@ -1,5 +1,6 @@
 import { useSetAtom, useAtomValue } from 'jotai';
 import { navigationAtom } from '../state/navigationAtom';
+import { FaGithub, FaLinkedin } from 'react-icons/fa';
 
 const navItems = [
   { label: 'Home', route: 'home' },
@@ -21,56 +22,36 @@ export function Navbar() {
         right: 20,
         height: 64,
         background: '#0a0a0a',
-        padding: '8px',
+        padding: '8px 24px',
         display: 'flex',
-        alignItems: 'stretch',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         boxSizing: 'border-box',
         zIndex: 1000,
         fontFamily:
           '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       }}
     >
-      <div
-        style={{
-          display: 'flex',
-          width: '100%',
-          gap: 8, // space between buttons
-        }}
-      >
-        {navItems.map(({ label, route }) => {
-          const active = current === route;
-
-          return (
-            <button
-              key={route}
-              onClick={() => setNavigation(route)}
-              style={{
-                flex: 1,
-                background: active ? '#e8e8e8' : 'transparent',
-                border: '1px solid #2a2a2a',
-                borderRadius: 0,
-                color: active ? '#111' : '#e0e0e0',
-                fontSize: 15,
-                fontWeight: 400,
-                padding: '12px 20px',
-                cursor: 'pointer',
-                textAlign: 'left',
-                display: 'flex',
-                alignItems: 'center',
-                boxSizing: 'border-box',
-                transition: 'background 0.15s ease, color 0.15s ease',
-              }}
-              onMouseEnter={(e) => {
-                if (!active) e.currentTarget.style.background = '#111';
-              }}
-              onMouseLeave={(e) => {
-                if (!active) e.currentTarget.style.background = 'transparent';
-              }}
-            >
-              {label}
-            </button>
-          );
-        })}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <span style={{ fontSize: 22, fontWeight: 700, color: '#e0e0e0' }}>EVAN AU</span>
+        <span style={{ fontSize: 14, color: '#b0b0b0' }}>Hi, my name is Evan Au. Welcome to my website!</span>
+      </div>
+      <div style={{ display: 'flex', gap: 16 }}>
+        {/* GitHub Icon */}
+        <a href="https://github.com/evanau" target="_blank" rel="noopener noreferrer" style={{ color: '#e0e0e0', fontSize: 28 }} aria-label="GitHub">
+          <FaGithub />
+        </a>
+        {/* LinkedIn Icon */}
+        <a href="https://linkedin.com/in/evanau" target="_blank" rel="noopener noreferrer" style={{ color: '#e0e0e0', fontSize: 28 }} aria-label="LinkedIn">
+          <FaLinkedin />
+        </a>
+        {/* Email Icon */}
+        <a href="mailto:evan.au@email.com" target="_blank" rel="noopener noreferrer" style={{ color: '#e0e0e0', fontSize: 28 }} aria-label="Email">
+          <svg height="28" width="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2" ry="2" />
+            <polyline points="2,4 12,14 22,4" />
+          </svg>
+        </a>
       </div>
     </nav>
   );
