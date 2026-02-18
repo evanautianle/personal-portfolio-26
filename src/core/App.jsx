@@ -108,13 +108,13 @@ export function App() {
       if (e.detail.type === "plot-course") {
         captainText = "Helm, lay in a course for sector " + (e.detail.sector || "2813") + ".";
         helmText = "Aye Captain, course plotted.";
-        captainTimeout = 2500;
-        helmTimeout = 2500;
+        captainTimeout = 3200;
+        helmTimeout = 3200;
       } else if (e.detail.type === "engage") {
         captainText = "Engage.";
         helmText = "Going to warp.";
-        captainTimeout = 2000;
-        helmTimeout = 2000;
+        captainTimeout = 2600;
+        helmTimeout = 2600;
       }
       if (captainText) {
         const id = Date.now() + Math.random();
@@ -130,7 +130,7 @@ export function App() {
           setTimeout(() => {
             setDialogueStack(prev => prev.filter(d => d.id !== id));
           }, helmTimeout);
-        }, 400); // Helmsman responds shortly after captain
+        }, 600); // Helmsman responds with more delay
       }
     }
     window.addEventListener("captain-speech", handleSpeechEvent);
@@ -147,24 +147,24 @@ export function App() {
       <Navbar />
       <CanvasRoot redAlert={redAlert} />
       {/* Stack dialogue boxes, newest at the bottom */}
-      <div style={{
-        position: 'fixed',
-        left: '40%',
-        bottom: 48,
-        transform: 'translateX(-50%)',
-        display: 'flex',
-        flexDirection: 'column-reverse',
-        gap: 12,
-        zIndex: 2000,
-        pointerEvents: 'none',
-        width: 480,
-        maxWidth: '80vw',
-        alignItems: 'flex-start',
-      }}>
-        {[...dialogueStack].reverse().map((d) => (
-          <DialogueBox key={d.id} text={d.text} speaker={d.speaker} imageUrl={d.imageUrl} />
-        ))}
-      </div>
+        <div style={{
+          position: 'fixed',
+          left: '40%',
+          bottom: 48,
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          flexDirection: 'column-reverse',
+          gap: 12,
+          zIndex: 2000,
+          pointerEvents: 'none',
+          width: 480,
+          maxWidth: '80vw',
+          alignItems: 'flex-start',
+        }}>
+          {[...dialogueStack].reverse().slice(0, 2).map((d) => (
+            <DialogueBox key={d.id} text={d.text} speaker={d.speaker} imageUrl={d.imageUrl} />
+          ))}
+        </div>
       <ControlPanel position="left">
         <div
           style={{
@@ -193,16 +193,19 @@ export function App() {
                   fontWeight: 500,
                   fontSize: 13,
                   padding: '0 14px',
-                  cursor: 'pointer',
+                  cursor: active ? 'not-allowed' : 'pointer',
                   fontFamily: 'system-ui, sans-serif',
                   outline: 'none',
                   margin: 0,
                   textAlign: 'left',
                   transition: 'background 0.15s, color 0.15s',
                 }}
+                disabled={active}
                 onClick={() => {
-                  setPendingTab(route);
-                  window.dispatchEvent(new CustomEvent("captain-speech", { detail: { type: "plot-course", sector: route } }));
+                  if (!active) {
+                    setPendingTab(route);
+                    window.dispatchEvent(new CustomEvent("captain-speech", { detail: { type: "plot-course", sector: route } }));
+                  }
                 }}
               >
                 {route === 'home' ? 'Home' : route.charAt(0).toUpperCase() + route.slice(1)}
