@@ -1,29 +1,66 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
 
+function ZoomedLightbox({ photo, onClose }) {
+  return createPortal(
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed',
+        top: 0, left: 0,
+        width: '100vw', height: '100vh',
+        background: 'rgba(0,0,0,0.92)',
+        zIndex: 99999,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <img
+        src={photo.src}
+        alt={photo.caption}
+        style={{
+          maxWidth: '85vw',
+          maxHeight: '80vh',
+          objectFit: 'contain',
+          boxShadow: '0 0 80px rgba(0,0,0,0.8)',
+          border: '1px solid #ffffff22',
+        }}
+        onClick={e => e.stopPropagation()}
+      />
+      <div style={{ color: '#fff', marginTop: 16, fontSize: 'clamp(12px, 1.5vw, 20px)', opacity: 0.8, letterSpacing: 1 }}>
+        {photo.caption}
+      </div>
+      <div style={{ color: '#ffffff55', marginTop: 8, fontSize: 'clamp(10px, 1vw, 14px)' }}>
+        click anywhere to close
+      </div>
+    </div>,
+    document.body
+  );
+}
+
 const PHOTOS = [
-  { id: 1, src: 'https://picsum.photos/seed/1/800/600', caption: 'Photo 1' },
-  { id: 2, src: 'https://picsum.photos/seed/2/800/600', caption: 'Photo 2' },
-  { id: 3, src: 'https://picsum.photos/seed/3/800/600', caption: 'Photo 3' },
-  { id: 4, src: 'https://picsum.photos/seed/4/800/600', caption: 'Photo 4' },
-  { id: 5, src: 'https://picsum.photos/seed/5/800/600', caption: 'Photo 5' },
-  { id: 6, src: 'https://picsum.photos/seed/6/800/600', caption: 'Photo 6' },
-  { id: 7, src: 'https://picsum.photos/seed/7/800/600', caption: 'Photo 7' },
-  { id: 8, src: 'https://picsum.photos/seed/8/800/600', caption: 'Photo 8' },
-  { id: 9, src: 'https://picsum.photos/seed/9/800/600', caption: 'Photo 9' },
+  { id: 1, src: '/assets/images/photo1.jpeg', caption: 'Findr app, 2024 WDCC & SESA Hackathon' },
+  { id: 2, src: '/assets/images/photo2.jpeg', caption: 'Findr app, 2024 WDCC & SESA Hackathon' },
+  { id: 3, src: '/assets/images/photo3.jpeg', caption: 'WDCC UAIC Project Milestone' },
+  { id: 4, src: '/assets/images/photo4.jpeg', caption: '2025 WDCC & SESA Hackathon' },
+  { id: 5, src: '/assets/images/photo5.jpeg', caption: 'UOA Scientific Sustainability Hackathon' },
+  { id: 6, src: '/assets/images/photo6.jpeg', caption: 'Web3 Crypto Hackathon' },
+  { id: 7, src: '/assets/images/photo7.jpeg', caption: 'Web3 Crypto Hackathon' },
+  { id: 8, src: '/assets/images/photo8.jpeg', caption: 'Web3 Crypto Hackathon (Binance Merchandise)' },
+  { id: 9, src: '/assets/images/photo9.jpeg', caption: '2025 WDCC & SESA Hackathon' },
 ];
 
 function PhotoAlbumContent() {
   const [zoomed, setZoomed] = useState(null);
   return (
     <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', fontFamily: 'system-ui, sans-serif' }}>
-      {/* Header */}
       <div style={{ padding: '16px 24px 12px', borderBottom: '1px solid #ffffff18', flexShrink: 0 }}>
         <h2 style={{ margin: 0, fontSize: 'clamp(16px, 2vw, 32px)', fontWeight: 700, color: '#fff', letterSpacing: 2, textTransform: 'uppercase' }}>
           Photo Album
         </h2>
       </div>
-      {/* Grid */}
       <div
         style={{
           flex: 1,
@@ -80,48 +117,14 @@ function PhotoAlbumContent() {
           </div>
         ))}
       </div>
-      {/* Zoomed lightbox */}
-      {zoomed && (
-        <div
-          onClick={() => setZoomed(null)}
-          style={{
-            position: 'fixed',
-            top: 0, left: 0,
-            width: '100vw', height: '100vh',
-            background: 'rgba(0,0,0,0.92)',
-            zIndex: 99999,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <img
-            src={zoomed.src}
-            alt={zoomed.caption}
-            style={{
-              maxWidth: '85vw',
-              maxHeight: '80vh',
-              objectFit: 'contain',
-              boxShadow: '0 0 80px rgba(0,0,0,0.8)',
-              border: '1px solid #ffffff22',
-            }}
-            onClick={e => e.stopPropagation()}
-          />
-          <div style={{ color: '#fff', marginTop: 16, fontSize: 'clamp(12px, 1.5vw, 20px)', opacity: 0.8, letterSpacing: 1 }}>
-            {zoomed.caption}
-          </div>
-          <div style={{ color: '#ffffff55', marginTop: 8, fontSize: 'clamp(10px, 1vw, 14px)' }}>
-            click anywhere to close
-          </div>
-        </div>
-      )}
+      {zoomed && <ZoomedLightbox photo={zoomed} onClose={() => setZoomed(null)} />}
     </div>
   );
 }
 
 export function PhotoAlbumPopup({ open, animateOut, onClose, onAnimationEnd }) {
-  if (!open) return null;
+  if (!open && !animateOut) return null;
+
   return createPortal(
     <>
       <style>{`
@@ -149,13 +152,14 @@ export function PhotoAlbumPopup({ open, animateOut, onClose, onAnimationEnd }) {
         onClick={onClose}
       >
         <div
+          key={animateOut ? 'closing' : 'opening'}
           style={{
             width: '55%',
             height: '84%',
             marginTop: 120,
             maxWidth: 1920,
             maxHeight: 1080,
-            background: '#181828',
+            background: '#000',
             boxShadow: '0 0 64px #000a',
             overflow: 'hidden',
             position: 'relative',
@@ -166,7 +170,9 @@ export function PhotoAlbumPopup({ open, animateOut, onClose, onAnimationEnd }) {
             padding: '3vw',
             boxSizing: 'border-box',
             color: '#fff',
-            animation: `${animateOut ? 'slideDownAlbumPopup' : 'slideUpAlbumPopup'} 0.5s cubic-bezier(0.33,1,0.68,1)`,
+            animation: animateOut
+              ? 'slideDownAlbumPopup 0.5s cubic-bezier(0.33,1,0.68,1) forwards'
+              : 'slideUpAlbumPopup 0.5s cubic-bezier(0.33,1,0.68,1) forwards',
           }}
           onClick={e => e.stopPropagation()}
           onAnimationEnd={onAnimationEnd}
