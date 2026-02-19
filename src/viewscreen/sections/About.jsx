@@ -14,6 +14,7 @@ export function About({ enhanced }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        boxSizing: 'border-box',
       }}
     >
       <CruiseStarfield />
@@ -21,8 +22,8 @@ export function About({ enhanced }) {
         style={{
           position: 'absolute',
           left: '50%',
-          top: 140,
-          transform: 'translateX(-50%)',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
           zIndex: 2,
           color: '#fff',
           textAlign: 'center',
@@ -31,8 +32,10 @@ export function About({ enhanced }) {
           border: '4px solid #fff',
           boxShadow: '0 12px 64px #000a',
           fontFamily: 'inherit',
-          minWidth: 'unset',
-          maxWidth: 'none',
+          minWidth: 0,
+          maxWidth: '100%',
+          maxHeight: '100%',
+          overflow: 'auto',
         }}
       >
         <span
@@ -61,7 +64,7 @@ function EnhancedAbout() {
     <div
       style={{
         width: '100%',
-        minHeight: '100vh',
+        height: '100%',
         background: '#000',
         color: '#fff',
         display: 'flex',
@@ -70,14 +73,15 @@ function EnhancedAbout() {
         fontFamily: 'inherit',
         position: 'relative',
         overflow: 'hidden',
+        boxSizing: 'border-box',
       }}
     >
       <CruiseStarfield />
-      <div style={{ position: 'relative', width: '100%', zIndex: 2 }}>
+      <div style={{ position: 'relative', width: '100%', zIndex: 2, height: '100%', overflow: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <header style={{ width: '100%', borderBottom: '2px solid #fff', padding: '32px 0', textAlign: 'center', letterSpacing: 8, background: 'rgba(0,0,0,0.7)' }}>
           <h1 style={{ fontSize: 56, fontWeight: 900, margin: 0, textTransform: 'uppercase' }}>About Me</h1>
         </header>
-        <main style={{ width: '100%', maxWidth: 900, margin: '40px auto 0 auto', display: 'flex', flexDirection: 'column', gap: 32 }}>
+        <main style={{ width: '100%', maxWidth: 900, margin: '40px auto 0 auto', display: 'flex', flexDirection: 'column', gap: 32, flex: 1 }}>
           {/* Introduction Section */}
           <section style={{ border: '2px solid #fff', padding: 32, marginBottom: 0, background: 'rgba(0,0,0,0.7)' }}>
             <h2 style={{ fontSize: 28, fontWeight: 700, margin: '0 0 16px 0', textTransform: 'uppercase', letterSpacing: 2 }}>Introduction</h2>

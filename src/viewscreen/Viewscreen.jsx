@@ -12,7 +12,7 @@ export function Viewscreen({ enhanced }) {
         background: 'linear-gradient(135deg, #222 60%, #888 100%)',
         color: '#fff',
         position: 'relative',
-        borderRadius: 16,
+        /* borderRadius removed for sharp corners */
         boxShadow: '0 0 32px #000a',
         overflow: 'hidden',
         display: 'flex',

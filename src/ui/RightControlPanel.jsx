@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Viewscreen } from '../viewscreen/Viewscreen';
 
 export default function RightControlPanel({
@@ -9,6 +9,37 @@ export default function RightControlPanel({
   setEnhancedScreen,
   enhancedScreen
 }) {
+  // Animation state for enhanced popup
+  const [showEnhanced, setShowEnhanced] = useState(false);
+  const [animateOut, setAnimateOut] = useState(false);
+
+  // Sync showEnhanced with enhancedScreen (open)
+  useEffect(() => {
+    if (enhancedScreen) {
+      setShowEnhanced(true);
+      setAnimateOut(false);
+    }
+    // Only hide after animation, not immediately
+    if (!enhancedScreen && showEnhanced) {
+      setAnimateOut(true);
+    }
+    // eslint-disable-next-line
+  }, [enhancedScreen]);
+
+  // Handle close (triggers animation)
+  const handleCloseEnhanced = () => {
+    setAnimateOut(true);
+  };
+
+  // After animation, unmount and update parent
+  const handleAnimationEnd = () => {
+    if (animateOut) {
+      setShowEnhanced(false);
+      setAnimateOut(false);
+      // Only update parent if still open
+      if (enhancedScreen) setEnhancedScreen(false);
+    }
+  };
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10, flex: 1, minHeight: 0 }}>
@@ -77,62 +108,91 @@ export default function RightControlPanel({
           </button>
         </div>
       </div>
-      {enhancedScreen && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            background: 'rgba(0,0,0,0.92)',
-            zIndex: 2000,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+      {showEnhanced && (
+        <>
+          <style>{`
+            @keyframes slideUpEnhancedPopup {
+              from {
+                transform: translateY(100vh);
+                opacity: 0.5;
+              }
+              to {
+                transform: translateY(0);
+                opacity: 1;
+              }
+            }
+            @keyframes slideDownEnhancedPopup {
+              from {
+                transform: translateY(0);
+                opacity: 1;
+              }
+              to {
+                transform: translateY(100vh);
+                opacity: 0.5;
+              }
+            }
+          `}</style>
           <div
             style={{
-              width: '92vw',
-              height: '92vh',
-              maxWidth: 1920,
-              maxHeight: 1080,
-              background: '#181828',
-              borderRadius: 24,
-              boxShadow: '0 0 64px #000a',
-              overflow: 'hidden',
-              position: 'relative',
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              background: 'rgba(0,0,0,0.6)',
+              zIndex: 2000,
               display: 'flex',
-              alignItems: 'center',
+              alignItems: 'flex-start',
               justifyContent: 'center',
+              pointerEvents: 'auto',
             }}
+            onClick={handleCloseEnhanced}
           >
-            <button
+            <div
               style={{
-                position: 'absolute',
-                top: 18,
-                right: 18,
-                zIndex: 2100,
-                background: '#fff',
-                color: '#111',
-                border: '1px solid #333',
-                fontWeight: 500,
-                fontSize: 13,
-                padding: '8px 18px',
-                cursor: 'pointer',
-                fontFamily: 'system-ui, sans-serif',
+                width: '55%',
+                height: '84%',
+                marginTop: 120,
+                maxWidth: 1920,
+                maxHeight: 1080,
+                background: '#181828',
+                boxShadow: '0 0 64px #000a',
+                overflow: 'hidden',
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                animation: `${animateOut ? 'slideDownEnhancedPopup' : 'slideUpEnhancedPopup'} 0.5s cubic-bezier(0.33,1,0.68,1)`,
               }}
-              onClick={() => setEnhancedScreen(false)}
+              onClick={e => e.stopPropagation()}
+              onAnimationEnd={handleAnimationEnd}
             >
-              CLOSE
-            </button>
-            {/* Main viewscreen popup */}
-            <div style={{ width: '100%', height: '100%' }}>
-              <Viewscreen enhanced />
+              <button
+                style={{
+                  position: 'absolute',
+                  top: 18,
+                  right: 18,
+                  zIndex: 2100,
+                  background: '#fff',
+                  color: '#111',
+                  border: '1px solid #333',
+                  fontWeight: 500,
+                  fontSize: 13,
+                  padding: '8px 18px',
+                  cursor: 'pointer',
+                  fontFamily: 'system-ui, sans-serif',
+                }}
+                onClick={handleCloseEnhanced}
+              >
+                CLOSE
+              </button>
+              {/* Main viewscreen popup */}
+              <div style={{ width: '100%', height: '100%' }}>
+                <Viewscreen enhanced />
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </>
   );
