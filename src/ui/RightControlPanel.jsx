@@ -129,7 +129,7 @@ export default function RightControlPanel({
             </button>
             {/* Main viewscreen popup */}
             <div style={{ width: '100%', height: '100%' }}>
-              <Viewscreen />
+              <Viewscreen enhanced />
             </div>
           </div>
         </div>

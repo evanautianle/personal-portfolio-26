@@ -8,7 +8,7 @@ import { Contact } from './sections/Contact';
 import { WarpTransition } from './WarpTransition';
 
 
-export function ScreenRouter() {
+export function ScreenRouter({ enhanced }) {
   const route = useAtomValue(navigationAtom);
   const [showWarp, setShowWarp] = useState(false);
   const [pendingRoute, setPendingRoute] = useState(route);
@@ -58,7 +58,7 @@ export function ScreenRouter() {
       }}
     >
       {showWarp && <WarpTransition />}
-      {!showWarp && <SectionComponent />}
+      {!showWarp && <SectionComponent enhanced={enhanced} />}
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import { ScreenRouter } from './ScreenRouter';
 
 // Viewscreen overlays routed content (About, Projects, etc) on the bridge screen
-export function Viewscreen() {
+export function Viewscreen({ enhanced }) {
   return (
     <div
       style={{
@@ -20,7 +20,7 @@ export function Viewscreen() {
       }}
     >
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-        <ScreenRouter />
+        <ScreenRouter enhanced={enhanced} />
       </div>
     </div>
   );
