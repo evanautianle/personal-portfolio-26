@@ -167,25 +167,7 @@ export default function RightControlPanel({
               onClick={e => e.stopPropagation()}
               onAnimationEnd={handleAnimationEnd}
             >
-              <button
-                style={{
-                  position: 'absolute',
-                  top: 18,
-                  right: 18,
-                  zIndex: 2100,
-                  background: '#fff',
-                  color: '#111',
-                  border: '1px solid #333',
-                  fontWeight: 500,
-                  fontSize: 13,
-                  padding: '8px 18px',
-                  cursor: 'pointer',
-                  fontFamily: 'system-ui, sans-serif',
-                }}
-                onClick={handleCloseEnhanced}
-              >
-                CLOSE
-              </button>
+              {/* CLOSE button removed as requested */}
               {/* Main viewscreen popup */}
               <div style={{ width: '100%', height: '100%' }}>
                 <Viewscreen enhanced />

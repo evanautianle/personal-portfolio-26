@@ -1,8 +1,8 @@
 import { CruiseStarfield } from '../CruiseStarfield';
+
 export function About({ enhanced }) {
-  if (enhanced) {
-    return <EnhancedAbout />;
-  }
+  if (enhanced) return <EnhancedAbout />;
+
   return (
     <div
       style={{
@@ -27,10 +27,10 @@ export function About({ enhanced }) {
           zIndex: 2,
           color: '#fff',
           textAlign: 'center',
-          background: 'rgba(0,0,0,0.22)',
-          padding: '64px 96px',
-          border: '4px solid #fff',
-          boxShadow: '0 12px 64px #000a',
+          background: 'rgba(0,0,0,0.25)',
+          padding: '48px 72px',
+          border: '3px solid #fff',
+          boxShadow: '0 10px 40px #0008',
           fontFamily: 'inherit',
           minWidth: 0,
           maxWidth: '100%',
@@ -40,9 +40,9 @@ export function About({ enhanced }) {
       >
         <span
           style={{
-            fontSize: 120,
+            fontSize: 96,
             fontWeight: 900,
-            letterSpacing: 10,
+            letterSpacing: 8,
             textTransform: 'uppercase',
             color: '#fff',
             display: 'block',
@@ -60,6 +60,23 @@ export function About({ enhanced }) {
 }
 
 function EnhancedAbout() {
+  const sectionStyle = {
+    border: '2px solid #fff',
+    padding: 24,
+    marginTop: 24,
+    background: 'rgba(0,0,0,0.7)',
+  };
+
+  const headerStyle = {
+    fontSize: 24,
+    fontWeight: 700,
+    margin: '0 0 12px 0',
+    textTransform: 'uppercase',
+    letterSpacing: 2,
+  };
+
+  const paragraphStyle = { fontSize: 16, margin: 0, lineHeight: 1.5 };
+
   return (
     <div
       style={{
@@ -74,63 +91,105 @@ function EnhancedAbout() {
         position: 'relative',
         overflow: 'hidden',
         boxSizing: 'border-box',
+        paddingBottom: 64, // extra bottom padding
       }}
     >
       <CruiseStarfield />
-      <div style={{ position: 'relative', width: '100%', zIndex: 2, height: '100%', overflow: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <header style={{ width: '100%', borderBottom: '2px solid #fff', padding: '32px 0', textAlign: 'center', letterSpacing: 8, background: 'rgba(0,0,0,0.7)' }}>
-          <h1 style={{ fontSize: 56, fontWeight: 900, margin: 0, textTransform: 'uppercase' }}>About Me</h1>
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          zIndex: 2,
+          height: '100%',
+          overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <header
+          style={{
+            width: '100%',
+            // borderBottom removed
+            padding: '24px 0',
+            textAlign: 'center',
+            letterSpacing: 6,
+            background: 'rgba(0,0,0,0.7)',
+          }}
+        >
+          <h1 style={{ fontSize: 48, fontWeight: 900, margin: 0, textTransform: 'uppercase' }}>
+            About Me
+          </h1>
         </header>
-        <main style={{ width: '100%', maxWidth: 900, margin: '40px auto 0 auto', display: 'flex', flexDirection: 'column', gap: 32, flex: 1 }}>
+
+        <main
+          style={{
+            width: '100%',
+            maxWidth: 800,
+            margin: '32px auto 0 auto',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 24,
+            flex: 1,
+            paddingBottom: 64, // extra padding at bottom
+          }}
+        >
           {/* Introduction Section */}
-          <section style={{ border: '2px solid #fff', padding: 32, marginBottom: 0, background: 'rgba(0,0,0,0.7)' }}>
-            <h2 style={{ fontSize: 28, fontWeight: 700, margin: '0 0 16px 0', textTransform: 'uppercase', letterSpacing: 2 }}>Introduction</h2>
-            <p style={{ fontSize: 20, margin: 0 }}>
-              {/* TODO: Add 3–5 sentence intro about yourself, degree, year, interests, fun fact */}
-              Hi, I'm [Your Name], a [Year] student at [University] pursuing a degree in [Degree]. I'm passionate about [Interests]. Fun fact: [Something fun about you!]
+          <section style={sectionStyle}>
+            <h2 style={headerStyle}>About Me</h2>
+            <p style={paragraphStyle}>
+              Hello! I’m in my last year studying Computer Science at the University of Auckland. I’m passionate about crafting web applications that are intuitive and meaningful tools that make life easier.
             </p>
           </section>
-          {/* Education & Experience Section */}
-          <section style={{ border: '2px solid #fff', padding: 32, background: 'rgba(0,0,0,0.7)' }}>
-            <h2 style={{ fontSize: 28, fontWeight: 700, margin: '0 0 16px 0', textTransform: 'uppercase', letterSpacing: 2 }}>Education & Experience</h2>
-            <ul style={{ fontSize: 20, margin: 0, paddingLeft: 24 }}>
-              <li>University: [Your University], [Degree], Expected Graduation: [Year]</li>
-              <li>Internship: [Company/Role] (Year)</li>
-              <li>Notable Coursework: [Course 1], [Course 2]</li>
+
+          {/* Education Section */}
+          <section style={sectionStyle}>
+            <h2 style={headerStyle}>Education</h2>
+            <ul style={{ fontSize: 16, margin: 0, paddingLeft: 20 }}>
+              <li>
+                <b>University of Auckland</b>
+                <br />
+                Bachelor of Science in Computer Science (2024–Present)
+              </li>
             </ul>
           </section>
+
           {/* Skills Section */}
-          <section style={{ border: '2px solid #fff', padding: 32, background: 'rgba(0,0,0,0.7)' }}>
-            <h2 style={{ fontSize: 28, fontWeight: 700, margin: '0 0 16px 0', textTransform: 'uppercase', letterSpacing: 2 }}>Skills</h2>
-            <ul style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 12, listStyle: 'none', padding: 0, margin: 0, fontSize: 18 }}>
-              <li>JavaScript</li>
+          <section style={sectionStyle}>
+            <h2 style={headerStyle}>Skills</h2>
+            <ul
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+                gap: 10,
+                listStyle: 'none',
+                padding: 0,
+                margin: 0,
+                fontSize: 14,
+              }}
+            >
               <li>React</li>
+              <li>Next.js</li>
+              <li>Typescript</li>
+              <li>Javascript</li>
               <li>Python</li>
+              <li>Flask</li>
+              <li>Tailwind CSS</li>
+              <li>SupaBase</li>
+              <li>Payload CMS</li>
               <li>Node.js</li>
-              <li>HTML/CSS</li>
-              <li>Git</li>
-              {/* Add more skills as needed */}
+              <li>Figma</li>
+              <li>Solidity</li>
+              <li>Tensorflow</li>
             </ul>
           </section>
-          {/* Interests / Goals Section */}
-          <section style={{ border: '2px solid #fff', padding: 32, background: 'rgba(0,0,0,0.7)' }}>
-            <h2 style={{ fontSize: 28, fontWeight: 700, margin: '0 0 16px 0', textTransform: 'uppercase', letterSpacing: 2 }}>Interests & Goals</h2>
-            <p style={{ fontSize: 20, margin: 0 }}>
-              {/* TODO: Add a short paragraph about your tech interests and professional aspirations */}
-              I'm interested in [Tech Interests] and aspire to [Professional Goals].
+
+          {/* Interests Section */}
+          <section style={sectionStyle}>
+            <h2 style={headerStyle}>Interests</h2>
+            <p style={paragraphStyle}>
+              I’m a big fan of coffee with my favourite technique being the V60. I collect Beatles records, Green Lantern comics, and Star Trek DVDs.
             </p>
-          </section>
-          {/* Optional Personal Touch Section */}
-          <section style={{ border: '2px solid #fff', padding: 32, background: 'rgba(0,0,0,0.7)' }}>
-            <h2 style={{ fontSize: 28, fontWeight: 700, margin: '0 0 16px 0', textTransform: 'uppercase', letterSpacing: 2 }}>Personal</h2>
-            <p style={{ fontSize: 20, margin: 0 }}>
-              {/* TODO: Add hobbies, passions, or a memorable fact */}
-              Outside of tech, I enjoy [Hobbies/Passions].
-            </p>
-          </section>
-          {/* CTA Section */}
-          <section style={{ border: '2px solid #fff', padding: 32, textAlign: 'center', background: 'rgba(0,0,0,0.7)' }}>
-            <a href="#/projects" style={{ color: '#fff', fontWeight: 700, fontSize: 22, textDecoration: 'underline', border: '2px solid #fff', padding: '12px 32px', display: 'inline-block', textTransform: 'uppercase', letterSpacing: 2 }}>View My Projects</a>
           </section>
         </main>
       </div>
