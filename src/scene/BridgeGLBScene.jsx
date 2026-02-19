@@ -319,8 +319,25 @@ export default function BridgeGLBScene({ glbUrl, redAlert }) {
   const speechTimeout = useRef();
 
   const handleOpenAlbum = () => {
-    setShowAlbum(true);
     setAlbumAnimateOut(false);
+    // 1. Captain speaks
+    window.dispatchEvent(
+      new CustomEvent("captain-speech", {
+        detail: { type: "photo-album-captain" }
+      })
+    );
+    // 2. Officer responds shortly after captain (overlap)
+    setTimeout(() => {
+      window.dispatchEvent(
+        new CustomEvent("captain-speech", {
+          detail: { type: "photo-album-ops" }
+        })
+      );
+      // 3. After officer, show album popup
+      setTimeout(() => {
+        setShowAlbum(true);
+      }, 1500); // longer delay after officer dialogue
+    }, 600); // officer starts speaking 950ms after captain
   };
 
   const handleCloseAlbum = () => {

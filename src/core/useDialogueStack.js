@@ -54,6 +54,37 @@ export function useDialogueStack(captainImage, helmImage) {
           }, 600);
         }
         return;
+      } else if (e.detail.type === "photo-album-captain") {
+        // Only captain speaks
+        captainText = "Visual Records on screen.";
+        captainTimeout = 2600; // was 1600
+        if (captainText) {
+          const id = Date.now() + Math.random();
+          setDialogueStack(prev => [...prev, { id, text: captainText, speaker: "CAPTAIN", imageUrl: profilePic }]);
+          setTimeout(() => {
+            setDialogueStack(prev => prev.filter(d => d.id !== id));
+          }, captainTimeout);
+        }
+        return;
+      } else if (e.detail.type === "photo-album-ops") {
+        // Only ops officer speaks
+        let opsText = "Displaying now, captain";
+        if (opsText) {
+          const id = Date.now() + Math.random();
+          setDialogueStack(prev => [
+            ...prev,
+            {
+              id,
+              text: opsText,
+              speaker: "OPS",
+              imageUrl: profilePic
+            }
+          ]);
+          setTimeout(() => {
+            setDialogueStack(prev => prev.filter(d => d.id !== id));
+          }, 1700); // was 850
+        }
+        return;
       }
       if (captainText) {
         const id = Date.now() + Math.random();
