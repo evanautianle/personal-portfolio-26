@@ -109,9 +109,7 @@ function ScreenOverlay({ onOpenAlbum }) {
         scale={SCREEN_SCALE}
       >
         <a
-          href="https://github.com/evanautianle"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="#"
           style={{
             width: "2100px",
             height: "450px",
@@ -123,6 +121,27 @@ function ScreenOverlay({ onOpenAlbum }) {
             alignItems: "center",
             justifyContent: "center",
             textDecoration: "none",
+          }}
+          onClick={e => {
+            e.preventDefault();
+            // 1. Captain speaks
+            window.dispatchEvent(
+              new CustomEvent("captain-speech", {
+                detail: { type: "github-access" }
+              })
+            );
+            // 2. Officer responds after delay
+            setTimeout(() => {
+              window.dispatchEvent(
+                new CustomEvent("captain-speech", {
+                  detail: { type: "github-access-ops" }
+                })
+              );
+              // 3. After a bigger delay, open the link
+              setTimeout(() => {
+                window.open("https://github.com/evanautianle", "_blank");
+              }, 1200); // big delay after officer
+            }, 900); // officer delay after captain
           }}
         >
           <img
@@ -261,9 +280,7 @@ function ScreenOverlay({ onOpenAlbum }) {
         scale={SCREEN_SCALE}
       >
         <a
-          href="https://www.linkedin.com/in/evanautianle"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="#"
           style={{
             width: "2100px",
             height: "450px",
@@ -275,6 +292,27 @@ function ScreenOverlay({ onOpenAlbum }) {
             alignItems: "center",
             justifyContent: "center",
             textDecoration: "none",
+          }}
+          onClick={e => {
+            e.preventDefault();
+            // 1. Captain speaks
+            window.dispatchEvent(
+              new CustomEvent("captain-speech", {
+                detail: { type: "linkedin-access" }
+              })
+            );
+            // 2. Comms officer responds after delay
+            setTimeout(() => {
+              window.dispatchEvent(
+                new CustomEvent("captain-speech", {
+                  detail: { type: "linkedin-access-comms" }
+                })
+              );
+              // 3. After a bigger delay, open the link
+              setTimeout(() => {
+                window.open("https://www.linkedin.com/in/evanautianle", "_blank");
+              }, 1200); // big delay after comms
+            }, 900); // comms delay after captain
           }}
         >
           <svg
