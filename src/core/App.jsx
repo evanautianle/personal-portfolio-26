@@ -74,24 +74,26 @@ const arrowStyle = {
       <Navbar />
       <CanvasRoot redAlert={redAlert} />
       {/* Stack dialogue boxes, newest at the bottom */}
-      <div style={{
-        position: 'fixed',
-        left: '40%',
-        bottom: 48,
-        transform: 'translateX(-50%)',
-        display: 'flex',
-        flexDirection: 'column-reverse',
-        gap: 12,
-        zIndex: 2000,
-        pointerEvents: 'none',
-        width: 480,
-        maxWidth: '80vw',
-        alignItems: 'flex-start',
-      }}>
-        {[...dialogueStack].reverse().slice(0, 2).map((d) => (
-          <DialogueBox key={d.id} text={d.text} speaker={d.speaker} imageUrl={d.imageUrl} />
-        ))}
-      </div>
+      {!enhancedScreen && (
+        <div style={{
+          position: 'fixed',
+          left: '40%',
+          bottom: 48,
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          flexDirection: 'column-reverse',
+          gap: 12,
+          zIndex: 2000,
+          pointerEvents: 'none',
+          width: 480,
+          maxWidth: '80vw',
+          alignItems: 'flex-start',
+        }}>
+          {[...dialogueStack].reverse().slice(0, 2).map((d) => (
+            <DialogueBox key={d.id} text={d.text} speaker={d.speaker} imageUrl={d.imageUrl} />
+          ))}
+        </div>
+      )}
       <ControlPanel position="left">
         <LeftControlPanel
           routes={routes}

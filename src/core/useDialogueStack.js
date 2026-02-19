@@ -11,6 +11,7 @@ export function useDialogueStack(captainImage, helmImage) {
       let helmText = "";
       let captainTimeout = 2500;
       let helmTimeout = 2500;
+      const profilePic = "/assets/images/officerpic.png";
       if (e.detail.type === "plot-course") {
         captainText = "Helm, lay in a course for sector " + (e.detail.sector || "2813") + ".";
         helmText = "Aye Captain, course plotted.";
@@ -21,10 +22,42 @@ export function useDialogueStack(captainImage, helmImage) {
         helmText = "Going to warp.";
         captainTimeout = 2600;
         helmTimeout = 2600;
+      } else if (e.detail.type === "enhance") {
+        captainText = "Enhance image.";
+        helmText = undefined;
+        let opsText = "Enhancing now, Captain";
+        captainTimeout = 2000;
+        // Show captain's dialogue
+        if (captainText) {
+          const id = Date.now() + Math.random();
+          setDialogueStack(prev => [...prev, { id, text: captainText, speaker: "CAPTAIN", imageUrl: profilePic }]);
+          setTimeout(() => {
+            setDialogueStack(prev => prev.filter(d => d.id !== id));
+          }, captainTimeout);
+        }
+        // Show ops officer's dialogue
+        if (opsText) {
+          const id = Date.now() + Math.random();
+          setTimeout(() => {
+            setDialogueStack(prev => [
+              ...prev,
+              {
+                id,
+                text: opsText,
+                speaker: "OPS",
+                imageUrl: profilePic
+              }
+            ]);
+            setTimeout(() => {
+              setDialogueStack(prev => prev.filter(d => d.id !== id));
+            }, 2000);
+          }, 600);
+        }
+        return;
       }
       if (captainText) {
         const id = Date.now() + Math.random();
-        setDialogueStack(prev => [...prev, { id, text: captainText, speaker: "CAPTAIN", imageUrl: captainImage }]);
+        setDialogueStack(prev => [...prev, { id, text: captainText, speaker: "CAPTAIN", imageUrl: profilePic }]);
         setTimeout(() => {
           setDialogueStack(prev => prev.filter(d => d.id !== id));
         }, captainTimeout);
@@ -32,7 +65,7 @@ export function useDialogueStack(captainImage, helmImage) {
       if (helmText) {
         const id = Date.now() + Math.random();
         setTimeout(() => {
-          setDialogueStack(prev => [...prev, { id, text: helmText, speaker: "HELMSMAN", imageUrl: helmImage }]);
+          setDialogueStack(prev => [...prev, { id, text: helmText, speaker: "HELMSMAN", imageUrl: profilePic }]);
           setTimeout(() => {
             setDialogueStack(prev => prev.filter(d => d.id !== id));
           }, helmTimeout);

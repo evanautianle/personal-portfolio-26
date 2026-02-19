@@ -102,7 +102,12 @@ export default function RightControlPanel({
               transition: 'background 0.15s, color 0.15s',
               textTransform: 'uppercase',
             }}
-            onClick={() => setEnhancedScreen(true)}
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent("captain-speech", { detail: { type: "enhance" } }));
+              setTimeout(() => {
+                setEnhancedScreen(true);
+              }, 1200); // 1.2s delay before popup
+            }}
           >
             ENHANCE
           </button>
@@ -140,7 +145,7 @@ export default function RightControlPanel({
               width: '100vw',
               height: '100vh',
               background: 'rgba(0,0,0,0.6)',
-              zIndex: 2000,
+              zIndex: 3000,
               display: 'flex',
               alignItems: 'flex-start',
               justifyContent: 'center',

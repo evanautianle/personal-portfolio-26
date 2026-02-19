@@ -18,7 +18,7 @@ export function DialogueBox({ text, speaker, imageUrl }) {
     }}>
       <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#444', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
         {imageUrl ? (
-          <img src={imageUrl} alt={speaker} style={{ width: 48, height: 48, borderRadius: '50%' }} />
+          <img src={imageUrl} alt={speaker} style={{ width: 48, height: 48, borderRadius: '50%', opacity: 1 }} />
         ) : null}
       </div>
       <div>
