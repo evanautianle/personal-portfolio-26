@@ -142,6 +142,37 @@ function ScreenOverlay() {
         </a>
       </Html>
 
+      {/* New: Left upper side screen */}
+      <Html
+        position={[-8.9, 2.25, -7.6]}
+        rotation={[0, Math.PI / 2.3, 0]}
+        transform
+        zIndexRange={[0, 0]}
+        scale={SCREEN_SCALE}
+      >
+        <div
+          style={{
+            width: "2150px",
+            height: "450px",
+            background: "#222",
+            borderRadius: 24,
+            opacity: 0.92,
+            overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: '#fff',
+            fontSize: 140,
+            fontWeight: 600,
+            letterSpacing: 1,
+            textShadow: '0 2px 8px #000a',
+            fontFamily: 'inherit',
+          }}
+        >
+          PHOTO ALBUM
+        </div>
+      </Html>
+
       {/* Left secondary viewscreen */}
       <Html
         position={[-5.05, 2.35, -7.6]}
@@ -160,6 +191,37 @@ function ScreenOverlay() {
           }}
         >
           <WarpDrive />
+        </div>
+      </Html>
+
+      {/* New: Right upper side screen */}
+      <Html
+        position={[9.15, 2.3, -7.6]}
+        rotation={[0, -Math.PI / 2.3, 0]}
+        transform
+        zIndexRange={[0, 0]}
+        scale={SCREEN_SCALE}
+      >
+        <div
+          style={{
+            width: "2100px",
+            height: "450px",
+            background: "#222",
+            borderRadius: 24,
+            opacity: 0.92,
+            overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: '#fff',
+            fontSize: 140,
+            fontWeight: 600,
+            letterSpacing: 1,
+            textShadow: '0 2px 8px #000a',
+            fontFamily: 'inherit',
+          }}
+        >
+          BATTLE STATIONS
         </div>
       </Html>
 
