@@ -69,7 +69,7 @@ export function Navbar() {
             borderRight: '1px solid #222',
           }}
         >
-          {['HELP', 'SIMPLE VIEW'].map((text) => (
+          {['HOW TO USE', 'SIMPLE VIEW'].map((text) => (
             <button
               key={text}
               style={buttonBase}
