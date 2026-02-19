@@ -1,6 +1,8 @@
+
 import { useSetAtom, useAtomValue } from 'jotai';
 import { navigationAtom } from '../state/navigationAtom';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import './ui-text.css';
 
 const navItems = [
   { label: 'Home', route: 'home' },
@@ -71,6 +73,7 @@ export function Navbar() {
             <button
               key={text}
               style={buttonBase}
+              className="navbar-text-style"
               onMouseEnter={(e) =>
                 Object.assign(e.currentTarget.style, buttonBase, buttonHover)
               }
@@ -95,6 +98,7 @@ export function Navbar() {
           }}
         >
           <span
+            className="navbar-text-style"
             style={{
               fontSize: 18,
               fontWeight: 700,

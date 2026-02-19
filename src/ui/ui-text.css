@@ -1,0 +1,17 @@
+.navbar-text-style {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #cfd8dc;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.controlpanel-text-style {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #cfd8dc;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}

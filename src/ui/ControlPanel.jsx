@@ -1,4 +1,6 @@
+
 import React from 'react';
+import './ui-text.css';
 
 export function ControlPanel({ position = 'left', children }) {
   const isLeft = position === 'left';
@@ -21,7 +23,9 @@ export function ControlPanel({ position = 'left', children }) {
         height: 250,
       }}
     >
-      {children}
+      <div className="controlpanel-text-style" style={{height: '100%', width: '100%'}}>
+        {children}
+      </div>
     </div>
   );
 }
