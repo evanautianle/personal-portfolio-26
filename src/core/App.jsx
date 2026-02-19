@@ -261,27 +261,7 @@ const arrowStyle = {
             ENGAGE
           </button>
           <div style={{ display: 'flex', gap: 8, flex: 1, minHeight: 60 }}>
-            <button
-              style={{
-                flex: 1,
-                border: '1px solid #333',
-                background: redAlert ? '#fff' : 'transparent',
-                color: redAlert ? '#111' : '#fff',
-                fontWeight: 500,
-                fontSize: 12,
-                cursor: 'pointer',
-                fontFamily: 'system-ui, sans-serif',
-                outline: 'none',
-                margin: 0,
-                padding: 0,
-                transition: 'background 0.15s, color 0.15s',
-                textTransform: 'uppercase',
-              }}
-              onClick={() => setAlert({ ...alert, isRedAlert: !alert.isRedAlert })}
-              title={redAlert ? 'Disable Red Alert' : 'Red Alert'}
-            >
-              ALERT
-            </button>
+
             <button
               style={{
                 flex: 1,
