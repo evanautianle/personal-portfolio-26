@@ -1,11 +1,6 @@
-
 import React from "react";
 import { useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
-
-// On mount, set all limb positions/rotations to standing pose
-// (must be after refs are defined)
-
 
 export default function OfficerModel({ uniformColor = "#cccccc", headRef, sitting = false, clicked = false }) {
   // Refs for limbs and body

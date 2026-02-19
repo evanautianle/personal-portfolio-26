@@ -1,8 +1,8 @@
 import React from "react";
-import Captain from "./Captain";
-import HelmOfficer from "../../characters/HelmOfficer";
-import OpsOfficer from "../../characters/OpsOfficer";
-import WanderingOfficer from "../../characters/WanderingOfficer";
+import Captain from "./members/Captain";
+import HelmOfficer from "./members/HelmOfficer";
+import OpsOfficer from "./members/OpsOfficer";
+import WanderingOfficer from "./members/WanderingOfficer";
 import { NAVIGATION_BOUNDS } from "../../scene/navigationBounds";
 
 export default function CrewManager({ captainSpeech }) {

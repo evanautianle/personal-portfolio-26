@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDialogueStack } from './useDialogueStack';
-import { DialogueBox } from '../components/DialogueBox';
+import { DialogueBox } from '../components/crew/DialogueBox';
 import { CanvasRoot } from './CanvasRoot';
 import { Navbar } from '../ui/Navbar';
 import { ControlPanel } from '../ui/ControlPanel';
