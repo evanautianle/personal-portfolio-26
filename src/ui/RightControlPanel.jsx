@@ -1,0 +1,139 @@
+import React from 'react';
+import { Viewscreen } from '../viewscreen/Viewscreen';
+
+export default function RightControlPanel({
+  pendingTab,
+  currentTab,
+  setSpeed,
+  setNavigation,
+  setEnhancedScreen,
+  enhancedScreen
+}) {
+  return (
+    <>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, flex: 1, minHeight: 0 }}>
+        <div
+          style={{
+            fontSize: 11,
+            color: pendingTab !== currentTab ? '#fff' : '#666',
+            minHeight: 16,
+            transition: 'color 0.2s',
+            fontFamily: 'system-ui, sans-serif',
+            padding: 0
+          }}
+        >
+          {pendingTab !== currentTab ? 'READY TO ENGAGE' : 'PLOT A COURSE FIRST'}
+        </div>
+        <button
+          style={{
+            flex: 1,
+            minHeight: 80,
+            background: pendingTab === currentTab ? '#333' : '#fff',
+            border: '1px solid #333',
+            color: pendingTab === currentTab ? '#666' : '#111',
+            fontWeight: 500,
+            fontSize: 14,
+            padding: 0,
+            cursor: pendingTab === currentTab ? 'not-allowed' : 'pointer',
+            fontFamily: 'system-ui, sans-serif',
+            outline: 'none',
+            margin: 0,
+            transition: 'background 0.15s, color 0.15s',
+            textTransform: 'uppercase',
+          }}
+          disabled={pendingTab === currentTab}
+          onClick={() => {
+            if (pendingTab !== currentTab) {
+              window.dispatchEvent(new CustomEvent("captain-speech", { detail: { type: "engage" } }));
+              setTimeout(() => {
+                setSpeed('warp');
+                setNavigation(pendingTab === 'home' ? 'home' : pendingTab);
+              }, 1100);
+            }
+          }}
+        >
+          ENGAGE
+        </button>
+        <div style={{ display: 'flex', gap: 8, flex: 1, minHeight: 60 }}>
+          <button
+            style={{
+              flex: 1,
+              border: '1px solid #333',
+              background: 'transparent',
+              color: '#fff',
+              fontWeight: 500,
+              fontSize: 12,
+              cursor: 'pointer',
+              fontFamily: 'system-ui, sans-serif',
+              outline: 'none',
+              margin: 0,
+              padding: 0,
+              transition: 'background 0.15s, color 0.15s',
+              textTransform: 'uppercase',
+            }}
+            onClick={() => setEnhancedScreen(true)}
+          >
+            ENHANCE
+          </button>
+        </div>
+      </div>
+      {enhancedScreen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(0,0,0,0.92)',
+            zIndex: 2000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div
+            style={{
+              width: '92vw',
+              height: '92vh',
+              maxWidth: 1920,
+              maxHeight: 1080,
+              background: '#181828',
+              borderRadius: 24,
+              boxShadow: '0 0 64px #000a',
+              overflow: 'hidden',
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <button
+              style={{
+                position: 'absolute',
+                top: 18,
+                right: 18,
+                zIndex: 2100,
+                background: '#fff',
+                color: '#111',
+                border: '1px solid #333',
+                fontWeight: 500,
+                fontSize: 13,
+                padding: '8px 18px',
+                cursor: 'pointer',
+                fontFamily: 'system-ui, sans-serif',
+              }}
+              onClick={() => setEnhancedScreen(false)}
+            >
+              CLOSE
+            </button>
+            {/* Main viewscreen popup */}
+            <div style={{ width: '100%', height: '100%' }}>
+              <Viewscreen />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
