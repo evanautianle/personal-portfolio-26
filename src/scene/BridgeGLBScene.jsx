@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Environment, useGLTF, Html } from "@react-three/drei";
 import * as THREE from "three";
@@ -84,13 +85,139 @@ function CameraSetup({ bounds }) {
 }
 
 /* ========================================
+   Photo Album Content
+======================================== */
+
+const PHOTOS = [
+  { id: 1, src: 'https://picsum.photos/seed/1/800/600', caption: 'Photo 1' },
+  { id: 2, src: 'https://picsum.photos/seed/2/800/600', caption: 'Photo 2' },
+  { id: 3, src: 'https://picsum.photos/seed/3/800/600', caption: 'Photo 3' },
+  { id: 4, src: 'https://picsum.photos/seed/4/800/600', caption: 'Photo 4' },
+  { id: 5, src: 'https://picsum.photos/seed/5/800/600', caption: 'Photo 5' },
+  { id: 6, src: 'https://picsum.photos/seed/6/800/600', caption: 'Photo 6' },
+  { id: 7, src: 'https://picsum.photos/seed/7/800/600', caption: 'Photo 7' },
+  { id: 8, src: 'https://picsum.photos/seed/8/800/600', caption: 'Photo 8' },
+  { id: 9, src: 'https://picsum.photos/seed/9/800/600', caption: 'Photo 9' },
+];
+
+function PhotoAlbumContent() {
+  const [zoomed, setZoomed] = useState(null);
+
+  return (
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', fontFamily: 'system-ui, sans-serif' }}>
+      {/* Header */}
+      <div style={{ padding: '16px 24px 12px', borderBottom: '1px solid #ffffff18', flexShrink: 0 }}>
+        <h2 style={{ margin: 0, fontSize: 'clamp(16px, 2vw, 32px)', fontWeight: 700, color: '#fff', letterSpacing: 2, textTransform: 'uppercase' }}>
+          Photo Album
+        </h2>
+      </div>
+
+      {/* Grid */}
+      <div
+        style={{
+          flex: 1,
+          overflowY: 'auto',
+          padding: '20px',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '12px',
+          alignContent: 'start',
+        }}
+      >
+        {PHOTOS.map(photo => (
+          <div
+            key={photo.id}
+            onClick={() => setZoomed(photo)}
+            style={{
+              aspectRatio: '4/3',
+              overflow: 'hidden',
+              cursor: 'pointer',
+              background: '#0a0a18',
+              position: 'relative',
+              border: '1px solid #ffffff18',
+              transition: 'border-color 0.2s, transform 0.2s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = '#ffffff66';
+              e.currentTarget.style.transform = 'scale(1.02)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = '#ffffff18';
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
+            <img
+              src={photo.src}
+              alt={photo.caption}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            />
+            <div style={{
+              position: 'absolute', bottom: 0, left: 0, right: 0,
+              background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
+              padding: '20px 10px 8px',
+              color: '#fff',
+              fontSize: 'clamp(10px, 1vw, 14px)',
+              fontWeight: 500,
+              opacity: 0,
+              transition: 'opacity 0.2s',
+            }}
+              onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+              onMouseLeave={e => e.currentTarget.style.opacity = '0'}
+            >
+              {photo.caption}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Zoomed lightbox */}
+      {zoomed && (
+        <div
+          onClick={() => setZoomed(null)}
+          style={{
+            position: 'fixed',
+            top: 0, left: 0,
+            width: '100vw', height: '100vh',
+            background: 'rgba(0,0,0,0.92)',
+            zIndex: 99999,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <img
+            src={zoomed.src}
+            alt={zoomed.caption}
+            style={{
+              maxWidth: '85vw',
+              maxHeight: '80vh',
+              objectFit: 'contain',
+              boxShadow: '0 0 80px rgba(0,0,0,0.8)',
+              border: '1px solid #ffffff22',
+            }}
+            onClick={e => e.stopPropagation()}
+          />
+          <div style={{ color: '#fff', marginTop: 16, fontSize: 'clamp(12px, 1.5vw, 20px)', opacity: 0.8, letterSpacing: 1 }}>
+            {zoomed.caption}
+          </div>
+          <div style={{ color: '#ffffff55', marginTop: 8, fontSize: 'clamp(10px, 1vw, 14px)' }}>
+            click anywhere to close
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ========================================
    Screen Overlay
 ======================================== */
-function ScreenOverlay() {
+function ScreenOverlay({ onOpenAlbum }) {
   const SCREEN_SCALE = 0.1;
   return (
     <>
-      {/* Main viewscreen - made much larger for visibility */}
+      {/* Main viewscreen */}
       <Html position={[0.15, 3.1, -8]} transform zIndexRange={[0, 0]} scale={SCREEN_SCALE}>
         <div style={{ width: "2550px", height: "1440px", background: "#000" }}>
           <Viewscreen />
@@ -142,7 +269,7 @@ function ScreenOverlay() {
         </a>
       </Html>
 
-      {/* New: Left upper side screen */}
+      {/* Left upper side screen - clickable photo album */}
       <Html
         position={[-8.9, 2.25, -7.6]}
         rotation={[0, Math.PI / 2.3, 0]}
@@ -167,7 +294,10 @@ function ScreenOverlay() {
             letterSpacing: 1,
             textShadow: '0 2px 8px #000a',
             fontFamily: 'inherit',
+            cursor: 'pointer',
           }}
+          onClick={() => onOpenAlbum()}
+          title="Open Photo Album"
         >
           PHOTO ALBUM
         </div>
@@ -194,7 +324,7 @@ function ScreenOverlay() {
         </div>
       </Html>
 
-      {/* New: Right upper side screen */}
+      {/* Right upper side screen */}
       <Html
         position={[9.15, 2.3, -7.6]}
         rotation={[0, -Math.PI / 2.3, 0]}
@@ -246,7 +376,7 @@ function ScreenOverlay() {
         </div>
       </Html>
 
-      {/* Right side screen - LinkedIn logo and link, styled like left */}
+      {/* Right side screen - LinkedIn logo and link */}
       <Html
         position={[9.15, 0.8, -7.6]}
         rotation={[0, -Math.PI / 2.3, 0]}
@@ -308,9 +438,26 @@ function ScreenOverlay() {
 export default function BridgeGLBScene({ glbUrl, redAlert }) {
   const [bounds, setBounds] = useState(null);
   const [captainSpeech, setCaptainSpeech] = useState("");
+  const [showAlbum, setShowAlbum] = useState(false);
+  const [albumAnimateOut, setAlbumAnimateOut] = useState(false);
   const speechTimeout = useRef();
 
-  // Listen for custom events from the UI for plotting course and engage
+  const handleOpenAlbum = () => {
+    setShowAlbum(true);
+    setAlbumAnimateOut(false);
+  };
+
+  const handleCloseAlbum = () => {
+    setAlbumAnimateOut(true);
+  };
+
+  const handleAlbumAnimationEnd = () => {
+    if (albumAnimateOut) {
+      setShowAlbum(false);
+      setAlbumAnimateOut(false);
+    }
+  };
+
   useEffect(() => {
     function handleSpeechEvent(e) {
       if (!e.detail || !e.detail.type) return;
@@ -330,58 +477,113 @@ export default function BridgeGLBScene({ glbUrl, redAlert }) {
     };
   }, []);
 
-  // Red alert color
   const normalColor = "#cfe6ff";
   const alertColor = "#ff2222";
   const lightColor = redAlert ? alertColor : normalColor;
 
   return (
-    <Canvas
-      shadows
-      camera={{ fov: 38, near: 0.01, far: 1000000 }}
-      style={{ width: "100vw", height: "100vh", background: "#101010" }}
-    >
-      {/* Soft ambient light */}
-      <ambientLight intensity={0.03} color={redAlert ? alertColor : undefined} />
+    <>
+      {/* Photo Album - enhance-style animated modal portal */}
+      {showAlbum && createPortal(
+        <>
+          <style>{`
+            @keyframes slideUpAlbumPopup {
+              from { transform: translateY(100vh); opacity: 0.5; }
+              to   { transform: translateY(0);     opacity: 1;   }
+            }
+            @keyframes slideDownAlbumPopup {
+              from { transform: translateY(0);     opacity: 1;   }
+              to   { transform: translateY(100vh); opacity: 0.5; }
+            }
+          `}</style>
+          {/* Backdrop */}
+          <div
+            style={{
+              position: 'fixed',
+              top: 0, left: 0,
+              width: '100vw', height: '100vh',
+              background: 'rgba(0,0,0,0.6)',
+              zIndex: 3000,
+              display: 'flex',
+              alignItems: 'flex-start',
+              justifyContent: 'center',
+              pointerEvents: 'auto',
+            }}
+            onClick={handleCloseAlbum}
+          >
+            {/* Modal */}
+            <div
+              style={{
+                width: '55%',
+                height: '84%',
+                marginTop: 120,
+                maxWidth: 1920,
+                maxHeight: 1080,
+                background: '#181828',
+                boxShadow: '0 0 64px #000a',
+                overflow: 'hidden',
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                padding: '3vw',
+                boxSizing: 'border-box',
+                color: '#fff',
+                animation: `${albumAnimateOut ? 'slideDownAlbumPopup' : 'slideUpAlbumPopup'} 0.5s cubic-bezier(0.33,1,0.68,1)`,
+              }}
+              onClick={e => e.stopPropagation()}
+              onAnimationEnd={handleAlbumAnimationEnd}
+            >
+              <PhotoAlbumContent />
+            </div>
+          </div>
+        </>,
+        document.body
+      )}
 
-      {/* Ring-style lights around the bridge */}
-      <pointLight position={[0, 2.7, -7.6]} intensity={7.005} distance={7} decay={2} color={lightColor} />
-      <pointLight position={[-4.5, 2, -7.6]} intensity={2.008} distance={2.5} decay={2} color={lightColor} />
-      <pointLight position={[4.5, 2, -7.6]} intensity={2.008} distance={2.5} decay={2} color={lightColor} />
-      {/* Ring of small point lights around the bridge */}
-      {Array.from({ length: 16 }).map((_, i) => {
-        const angle = (i / 16) * Math.PI * 2;
-        const radius = 6;
-        const x = Math.cos(angle) * radius;
-        const z = Math.sin(angle) * radius;
-        return (
-          <pointLight
-            key={i}
-            position={[x, 1.8, z]}
-            intensity={2}
-            distance={12}
-            decay={2}
-            color={lightColor}
-            castShadow={false}
-          />
-        );
-      })}
+      <Canvas
+        shadows
+        camera={{ fov: 38, near: 0.01, far: 1000000 }}
+        style={{ width: "100vw", height: "100vh", background: "#101010" }}
+      >
+        {/* Soft ambient light */}
+        <ambientLight intensity={0.03} color={redAlert ? alertColor : undefined} />
 
+        {/* Ring-style lights around the bridge */}
+        <pointLight position={[0, 2.7, -7.6]} intensity={7.005} distance={7} decay={2} color={lightColor} />
+        <pointLight position={[-4.5, 2, -7.6]} intensity={2.008} distance={2.5} decay={2} color={lightColor} />
+        <pointLight position={[4.5, 2, -7.6]} intensity={2.008} distance={2.5} decay={2} color={lightColor} />
+        {Array.from({ length: 16 }).map((_, i) => {
+          const angle = (i / 16) * Math.PI * 2;
+          const radius = 6;
+          const x = Math.cos(angle) * radius;
+          const z = Math.sin(angle) * radius;
+          return (
+            <pointLight
+              key={i}
+              position={[x, 1.8, z]}
+              intensity={2}
+              distance={12}
+              decay={2}
+              color={lightColor}
+              castShadow={false}
+            />
+          );
+        })}
 
-      {/* Navigation bounds visualization (hidden by default) */}
-      {/* <NavigationBoundsBox color="#00ff88" opacity={0.25} /> */}
+        {/* Load the bridge model */}
+        <BridgeModel url={glbUrl} onBounds={setBounds} />
 
-      {/* Load the bridge model */}
-      <BridgeModel url={glbUrl} onBounds={setBounds} />
+        {/* CrewManager spawns all crew */}
+        <CrewManager captainSpeech={captainSpeech} />
 
-      {/* CrewManager spawns all crew */}
-      <CrewManager captainSpeech={captainSpeech} />
+        {/* Static camera setup */}
+        {bounds && <CameraSetup bounds={bounds} />}
 
-      {/* Static camera setup (safe to render even if bounds is null) */}
-      {bounds && <CameraSetup bounds={bounds} />}
-
-      {/* Overlay screens always rendered */}
-      <ScreenOverlay />
-    </Canvas>
+        {/* Overlay screens */}
+        <ScreenOverlay onOpenAlbum={handleOpenAlbum} />
+      </Canvas>
+    </>
   );
 }
