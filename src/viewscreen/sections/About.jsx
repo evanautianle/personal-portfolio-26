@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 export function About({ enhanced }) {
   if (enhanced) return <EnhancedAbout />;
 
-  const heading = { fontSize: '8vw', fontWeight: 700, marginBottom: '2vw', textTransform: 'uppercase', letterSpacing: '0.1em' };
-  const body = { fontSize: '4.5vw', lineHeight: 1.3 , textTransform: 'uppercase' };
+  const heading = { fontSize: 'clamp(56px, 9vw, 88px)', fontWeight: 700, marginBottom: '1.5vw', textTransform: 'uppercase', letterSpacing: '0.1em' };
+  const body = { fontSize: 'clamp(36px, 4.2vw, 64px)', lineHeight: 1.3 , textTransform: 'uppercase' };
 
   const slides = [
     {
@@ -13,7 +13,7 @@ export function About({ enhanced }) {
       content: (
         <span
           style={{
-            fontSize: '9vw',
+            fontSize: 'clamp(80px, 13vw, 144px)',
             fontWeight: 900,
             letterSpacing: '0.2em',
             textTransform: 'uppercase',
@@ -63,12 +63,13 @@ export function About({ enhanced }) {
               justifyContent: 'center',
             }}
           >
-            {['React', 'Next.js', 'TypeScript', 'JavaScript', 'Python', 'Flask', 'Tailwind CSS', 'Supabase', 'Payload CMS', 'Node.js', 'Figma', 'Solidity', 'TensorFlow'].map((skill) => (
+                {['React', 'Next.js', 'TypeScript', 'JavaScript', 'Python', 'Flask', 'Tailwind CSS', 'Supabase', 'Payload CMS', 'Node.js', 'Figma', 'Solidity', 'TensorFlow'].map((skill) => (
               <span
                 key={skill}
                 style={{
                   padding: '0.4vw 1vw',
-                  fontSize: '4.5vw',textTransform: 'uppercase'
+                  fontSize: 'clamp(36px, 4.2vw, 64px)',
+                  textTransform: 'uppercase'
                 }}
               >
                 {skill}
@@ -198,7 +199,8 @@ export function About({ enhanced }) {
           color: '#fff',
           textAlign: 'center',
           background: 'none',
-          width: '90vw',
+          width: 'calc(100% - 20vw)',
+          maxWidth: '1600px',
           maxHeight: '85%',
           overflow: 'auto',
           padding: '4vw 0',
