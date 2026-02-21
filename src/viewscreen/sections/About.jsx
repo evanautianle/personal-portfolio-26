@@ -1,5 +1,6 @@
 import { CruiseStarfield } from '../CruiseStarfield';
 import React, { useState } from 'react';
+import evanImg from '/assets/images/evan.png';
 
 export function About({ enhanced }) {
   if (enhanced) return <EnhancedAbout />;
@@ -306,9 +307,23 @@ function EnhancedAbout() {
         >
           <section style={sectionStyle}>
             <h2 style={headerStyle}>About Me</h2>
-            <p style={paragraphStyle}>
-              Hello! I'm in my last year studying Computer Science at the University of Auckland. I'm passionate about crafting web applications that are intuitive and meaningful tools that make life easier.
-            </p>
+            <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+              <div style={{ flex: 1, minWidth: 260 }}>
+                <p style={paragraphStyle}>
+                  Hello! I'm in my last year studying Computer Science at the University of Auckland. I'm passionate about crafting web applications that are intuitive and meaningful tools that make life easier.
+                </p>
+              </div>
+
+              <div style={{ width: 220, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ border: '2px solid #fff', padding: 8, background: 'rgba(255,255,255,0.03)' }}>
+                  <img
+                    src={evanImg}
+                    alt="Evan"
+                    style={{ width: 200, height: 200, objectFit: 'cover', borderRadius: 6, display: 'block' }}
+                  />
+                </div>
+              </div>
+            </div>
           </section>
 
           <section style={sectionStyle}>
@@ -380,7 +395,7 @@ Auckland, NZ · March 2025 – Present</span>
         Web Designer & Front End Developer
       </div>
       <div style={{ fontSize: 14, marginTop: 6, lineHeight: 1.5 }}>
-        Designed and developed an e-commerce website supporting product listings, customer interaction, and streamlined online purchases.
+        Contributed in the front-end development and design of an  e-commerce platform for a sneaker retail business, supporting product listings, customer interactions, and streamlined online purchases.
       </div>
     </div>
 
