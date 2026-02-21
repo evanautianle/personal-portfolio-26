@@ -316,7 +316,7 @@ function ScreenOverlay({ onOpenAlbum, overlayKey }) {
               );
               // 3. After a bigger delay, open the link
               setTimeout(() => {
-                window.open("https://www.linkedin.com/in/evanautianle", "_blank");
+                window.open("https://www.linkedin.com/in/evan-au-01667630a/", "_blank");
               }, 1200); // big delay after comms
             }, 900); // comms delay after captain
           }}

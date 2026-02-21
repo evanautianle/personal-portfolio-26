@@ -8,6 +8,8 @@ import LeftControlPanel from '../ui/LeftControlPanel';
 import RightControlPanel from '../ui/RightControlPanel';
 import { Viewscreen } from '../viewscreen/Viewscreen';
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
+import { simpleViewAtom } from '../state/simpleViewAtom';
+import SimpleSite from '../ui/SimpleSite';
 import { heroSpeedAtom } from '../state/heroSpeedAtom';
 import { navigationAtom } from '../state/navigationAtom';
 import { alertAtom } from '../state/alertAtom';
@@ -45,6 +47,7 @@ export function App() {
   const captainImage = undefined; // e.g. '/assets/crew/captain.png'
   const helmImage = undefined; // e.g. '/assets/crew/helm.png'
   const [dialogueStack, setDialogueStack] = useDialogueStack(captainImage, helmImage);
+  const simpleView = useAtomValue(simpleViewAtom);
 
   // When currentTab changes externally, update pendingTab and cardIndex
   React.useEffect(() => {
@@ -72,48 +75,83 @@ const arrowStyle = {
   return (
     <>
       <Navbar />
-      <CanvasRoot redAlert={redAlert} />
-      {/* Stack dialogue boxes, newest at the bottom */}
-      {!enhancedScreen && (
-        <div style={{
-          position: 'fixed',
-          left: '40%',
-          bottom: 48,
-          transform: 'translateX(-50%)',
-          display: 'flex',
-          flexDirection: 'column-reverse',
-          gap: 12,
-          zIndex: 2000,
-          pointerEvents: 'none',
-          width: 480,
-          maxWidth: '80vw',
-          alignItems: 'flex-start',
-        }}>
-          {[...dialogueStack].reverse().slice(0, 2).map((d) => (
-            <DialogueBox key={d.id} text={d.text} speaker={d.speaker} imageUrl={d.imageUrl} />
-          ))}
+
+      <div style={{ position: 'relative' }}>
+        {/* SimpleSite overlay - fixed, fades in when simpleView is true. */}
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 900,
+            transition: 'opacity 300ms ease, visibility 0s linear 300ms',
+            opacity: simpleView ? 1 : 0,
+            visibility: simpleView ? 'visible' : 'hidden',
+            pointerEvents: simpleView ? 'auto' : 'none',
+            willChange: 'opacity',
+            overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch',
+          }}
+        >
+          <SimpleSite />
         </div>
-      )}
-      <ControlPanel position="left">
-        <LeftControlPanel
-          routes={routes}
-          cardIndex={cardIndex}
-          setCardIndex={setCardIndex}
-          pendingTab={pendingTab}
-          currentTab={currentTab}
-          plotCourse={plotCourse}
-        />
-      </ControlPanel>
-      <ControlPanel position="right">
-        <RightControlPanel
-          pendingTab={pendingTab}
-          currentTab={currentTab}
-          setSpeed={setSpeed}
-          setNavigation={setNavigation}
-          setEnhancedScreen={setEnhancedScreen}
-          enhancedScreen={enhancedScreen}
-        />
-      </ControlPanel>
+
+        {/* Full interactive app - stays mounted but faded out when simpleView is true */}
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 0,
+            transition: 'opacity 300ms ease',
+            opacity: simpleView ? 0 : 1,
+            pointerEvents: simpleView ? 'none' : 'auto',
+          }}
+        >
+          <CanvasRoot redAlert={redAlert} />
+          {/* Stack dialogue boxes, newest at the bottom */}
+          {!enhancedScreen && (
+            <div style={{
+              position: 'fixed',
+              left: '40%',
+              bottom: 48,
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              flexDirection: 'column-reverse',
+              gap: 12,
+              zIndex: 2000,
+              pointerEvents: 'none',
+              width: 480,
+              maxWidth: '80vw',
+              alignItems: 'flex-start',
+            }}>
+              {[...dialogueStack].reverse().slice(0, 2).map((d) => (
+                <DialogueBox key={d.id} text={d.text} speaker={d.speaker} imageUrl={d.imageUrl} />
+              ))}
+            </div>
+          )}
+          <ControlPanel position="left">
+            <LeftControlPanel
+              routes={routes}
+              cardIndex={cardIndex}
+              setCardIndex={setCardIndex}
+              pendingTab={pendingTab}
+              currentTab={currentTab}
+              plotCourse={plotCourse}
+            />
+          </ControlPanel>
+          <ControlPanel position="right">
+            <RightControlPanel
+              pendingTab={pendingTab}
+              currentTab={currentTab}
+              setSpeed={setSpeed}
+              setNavigation={setNavigation}
+              setEnhancedScreen={setEnhancedScreen}
+              enhancedScreen={enhancedScreen}
+            />
+          </ControlPanel>
+        </div>
+      </div>
     </>
   );
 }

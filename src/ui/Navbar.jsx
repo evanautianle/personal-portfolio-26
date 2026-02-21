@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useSetAtom, useAtomValue } from 'jotai';
 import { navigationAtom } from '../state/navigationAtom';
+import { simpleViewAtom } from '../state/simpleViewAtom';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import './ui-text.css';
 import HowToUsePopup from './howToUse';
 
 const LINKS = [
-  { icon: <FaGithub />, href: 'https://github.com/evanau', label: 'GitHub' },
-  { icon: <FaLinkedin />, href: 'https://linkedin.com/in/evanau', label: 'LinkedIn' },
+  { icon: <FaGithub />, href: 'https://github.com/evanautianle', label: 'GitHub' },
+  { icon: <FaLinkedin />, href: 'https://www.linkedin.com/in/evan-au-01667630a/', label: 'LinkedIn' },
   {
     icon: (
       <svg height="20" width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -187,6 +188,7 @@ const styles = `
 export function Navbar() {
   const setNavigation = useSetAtom(navigationAtom);
   const current = useAtomValue(navigationAtom);
+  const setSimpleView = useSetAtom(simpleViewAtom);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [howOpen, setHowOpen] = useState(false);
   const [howAnimateOut, setHowAnimateOut] = useState(false);
@@ -220,6 +222,7 @@ export function Navbar() {
                 className="navbar-btn navbar-text-style"
                 onClick={() => {
                   if (text === 'HOW TO USE') handleOpenHow();
+                  if (text === 'SIMPLE VIEW') setSimpleView((s) => !s);
                 }}
               >
                 {text}
@@ -269,6 +272,8 @@ export function Navbar() {
               className="navbar-btn navbar-text-style"
               onClick={() => {
                 if (text === 'HOW TO USE') handleOpenHow();
+                if (text === 'SIMPLE VIEW') setSimpleView((s) => !s);
+                setDrawerOpen(false);
               }}
             >
               {text}
