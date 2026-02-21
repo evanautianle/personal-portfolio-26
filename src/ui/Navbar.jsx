@@ -293,18 +293,19 @@ export function Navbar() {
 
           {/* LEFT — hidden on tablet/mobile */}
           <div className="navbar-left">
-            {['HOW TO USE', 'SIMPLE VIEW'].map((text) => (
-              <button
-                key={text}
-                className="navbar-btn navbar-text-style"
-                onClick={() => {
-                  if (text === 'HOW TO USE') handleOpenHow();
-                  if (text === 'SIMPLE VIEW') setSimpleView((s) => !s);
-                }}
-              >
-                {text}
-              </button>
-            ))}
+            <button
+              className="navbar-btn navbar-text-style"
+              onClick={handleOpenHow}
+            >
+              HOW TO USE
+            </button>
+
+            <button
+              className="navbar-btn navbar-text-style"
+              onClick={() => setSimpleView((s) => !s)}
+            >
+              {simpleView ? 'BRIDGE VIEW' : 'SIMPLE VIEW'}
+            </button>
           </div>
 
           {/* CENTER */}
@@ -356,19 +357,19 @@ export function Navbar() {
       {/* Drawer — slides in below the bar on tablet/mobile */}
       <div className={`navbar-drawer navbar-text-style${drawerOpen ? ' open' : ''}`}>
         <div className="navbar-drawer-section">
-          {['HOW TO USE', 'SIMPLE VIEW'].map((text) => (
-            <button
-              key={text}
-              className="navbar-btn navbar-text-style"
-              onClick={() => {
-                if (text === 'HOW TO USE') handleOpenHow();
-                if (text === 'SIMPLE VIEW') setSimpleView((s) => !s);
-                setDrawerOpen(false);
-              }}
-            >
-              {text}
-            </button>
-          ))}
+          <button
+            className="navbar-btn navbar-text-style"
+            onClick={() => { handleOpenHow(); setDrawerOpen(false); }}
+          >
+            HOW TO USE
+          </button>
+
+          <button
+            className="navbar-btn navbar-text-style"
+            onClick={() => { setSimpleView((s) => !s); setDrawerOpen(false); }}
+          >
+            {simpleView ? 'BRIDGE VIEW' : 'SIMPLE VIEW'}
+          </button>
         </div>
         <div className="navbar-drawer-divider" />
         <div className="navbar-drawer-section" style={{ gap: 20 }}>
