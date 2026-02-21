@@ -431,7 +431,7 @@ export default function BridgeGLBScene({ glbUrl, redAlert }) {
     };
   }, []);
 
-  const normalColor = "#cfe6ff";
+  const normalColor = "#fff";
   const alertColor = "#ff2222";
   const lightColor = redAlert ? alertColor : normalColor;
 
@@ -451,7 +451,7 @@ export default function BridgeGLBScene({ glbUrl, redAlert }) {
         style={{ width: "100vw", height: "100vh", background: "#101010" }}
       >
         {/* Soft ambient light */}
-        <ambientLight intensity={0.03} color={redAlert ? alertColor : undefined} />
+        <ambientLight intensity={0.01} color={redAlert ? alertColor : undefined} />
 
         {/* Ring-style lights around the bridge */}
         <pointLight position={[0, 2.7, -7.6]} intensity={7.005} distance={7} decay={2} color={lightColor} />
@@ -466,7 +466,7 @@ export default function BridgeGLBScene({ glbUrl, redAlert }) {
             <pointLight
               key={i}
               position={[x, 1.8, z]}
-              intensity={2}
+              intensity={1}
               distance={12}
               decay={2}
               color={lightColor}
