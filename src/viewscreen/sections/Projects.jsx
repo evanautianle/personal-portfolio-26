@@ -2,6 +2,18 @@ import { CruiseStarfield } from '../CruiseStarfield';
 import React, { useState } from 'react';
 
 const projectData = [
+    {
+    key: 'wdcc-uaic',
+    image: '/assets/images/project.png',
+    title: 'WDCC — Web Development & Consulting Club',
+    event: 'University of Auckland Investment Club (UAIC)',
+    award: null,
+    link: null,
+    description:
+  'Built features for a full-stack site supporting registration, events, and online payments.',
+
+     tech: 'React · Next.js · Tailwind CSS · Payload CMS · MongoDB',
+  },
   {
     key: 'comic-library',
     image: '/assets/images/project0.png',

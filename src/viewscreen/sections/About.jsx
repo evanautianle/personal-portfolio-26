@@ -78,17 +78,40 @@ export function About({ enhanced }) {
         </div>
       ),
     },
-    {
-      key: 'interests',
-      content: (
-        <div>
-          <h2 style={heading}>Interests</h2>
-          <p style={body}>
-            I'm a big fan of coffee — my favourite technique is the V60. I collect Beatles records, Green Lantern comics, and Star Trek DVDs.
-          </p>
-        </div>
-      ),
-    },
+{
+  key: 'experience',
+  content: (
+    <div>
+      <h2 style={heading}>Experience</h2>
+      <div style={{ ...body, textAlign: 'left', lineHeight: 1.6 }}>
+
+        <b>WDCC — WEB DEVELOPMENT & CONSULTING CLUB</b><br />
+        Full Stack Web Developer · Auckland, NZ · March 2025 – Present<br /><br />
+
+        <b>FEEL GOOD KICKS</b><br />
+        Web Designer & Front End Developer · Auckland, NZ · Jan 2023 – June 2023<br /><br />
+
+        <b>WEB3 BLOCKCHAIN HACKATHON</b><br />
+        Developer & Designer · Auckland, NZ · April 2025<br />
+        1st Place — Kiwiana Prize<br /><br />
+
+        <b>SUSTAINABILITY HACKATHON</b><br />
+        Developer & Designer · Auckland, NZ · March 2025<br />
+        Exec’s Choice Award<br /><br />
+
+        <b>SESA x WDCC HACKATHON 2025</b><br />
+        Developer · Auckland, NZ · July 2025<br /><br />
+
+        <b>SESA x WDCC HACKATHON 2024</b><br />
+        Developer & Designer · Auckland, NZ · July 2024<br />
+        Most Entertaining Solution
+
+      </div>
+    </div>
+  ),
+},
+
+
   ];
 
   const [slide, setSlide] = useState(0);
@@ -317,12 +340,97 @@ function EnhancedAbout() {
             </ul>
           </section>
 
-          <section style={sectionStyle}>
-            <h2 style={headerStyle}>Interests</h2>
-            <p style={paragraphStyle}>
-              I'm a big fan of coffee with my favourite technique being the V60. I collect Beatles records, Green Lantern comics, and Star Trek DVDs.
-            </p>
-          </section>
+<section style={sectionStyle}>
+  <h2 style={headerStyle}>Experience</h2>
+
+  <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
+
+    {/* WDCC */}
+    <div>
+      <div
+  style={{
+    display: 'grid',
+    gridTemplateColumns: '1fr auto',
+    gap: 8,
+    alignItems: 'baseline',
+  }}
+>
+
+        <strong>WDCC — Web Development & Consulting Club</strong>
+        <span style={{ opacity: 0.6, textAlign: 'right', whiteSpace: 'nowrap' }}>
+Auckland, NZ · March 2025 – Present</span>
+      </div>
+      <div style={{ fontSize: 14, opacity: 0.8 }}>
+        Full Stack Web Developer
+      </div>
+      <div style={{ fontSize: 14, marginTop: 6, lineHeight: 1.5 }}>
+        Contributed to the development of a full-stack platform for the University of Auckland Investment Club, supporting registration, event sign-ups, and online membership payments.
+      </div>
+    </div>
+
+    {/* Feel Good Kicks */}
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+        <strong>Feel Good Kicks</strong>
+        <span style={{ opacity: 0.6 }}>Auckland, NZ · Jan 2023 – June 2023</span>
+      </div>
+      <div style={{ fontSize: 14, opacity: 0.8 }}>
+        Web Designer & Front End Developer
+      </div>
+      <div style={{ fontSize: 14, marginTop: 6, lineHeight: 1.5 }}>
+        Designed and developed an e-commerce website supporting product listings, customer interaction, and streamlined online purchases.
+      </div>
+    </div>
+
+    {/* Web3 */}
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+        <strong>Web3 Blockchain Hackathon</strong>
+        <span style={{ opacity: 0.6 }}>Auckland, NZ · April 2025</span>
+      </div>
+      <div style={{ fontSize: 14, opacity: 0.8 }}>Developer & Designer</div>
+      <div style={{ fontSize: 14, marginTop: 4 }}>
+        1st Place — Kiwiana Prize
+      </div>
+    </div>
+
+    {/* Sustainability */}
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+        <strong>Sustainability Hackathon</strong>
+        <span style={{ opacity: 0.6 }}>Auckland, NZ · March 2025</span>
+      </div>
+      <div style={{ fontSize: 14, opacity: 0.8 }}>Developer & Designer</div>
+      <div style={{ fontSize: 14, marginTop: 4 }}>
+        Exec’s Choice Award
+      </div>
+    </div>
+
+    {/* PiggyQuest */}
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+        <strong>SESA x WDCC Hackathon 2025</strong>
+        <span style={{ opacity: 0.6 }}>Auckland, NZ · July 2025</span>
+      </div>
+      <div style={{ fontSize: 14, opacity: 0.8 }}>Developer</div>
+    </div>
+
+    {/* Findr */}
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+        <strong>SESA x WDCC Hackathon 2024</strong>
+        <span style={{ opacity: 0.6 }}>Auckland, NZ · July 2024</span>
+      </div>
+      <div style={{ fontSize: 14, opacity: 0.8 }}>Developer & Designer</div>
+      <div style={{ fontSize: 14, marginTop: 4 }}>
+        Most Entertaining Solution
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
         </main>
       </div>
     </div>

@@ -12,7 +12,7 @@ export function ControlPanel({ position = 'left', children }) {
         left: isLeft ? 28 : 'auto',
         right: isLeft ? 'auto' : 28,
         background: '#111',
-          padding: '32px 20px 20px 20px', // Add top padding to both panels
+        padding: '32px 20px 20px 20px', // Add top padding to both panels
         display: 'flex',
         flexDirection: 'column',
         gap: 12,
@@ -23,7 +23,7 @@ export function ControlPanel({ position = 'left', children }) {
         height: 250,
       }}
     >
-      <div className="controlpanel-text-style" style={{height: '100%', width: '100%'}}>
+      <div className="controlpanel-text-style" style={{height: '100%', width: '100%', pointerEvents: 'auto'}}>
         {children}
       </div>
     </div>
