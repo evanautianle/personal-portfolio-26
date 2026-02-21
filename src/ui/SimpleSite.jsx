@@ -123,7 +123,7 @@ const secondaryButton = {
 };
 export default function SimpleSite() {
   return (
-    <div style={{ background: '#fff', minHeight: '100vh', fontFamily: baseFont }}>
+    <div style={{ background: 'transparent', minHeight: '100vh', fontFamily: baseFont }}>
       {/* Hero (dark, full viewport height) */}
       <section
         style={{

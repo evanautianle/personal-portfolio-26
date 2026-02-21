@@ -49,8 +49,11 @@ export function App() {
   const [dialogueStack, setDialogueStack] = useDialogueStack(captainImage, helmImage);
   const simpleView = useAtomValue(simpleViewAtom);
   const overlayRef = useRef(null);
+  const [overlayShown, setOverlayShown] = useState(false);
+  const hideOverlayTimer = useRef(null);
 
   React.useEffect(() => {
+    // Always scroll to top when entering simple view
     if (simpleView && overlayRef.current) {
       try {
         overlayRef.current.scrollTop = 0;
@@ -58,6 +61,31 @@ export function App() {
         // ignore
       }
     }
+
+    // Manage overlay visibility: show immediately when entering simpleView;
+    // when leaving, keep the black overlay visible briefly so the main app
+    // can fade in without a white flash.
+    if (simpleView) {
+      if (hideOverlayTimer.current) {
+        clearTimeout(hideOverlayTimer.current);
+        hideOverlayTimer.current = null;
+      }
+      setOverlayShown(true);
+    } else {
+      // keep overlay for 300ms (matches main app fade) then hide
+      if (hideOverlayTimer.current) clearTimeout(hideOverlayTimer.current);
+      hideOverlayTimer.current = setTimeout(() => {
+        setOverlayShown(false);
+        hideOverlayTimer.current = null;
+      }, 320);
+    }
+
+    return () => {
+      if (hideOverlayTimer.current) {
+        clearTimeout(hideOverlayTimer.current);
+        hideOverlayTimer.current = null;
+      }
+    };
   }, [simpleView]);
 
   // When currentTab changes externally, update pendingTab and cardIndex
@@ -97,9 +125,10 @@ const arrowStyle = {
             right: 0,
             bottom: 0,
             zIndex: 900,
+            background: '#000',
             transition: 'opacity 300ms ease, visibility 0s linear 300ms',
             opacity: simpleView ? 1 : 0,
-            visibility: simpleView ? 'visible' : 'hidden',
+            visibility: overlayShown ? 'visible' : 'hidden',
             pointerEvents: simpleView ? 'auto' : 'none',
             willChange: 'opacity',
             overflowY: 'auto',
@@ -108,7 +137,7 @@ const arrowStyle = {
           id="simplesite-overlay"
           ref={overlayRef}
         >
-          <SimpleSite />
+          {overlayShown ? <SimpleSite /> : null}
         </div>
 
         {/* Full interactive app - stays mounted but faded out when simpleView is true */}
