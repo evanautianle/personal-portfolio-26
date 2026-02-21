@@ -125,6 +125,7 @@ function PhotoAlbumContent() {
 export function PhotoAlbumPopup({ open, animateOut, onClose, onAnimationEnd }) {
   if (!open && !animateOut) return null;
 
+  // Prevent flash: fade overlay out with animation
   return createPortal(
     <>
       <style>{`
@@ -135,6 +136,10 @@ export function PhotoAlbumPopup({ open, animateOut, onClose, onAnimationEnd }) {
         @keyframes slideDownAlbumPopup {
           from { transform: translateY(0);     opacity: 1;   }
           to   { transform: translateY(100vh); opacity: 0.5; }
+        }
+        @keyframes fadeOutOverlay {
+          from { opacity: 0.6; }
+          to   { opacity: 0; }
         }
       `}</style>
       <div
@@ -148,6 +153,7 @@ export function PhotoAlbumPopup({ open, animateOut, onClose, onAnimationEnd }) {
           alignItems: 'flex-start',
           justifyContent: 'center',
           pointerEvents: 'auto',
+          animation: animateOut ? 'fadeOutOverlay 0.5s linear forwards' : undefined,
         }}
         onClick={onClose}
       >

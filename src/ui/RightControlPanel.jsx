@@ -114,73 +114,64 @@ export default function RightControlPanel({
         </div>
       </div>
       {showEnhanced && (
-        <>
-          <style>{`
-            @keyframes slideUpEnhancedPopup {
-              from {
-                transform: translateY(100vh);
-                opacity: 0.5;
-              }
-              to {
-                transform: translateY(0);
-                opacity: 1;
-              }
-            }
-            @keyframes slideDownEnhancedPopup {
-              from {
-                transform: translateY(0);
-                opacity: 1;
-              }
-              to {
-                transform: translateY(100vh);
-                opacity: 0.5;
-              }
-            }
-          `}</style>
-          <div
-            style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              width: '100vw',
-              height: '100vh',
-              background: 'rgba(0,0,0,0.6)',
-              zIndex: 3000,
-              display: 'flex',
-              alignItems: 'flex-start',
-              justifyContent: 'center',
-              pointerEvents: 'auto',
-            }}
-            onClick={handleCloseEnhanced}
-          >
-            <div
-              style={{
-                width: '55%',
-                height: '84%',
-                marginTop: 120,
-                maxWidth: 1920,
-                maxHeight: 1080,
-                background: '#181828',
-                boxShadow: '0 0 64px #000a',
-                overflow: 'hidden',
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                animation: `${animateOut ? 'slideDownEnhancedPopup' : 'slideUpEnhancedPopup'} 0.5s cubic-bezier(0.33,1,0.68,1)`,
-              }}
-              onClick={e => e.stopPropagation()}
-              onAnimationEnd={handleAnimationEnd}
-            >
-              {/* CLOSE button removed as requested */}
-              {/* Main viewscreen popup */}
-              <div style={{ width: '100%', height: '100%' }}>
-                <Viewscreen enhanced />
-              </div>
-            </div>
-          </div>
-        </>
-      )}
+  <>
+    <style>{`
+      @keyframes slideUpEnhancedPopup {
+        from { transform: translateY(100vh); opacity: 0; }
+        to   { transform: translateY(0); opacity: 1; }
+      }
+      @keyframes slideDownEnhancedPopup {
+        from { transform: translateY(0); opacity: 1; }
+        to   { transform: translateY(100vh); opacity: 0; }
+      }
+    `}</style>
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        background: 'rgba(0,0,0,0.6)',
+        zIndex: 3000,
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        pointerEvents: 'auto',
+      }}
+      onClick={handleCloseEnhanced}
+    >
+      <div
+        style={{
+          width: '55%',
+          height: '84%',
+          marginTop: 120,
+          maxWidth: 1920,
+          maxHeight: 1080,
+          background: '#181828',
+          boxShadow: '0 0 64px #000a',
+          overflow: 'hidden',
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          animation: `${animateOut ? 'slideDownEnhancedPopup' : 'slideUpEnhancedPopup'} 0.5s cubic-bezier(0.33,1,0.68,1) forwards`,
+        }}
+        onClick={e => e.stopPropagation()}
+        onAnimationEnd={() => {
+          if (animateOut) {
+            setShowEnhanced(false);
+            setAnimateOut(false);
+            setEnhancedScreen(false); // now only after animation
+          }
+        }}
+      >
+        <Viewscreen enhanced />
+      </div>
+    </div>
+  </>
+)}
+
     </>
   );
 }

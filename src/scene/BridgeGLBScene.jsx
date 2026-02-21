@@ -176,7 +176,7 @@ function ScreenOverlay({ onOpenAlbum }) {
           style={{
             width: "2150px",
             height: "450px",
-            background: "#222",
+            background: "#111",
             borderRadius: 24,
             opacity: 0.92,
             overflow: "hidden",
@@ -231,7 +231,7 @@ function ScreenOverlay({ onOpenAlbum }) {
           style={{
             width: "2100px",
             height: "450px",
-            background: "#222",
+            background: "#111",
             borderRadius: 24,
             opacity: 0.92,
             overflow: "hidden",
