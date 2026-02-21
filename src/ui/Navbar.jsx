@@ -3,6 +3,7 @@ import { useSetAtom, useAtomValue } from 'jotai';
 import { navigationAtom } from '../state/navigationAtom';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import './ui-text.css';
+import HowToUsePopup from './howToUse';
 
 const LINKS = [
   { icon: <FaGithub />, href: 'https://github.com/evanau', label: 'GitHub' },
@@ -187,6 +188,22 @@ export function Navbar() {
   const setNavigation = useSetAtom(navigationAtom);
   const current = useAtomValue(navigationAtom);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [howOpen, setHowOpen] = useState(false);
+  const [howAnimateOut, setHowAnimateOut] = useState(false);
+
+  const handleOpenHow = () => {
+    setHowAnimateOut(false);
+    setHowOpen(true);
+  };
+
+  const handleCloseHow = () => setHowAnimateOut(true);
+
+  const handleHowAnimationEnd = () => {
+    if (howAnimateOut) {
+      setHowOpen(false);
+      setHowAnimateOut(false);
+    }
+  };
 
   return (
     <>
@@ -198,7 +215,13 @@ export function Navbar() {
           {/* LEFT — hidden on tablet/mobile */}
           <div className="navbar-left">
             {['HOW TO USE', 'SIMPLE VIEW'].map((text) => (
-              <button key={text} className="navbar-btn navbar-text-style">
+              <button
+                key={text}
+                className="navbar-btn navbar-text-style"
+                onClick={() => {
+                  if (text === 'HOW TO USE') handleOpenHow();
+                }}
+              >
                 {text}
               </button>
             ))}
@@ -241,7 +264,13 @@ export function Navbar() {
       <div className={`navbar-drawer navbar-text-style${drawerOpen ? ' open' : ''}`}>
         <div className="navbar-drawer-section">
           {['HOW TO USE', 'SIMPLE VIEW'].map((text) => (
-            <button key={text} className="navbar-btn navbar-text-style">
+            <button
+              key={text}
+              className="navbar-btn navbar-text-style"
+              onClick={() => {
+                if (text === 'HOW TO USE') handleOpenHow();
+              }}
+            >
               {text}
             </button>
           ))}
@@ -262,6 +291,12 @@ export function Navbar() {
           ))}
         </div>
       </div>
+      <HowToUsePopup
+        open={howOpen}
+        animateOut={howAnimateOut}
+        onClose={handleCloseHow}
+        onAnimationEnd={handleHowAnimationEnd}
+      />
     </>
   );
 }
