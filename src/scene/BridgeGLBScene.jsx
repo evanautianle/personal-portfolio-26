@@ -89,12 +89,12 @@ function CameraSetup({ bounds }) {
 /* ========================================
    Screen Overlay
 ======================================== */
-function ScreenOverlay({ onOpenAlbum }) {
+function ScreenOverlay({ onOpenAlbum, overlayKey }) {
   const SCREEN_SCALE = 0.1;
   return (
     <>
       {/* Main viewscreen */}
-      <Html position={[0.15, 3.1, -8]} transform zIndexRange={[0, 0]} scale={SCREEN_SCALE}>
+      <Html key={`viewscreen-main-${overlayKey}`} position={[0.15, 3.1, -8]} transform zIndexRange={[0, 0]} scale={SCREEN_SCALE}>
         <div style={{ width: "2550px", height: "1440px", background: "#000" }}>
           <Viewscreen />
         </div>
@@ -102,6 +102,7 @@ function ScreenOverlay({ onOpenAlbum }) {
 
       {/* Left side screen - GitHub logo and link */}
       <Html
+        key={`viewscreen-left-link-${overlayKey}`}
         position={[-9, 0.7, -7.6]}
         rotation={[0, Math.PI / 2.3, 0]}
         transform
@@ -166,6 +167,7 @@ function ScreenOverlay({ onOpenAlbum }) {
 
       {/* Left upper side screen - clickable photo album */}
       <Html
+        key={`viewscreen-left-album-${overlayKey}`}
         position={[-8.9, 2.25, -7.6]}
         rotation={[0, Math.PI / 2.3, 0]}
         transform
@@ -200,6 +202,7 @@ function ScreenOverlay({ onOpenAlbum }) {
 
       {/* Left secondary viewscreen */}
       <Html
+        key={`viewscreen-left-secondary-${overlayKey}`}
         position={[-5.05, 2.35, -7.6]}
         rotation={[0, Math.PI / 5, 0]}
         transform
@@ -221,6 +224,7 @@ function ScreenOverlay({ onOpenAlbum }) {
 
       {/* Right upper side screen */}
       <Html
+        key={`viewscreen-right-top-${overlayKey}`}
         position={[9.15, 2.3, -7.6]}
         rotation={[0, -Math.PI / 2.3, 0]}
         transform
@@ -252,6 +256,7 @@ function ScreenOverlay({ onOpenAlbum }) {
 
       {/* Right secondary viewscreen */}
       <Html
+        key={`viewscreen-right-secondary-${overlayKey}`}
         position={[5.35, 2.25, -7.6]}
         rotation={[0, -Math.PI / 5, 0]}
         transform
@@ -273,6 +278,7 @@ function ScreenOverlay({ onOpenAlbum }) {
 
       {/* Right side screen - LinkedIn logo and link */}
       <Html
+        key={`viewscreen-right-link-${overlayKey}`}
         position={[9.15, 0.8, -7.6]}
         rotation={[0, -Math.PI / 2.3, 0]}
         transform
@@ -355,6 +361,8 @@ export default function BridgeGLBScene({ glbUrl, redAlert }) {
   const [showAlbum, setShowAlbum] = useState(false);
   const [albumAnimateOut, setAlbumAnimateOut] = useState(false);
   const speechTimeout = useRef();
+  const [overlayKey, setOverlayKey] = useState(0);
+  const resizeTimer = useRef();
 
   const handleOpenAlbum = () => {
     setAlbumAnimateOut(false);
@@ -405,6 +413,21 @@ export default function BridgeGLBScene({ glbUrl, redAlert }) {
     return () => {
       window.removeEventListener("captain-speech", handleSpeechEvent);
       if (speechTimeout.current) clearTimeout(speechTimeout.current);
+    };
+  }, []);
+
+  // Debounced overlay remount on window resize to ensure Html overlays remount
+  useEffect(() => {
+    function handleResize() {
+      if (resizeTimer.current) clearTimeout(resizeTimer.current);
+      resizeTimer.current = setTimeout(() => {
+        setOverlayKey((k) => k + 1);
+      }, 120);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      if (resizeTimer.current) clearTimeout(resizeTimer.current);
     };
   }, []);
 
@@ -462,7 +485,7 @@ export default function BridgeGLBScene({ glbUrl, redAlert }) {
         {bounds && <CameraSetup bounds={bounds} />}
 
         {/* Overlay screens */}
-        <ScreenOverlay onOpenAlbum={handleOpenAlbum} />
+        <ScreenOverlay onOpenAlbum={handleOpenAlbum} overlayKey={overlayKey} />
       </Canvas>
     </>
   );

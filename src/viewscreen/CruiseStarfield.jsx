@@ -8,17 +8,20 @@ export function CruiseStarfield() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let animationId;
-    const w = canvas.width = canvas.offsetWidth;
-    const h = canvas.height = canvas.offsetHeight;
+    let w = canvas.width = canvas.offsetWidth;
+    let h = canvas.height = canvas.offsetHeight;
     const numStars = 220;
-    const stars = [];
-    for (let i = 0; i < numStars; i++) {
-      stars.push({
-        x: Math.random() * w - w / 2,
-        y: Math.random() * h - h / 2,
-        z: Math.random() * (w * 0.5),
-        o: 0.2 + Math.random() * 0.8
-      });
+    let stars = [];
+    function initStars() {
+      stars = [];
+      for (let i = 0; i < numStars; i++) {
+        stars.push({
+          x: Math.random() * w - w / 2,
+          y: Math.random() * h - h / 2,
+          z: Math.random() * (w * 0.5),
+          o: 0.2 + Math.random() * 0.8
+        });
+      }
     }
     let currentSpeed = 0.5;
     function draw() {
@@ -47,8 +50,18 @@ export function CruiseStarfield() {
       ctx.restore();
       animationId = requestAnimationFrame(draw);
     }
+    initStars();
     draw();
-    return () => cancelAnimationFrame(animationId);
+    function handleResize() {
+      w = canvas.width = canvas.offsetWidth;
+      h = canvas.height = canvas.offsetHeight;
+      initStars();
+    }
+    window.addEventListener('resize', handleResize);
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   return (

@@ -12,6 +12,16 @@ export function ScreenRouter({ enhanced }) {
   const route = useAtomValue(navigationAtom);
   const [showWarp, setShowWarp] = useState(false);
   const [pendingRoute, setPendingRoute] = useState(route);
+  const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+
+  // Force rerender on window resize
+  useEffect(() => {
+    function handleResize() {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Track route changes
   useEffect(() => {
