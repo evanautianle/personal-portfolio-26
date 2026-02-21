@@ -41,6 +41,18 @@ const projects = [
   { key: 'piggyquest', title: 'PiggyQuest', description: 'A gamified household task app for kids, helping parents encourage positive habits through rewards and challenges.', tech: 'React · Tailwind', image: '/assets/images/project4.png' },
   { key: 'findr', title: 'Findr', description: 'A planet-swiping web app themed around escaping Earth — Tinder, but for finding your next home planet.', tech: 'HTML · CSS · JavaScript', image: '/assets/images/project5.png' },
 ];
+
+const photos = [
+  '/assets/images/photo1.jpeg',
+  '/assets/images/photo2.jpeg',
+  '/assets/images/photo3.jpeg',
+  '/assets/images/photo4.jpeg',
+  '/assets/images/photo5.jpeg',
+  '/assets/images/photo6.jpeg',
+  '/assets/images/photo7.jpeg',
+  '/assets/images/photo8.jpeg',
+  '/assets/images/photo9.jpeg',
+];
 const divider = {
   borderTop: '1px solid #e5e5e5',
 };
@@ -123,6 +135,8 @@ const secondaryButton = {
 };
 export default function SimpleSite() {
   const [isMobile, setIsMobile] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 680px)');
@@ -239,28 +253,26 @@ export default function SimpleSite() {
       }}>
 
         <div style={{ color: '#777', fontSize: 14 }}>
-          2025 — Present
+          March 2025–Dec 2025
         </div>
 
         <div>
 
           <div style={{ ...title, fontWeight: 600 }}>
-            WDCC — Full Stack Developer
+            WDCC - Web Development & Consulting Club
           </div>
 
           <div style={{ color: '#777', marginTop: 6 }}>
-            React · Next.js · Payload · MongoDB
+            Full Stack Web Developer (React · Tailwind · Payload · Next.js · MongoDB) — Auckland, NZ
           </div>
 
           <p style={{ ...body, marginTop: 12 }}>
-            Built full-stack features supporting user registration,
-            payments, and membership systems.
+            Contributed in the development of a full-stack website for the University of Auckland Investment Club (UAIC), enabling users to register, sign up, and complete membership payments online.
           </p>
 
         </div>
 
       </div>
-
 
       {/* second item */}
 
@@ -272,19 +284,123 @@ export default function SimpleSite() {
       }}>
 
         <div style={{ color: '#777', fontSize: 14 }}>
-          2023
+          Jan 2023–June 2023
         </div>
 
         <div>
 
           <div style={{ ...title, fontWeight: 600 }}>
-            Feel Good Kicks — Frontend Developer
+            FEEL GOOD KICKS
+          </div>
+
+          <div style={{ color: '#777', marginTop: 6 }}>
+            Web Designer & Front End Developer (Figma · React · Tailwind) — Auckland, NZ
           </div>
 
           <p style={{ ...body, marginTop: 12 }}>
-            Designed and built ecommerce UI and product interfaces.
+            Contributed in the front-end development and design of an e-commerce platform for a sneaker retail business, supporting product listings, customer interactions, and streamlined online purchases.
           </p>
 
+        </div>
+
+      </div>
+
+      {/* WEB3 Blockchain Hackathon */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: isMobile ? '1fr' : '200px 1fr',
+        gap: 32,
+        paddingTop: 32,
+        borderTop: '1px solid #e5e5e5',
+      }}>
+
+        <div style={{ color: '#777', fontSize: 14 }}>
+          April 2025 — April 2025
+        </div>
+
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ ...title, fontWeight: 600, margin: 0 }}>WEB3 BLOCKCHAIN HACKATHON</div>
+            <div style={{ fontSize: 13, color: '#999', fontWeight: 500 }}>1st Place — Kiwiana prize</div>
+          </div>
+          <div style={{ color: '#777', marginTop: 6 }}>Developer & Designer (Figma, Canva, React, Tailwind, Solidity, Next.js) — Auckland, NZ</div>
+          <p style={{ ...body, marginTop: 12 }}>
+            Built <strong>Crypto Critters</strong>, a conservation-driven game where players use crypto converted into in-game currency to protect native wildlife.
+          </p>
+        </div>
+
+      </div>
+
+      {/* Sustainability Hackathon */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: isMobile ? '1fr' : '200px 1fr',
+        gap: 32,
+        paddingTop: 32,
+      }}>
+
+        <div style={{ color: '#777', fontSize: 14 }}>
+          March 2025 — March 2025
+        </div>
+
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ ...title, fontWeight: 600, margin: 0 }}>SUSTAINABILITY HACKATHON (YCC & AUCKLAND COUNCIL)</div>
+            <div style={{ fontSize: 13, color: '#999', fontWeight: 500 }}>Exec's Choice Award</div>
+          </div>
+          <div style={{ color: '#777', marginTop: 6 }}>Developer & Designer (TensorFlow, COCO-SSD, JavaScript, HTML, CSS) — Auckland, NZ</div>
+          <p style={{ ...body, marginTop: 12 }}>
+            Built <strong>Robin</strong>, an AI-powered rubbish detection system promoting correct waste disposal; awarded the Exec’s Choice Award at the UoA Scientific Hackathon.
+          </p>
+        </div>
+
+      </div>
+
+      {/* SESA x WDCC Hackathon 2024 */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: isMobile ? '1fr' : '200px 1fr',
+        gap: 32,
+        paddingTop: 32,
+      }}>
+
+        <div style={{ color: '#777', fontSize: 14 }}>
+          July 2024 — July 2024
+        </div>
+
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ ...title, fontWeight: 600, margin: 0 }}>SESA X WDCC HACKATHON 2024</div>
+            <div style={{ fontSize: 13, color: '#999', fontWeight: 500 }}>Most Entertaining Solution</div>
+          </div>
+          <div style={{ color: '#777', marginTop: 6 }}>Developer & Designer (HTML, CSS, JavaScript) — Auckland, NZ</div>
+          <p style={{ ...body, marginTop: 12 }}>
+            Built <strong>Finder</strong>, a planet-swiping web app themed around escaping Earth; won the ‘Most Entertaining Solution’ at the SESA x WDCC Hackathon.
+          </p>
+        </div>
+
+      </div>
+
+      {/* SESA x WDCC Hackathon 2025 */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: isMobile ? '1fr' : '200px 1fr',
+        gap: 32,
+        paddingTop: 32,
+        paddingBottom: 32,
+        borderBottom: '1px solid #e5e5e5',
+      }}>
+
+        <div style={{ color: '#777', fontSize: 14 }}>
+          July 2025 — July 2025
+        </div>
+
+        <div>
+          <div style={{ ...title, fontWeight: 600 }}>SESA X WDCC HACKATHON 2025</div>
+          <div style={{ color: '#777', marginTop: 6 }}>Developer (React, Tailwind) — Auckland, NZ</div>
+          <p style={{ ...body, marginTop: 12 }}>
+            Collaborated with a team to build <strong>PiggyQuest</strong>, a digital app that gamifies household tasks for kids to help parents encourage positive habits. Gained hands-on experience in user-centered design, rapid prototyping, and addressing real-world family challenges through technology.
+          </p>
         </div>
 
       </div>
@@ -386,6 +502,26 @@ export default function SimpleSite() {
   </div>
 
 </section>
+<section id="album" style={{ ...sectionLight, borderTop: '1px solid #000', background: '#000', color: '#fff' }}>
+  <div style={container}>
+    <div style={{ ...label }}>Photo Album</div>
+
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(180px, 1fr))',
+      gap: 12,
+      marginTop: 18,
+    }}>
+      {photos.map((src, i) => (
+        <div key={src} style={{ cursor: 'pointer', overflow: 'hidden', borderRadius: 8 }} onClick={() => { setLightboxIndex(i); setLightboxOpen(true); }}>
+          <img src={src} alt={`photo-${i}`} style={{ width: '100%', height: isMobile ? 220 : 160, objectFit: 'cover', display: 'block' }} />
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
+
 <section id="contact" style={{ ...sectionLight, borderTop: '1px solid #e5e5e5' }}>
 
     <div style={container}>
@@ -416,9 +552,32 @@ export default function SimpleSite() {
 
 </section>
 
+    <Lightbox
+      open={lightboxOpen}
+      index={lightboxIndex}
+      photos={photos}
+      onClose={() => setLightboxOpen(false)}
+      onPrev={() => setLightboxIndex(i => (i - 1 + photos.length) % photos.length)}
+      onNext={() => setLightboxIndex(i => (i + 1) % photos.length)}
+    />
+
     </div>
   );
 }
+
+// Lightbox overlay rendered at end of file so state closures are simple to use
+function Lightbox({ open, index, photos, onClose, onPrev, onNext }) {
+  if (!open) return null;
+  const src = photos[index];
+  return (
+    <div style={{ position: 'fixed', left: 0, top: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.9)', zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={onClose}>
+      <button aria-label="previous" onClick={(e) => { e.stopPropagation(); onPrev(); }} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#fff', fontSize: 28, cursor: 'pointer' }}>‹</button>
+      <img src={src} alt="lightbox" style={{ maxWidth: '92%', maxHeight: '92%', boxShadow: '0 8px 40px rgba(0,0,0,0.8)' }} onClick={(e) => e.stopPropagation()} />
+      <button aria-label="next" onClick={(e) => { e.stopPropagation(); onNext(); }} style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#fff', fontSize: 28, cursor: 'pointer' }}>›</button>
+    </div>
+  );
+}
+
 
 function ContactForm({ isMobile = false }) {
   const [name, setName] = useState('');
