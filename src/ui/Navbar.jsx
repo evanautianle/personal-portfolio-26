@@ -24,7 +24,7 @@ const LINKS = [
   const styles = `
   :root {
     --navbar-height: clamp(48px, 6vh, 72px);
-    --navbar-side: clamp(12px, 2.5vw, 24px);
+    --navbar-side: 0px; /* full-width: no side inset */
     --navbar-padding: clamp(8px, 1.2vw, 20px);
     --navbar-gap: clamp(8px, 1.2vw, 18px);
     --center-min: clamp(140px, 26vw, 320px);
@@ -32,9 +32,9 @@ const LINKS = [
 
   .navbar-root {
     position: fixed;
-    top: var(--navbar-side);
-    left: var(--navbar-side);
-    right: var(--navbar-side);
+    top: 0;
+    left: 0;
+    right: 0;
     height: var(--navbar-height);
     z-index: 1000;
     display: flex;
@@ -151,9 +151,9 @@ const LINKS = [
   .navbar-drawer {
     display: none;
     position: fixed;
-    top: calc(var(--navbar-height) + var(--navbar-side));
-    left: var(--navbar-side);
-    right: var(--navbar-side);
+    top: var(--navbar-height);
+    left: 0;
+    right: 0;
     background: #0a0a0a;
     border: 1px solid #222;
     box-shadow: 0 8px 24px rgba(0,0,0,0.7);

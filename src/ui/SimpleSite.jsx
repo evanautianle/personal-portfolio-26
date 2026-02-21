@@ -1,69 +1,160 @@
-import React from 'react'
-import '../ui/ui-text.css'
+import React from 'react';
+import '../ui/ui-text.css';
 
-const container = { maxWidth: 980, margin: '32px auto', padding: '28px', background: '#fff', borderRadius: 8, boxShadow: '0 6px 24px rgba(10,10,10,0.06)' }
-const header = { margin: 0, textTransform: 'uppercase', letterSpacing: 2 }
-const lead = { marginTop: 8, color: '#333', lineHeight: 1.6 }
+const baseFont = 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", sans-serif';
+
+const sectionLight = {
+  width: '100%',
+  padding: '80px 5%',
+  background: '#f9f9f9',
+  color: '#111',
+  fontFamily: baseFont,
+  boxSizing: 'border-box',
+};
+
+const sectionDark = {
+  width: '100%',
+  padding: '80px 5%',
+  background: '#0f0f0f',
+  color: '#fff',
+  fontFamily: baseFont,
+  boxSizing: 'border-box',
+};
+
+const header = {
+  margin: 0,
+  textTransform: 'uppercase',
+  letterSpacing: 2,
+};
+
+const lead = {
+  marginTop: 16,
+  lineHeight: 1.6,
+};
 
 const projects = [
-  { key: 'wdcc-uaic', title: 'WDCC — Web Development & Consulting Club', event: 'University of Auckland Investment Club (UAIC)', description: 'Built features for a full-stack site supporting registration, events, and online payments.', tech: 'React · Next.js · Tailwind · Payload CMS' },
-  { key: 'comic-library', title: 'Comic Library', event: 'Personal Project', description: 'Public-domain Golden Age comic library and reader.', tech: 'React · Vite · Tailwind · Supabase', link: 'https://evanautianle.github.io/COMIC-READER/' },
-  { key: 'book-of-fates', title: 'Book of Fates', event: 'Personal Project', description: 'A digital interactive 3D book.', tech: 'React · Three.js · @react-three/fiber' },
-  { key: 'crypto-critters', title: 'Crypto Critters', event: 'Web3 Hackathon — April 2025', award: '1st Place — Kiwiana Prize', description: "A conservation-driven game where players use crypto as in-game currency.", tech: 'Solidity · React' },
-]
-
-
+  { key: 'wdcc-uaic', title: 'WDCC — Web Dev & Consulting Club', description: 'Built features for a full-stack site supporting registration, events, and payments.', tech: 'React · Next.js · Tailwind · Payload CMS' },
+  { key: 'comic-library', title: 'Comic Library', description: 'Public-domain Golden Age comic library and reader.', tech: 'React · Vite · Tailwind · Supabase', link: 'https://evanautianle.github.io/COMIC-READER/' },
+  { key: 'book-of-fates', title: 'Book of Fates', description: 'A digital interactive 3D book.', tech: 'React · Three.js · @react-three/fiber' },
+  { key: 'crypto-critters', title: 'Crypto Critters', description: "A conservation-driven game using crypto as in-game currency.", tech: 'Solidity · React' },
+];
 
 export default function SimpleSite() {
   return (
-    <div style={{ background: '#f4f6f8', minHeight: '100vh', paddingTop: 96, paddingBottom: 360 }}>
-      <main>
-        <section id="home" style={container}>
-          <h1 style={{ ...header, fontSize: 36 }}>Evan Au</h1>
-          <p style={{ ...lead, fontWeight: 700 }}>Full Stack Developer</p>
-          <p style={lead}>Third-year Computer Science student. I build intuitive web experiences, participate in hackathons, and focus on practical, well-designed tools.</p>
-        </section>
+    <div style={{ background: '#fff', minHeight: '100vh' }}>
+      {/* Hero (dark, full viewport height) */}
+      <section
+        style={{
+          width: '100%',
+          height: '100vh',
+          padding: '0 5%',
+          background: '#000',
+          color: '#fff',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          gap: 40,
+          flexWrap: 'wrap',
+          boxSizing: 'border-box',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <div style={{ flex: '1 1 520px', maxWidth: 680, zIndex: 2 }}>
+          <h1 style={{ ...header, fontSize: 72, lineHeight: 1.02, marginBottom: 8 }}>Evan Au</h1>
+          <p style={{ ...lead, fontSize: 22, margin: '12px 0 0 0', color: '#d0d0d0' }}>Full Stack Developer & Designer</p>
+          <p style={{ marginTop: 16, color: '#bdbdbd', lineHeight: 1.6, maxWidth: 560 }}>
+            I build modern web experiences and intuitive tools that make life easier. Passionate about hackathons, UX, and minimal design.
+          </p>
+        </div>
 
-        <section id="about" style={{ ...container, marginTop: 12 }}>
-          <h2 style={{ ...header, fontSize: 22 }}>About Me</h2>
-          <p style={lead}>Hello! I'm in my last year studying Computer Science at the University of Auckland. I'm passionate about crafting web applications that are intuitive and meaningful tools that make life easier.</p>
+        <div
+          style={{
+            position: 'absolute',
+            right: '18%',
+            top: '52%',
+            transform: 'translateY(-50%)',
+            width: '46vw',
+            maxWidth: 900,
+            minWidth: 300,
+            zIndex: 1,
+            pointerEvents: 'none',
+          }}
+        >
+          <img
+            src="/assets/images/transparentevan.png"
+            alt="Evan Au"
+            style={{
+              width: '100%',
+              borderRadius: 12,
+              boxShadow: '0 80px 200px rgba(0,0,0,0.85)',
+              objectFit: 'cover',
+              display: 'block',
+            }}
+          />
+        </div>
+      </section>
 
-          <h3 style={{ ...header, fontSize: 16, marginTop: 18 }}>Education</h3>
-          <p style={lead}><strong>University of Auckland</strong><br/>Bachelor of Science in Computer Science (2024 – Present)</p>
+      {/* About */}
+      <section style={sectionLight}>
+        <h2 style={{ ...header, fontSize: 28, marginBottom: 16 }}>About Me</h2>
+        <p style={{ ...lead, fontSize: 18 }}>
+          Third-year Computer Science student at the University of Auckland. Focused on creating practical, well-designed web apps that people enjoy using.
+        </p>
+      </section>
 
-          <h3 style={{ ...header, fontSize: 16, marginTop: 12 }}>Skills</h3>
-          <p style={lead}>React · Next.js · TypeScript · JavaScript · Python · Flask · Tailwind CSS · Supabase · Payload CMS · Node.js · Figma · Solidity · TensorFlow</p>
+      {/* Projects */}
+      <section style={sectionDark}>
+        <h2 style={{ ...header, fontSize: 28, marginBottom: 24 }}>Projects</h2>
+        <div style={{ display: 'grid', gap: 32, gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+          {projects.map((p) => (
+            <div
+              key={p.key}
+              style={{
+                background: '#161616',
+                padding: 24,
+                borderRadius: 12,
+                transition: 'transform 0.3s, box-shadow 0.3s',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-6px)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+            >
+              <h3 style={{ margin: 0 }}>{p.title}</h3>
+              <p style={{ margin: '12px 0', color: '#cfcfcf', lineHeight: 1.5 }}>{p.description}</p>
+              <p style={{ margin: 0, fontSize: 12, color: '#9a9a9a' }}>{p.tech}</p>
+              {p.link && (
+                <a
+                  href={p.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{
+                    display: 'inline-block',
+                    marginTop: 12,
+                    color: '#fff',
+                    textDecoration: 'none',
+                    fontWeight: 600,
+                  }}
+                >
+                  View ↗
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
 
-          <h3 style={{ ...header, fontSize: 16, marginTop: 12 }}>Experience</h3>
-          <ul style={{ marginTop: 8, lineHeight: 1.5 }}>
-            <li><strong>WDCC</strong> — Full Stack Web Developer (Auckland, March 2025 – Present)</li>
-            <li><strong>Feel Good Kicks</strong> — Web Designer & Front End Developer (Jan 2023 – Jun 2023)</li>
-          </ul>
-        </section>
-
-        <section id="projects" style={{ ...container, marginTop: 12 }}>
-          <h2 style={{ ...header, fontSize: 22 }}>Projects</h2>
-          <div style={{ display: 'grid', gap: 12, marginTop: 12 }}>
-            {projects.map((p) => (
-              <article key={p.key} style={{ padding: 14, borderRadius: 6, background: '#fff', border: '1px solid #eee' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                  <h3 style={{ margin: 0 }}>{p.title}</h3>
-                  {p.award && <small style={{ color: '#666' }}>{p.award}</small>}
-                </div>
-                <p style={{ margin: '8px 0', color: '#444' }}>{p.description}</p>
-                <p style={{ margin: 0, color: '#777', fontSize: 13 }}>{p.tech}</p>
-                {p.link && <a href={p.link} target="_blank" rel="noreferrer" style={{ display: 'inline-block', marginTop: 8 }}>View ↗</a>}
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section id="contact" style={{ ...container, marginTop: 12, marginBottom: 48 }}>
-          <h2 style={{ ...header, fontSize: 22 }}>Contact</h2>
-          <p style={lead}>Want to work together or say hello? Use the links in the navbar or send an email:</p>
-          <a href="mailto:evan.au206@gmail.com" style={{ display: 'inline-block', marginTop: 8 }}>evan.au206@gmail.com</a>
-        </section>
-      </main>
+      {/* Contact */}
+      <section style={sectionLight}>
+        <h2 style={{ ...header, fontSize: 28, marginBottom: 16 }}>Contact</h2>
+        <p style={{ ...lead, fontSize: 18 }}>Let's work together or just say hi!</p>
+        <a
+          href="mailto:evan.au206@gmail.com"
+          style={{ fontWeight: 600, color: '#111', textDecoration: 'none', fontSize: 16 }}
+        >
+          evan.au206@gmail.com
+        </a>
+      </section>
     </div>
-  )
+  );
 }
