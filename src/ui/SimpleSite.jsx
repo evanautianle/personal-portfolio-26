@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../ui/ui-text.css';
 
 const baseFont = '"Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, Ubuntu, "Helvetica Neue", sans-serif';
@@ -122,59 +122,103 @@ const secondaryButton = {
   fontSize: 15,
 };
 export default function SimpleSite() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 680px)');
+    const handler = (e) => setIsMobile(e.matches);
+    try {
+      setIsMobile(mq.matches);
+      mq.addEventListener('change', handler);
+    } catch (e) {
+      // fallback for older browsers
+      mq.addListener(handler);
+    }
+    return () => {
+      try { mq.removeEventListener('change', handler); } catch (e) { mq.removeListener(handler); }
+    };
+  }, []);
+
+  const heroStyle = {
+    width: '100%',
+    height: isMobile ? 'auto' : 'calc(100vh - var(--navbar-height))',
+    padding: isMobile ? '40px 5%' : '0 5%',
+    background: '#000',
+    color: '#fff',
+    display: 'flex',
+    alignItems: isMobile ? 'stretch' : 'center',
+    justifyContent: isMobile ? 'space-between' : 'flex-start',
+    gap: 24,
+    flexWrap: 'wrap',
+    boxSizing: 'border-box',
+    position: 'relative',
+    overflow: 'hidden',
+    flexDirection: isMobile ? 'column' : 'row',
+  };
+
+  const textContainerStyle = { flex: isMobile ? '1 1 100%' : '1 1 520px', maxWidth: isMobile ? '100%' : 680, zIndex: 2 };
+  const imageStyle = {
+    position: isMobile ? 'relative' : 'absolute',
+    right: isMobile ? 'auto' : '18%',
+    top: isMobile ? 'auto' : '52%',
+    transform: isMobile ? 'none' : 'translateY(-50%)',
+    width: isMobile ? '100%' : '46vw',
+    maxWidth: isMobile ? '100%' : 900,
+    minWidth: isMobile ? 0 : 300,
+    zIndex: 1,
+    pointerEvents: 'none',
+    order: isMobile ? 2 : 0,
+    marginTop: isMobile ? 0 : 0,
+    alignSelf: isMobile ? 'stretch' : 'auto',
+    maxHeight: isMobile ? '55vh' : undefined,
+    height: isMobile ? '55vh' : undefined,
+  };
+
+  const fadeStyle = {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: isMobile ? '45%' : '32%',
+    pointerEvents: 'none',
+    zIndex: 3,
+    background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%)',
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+  };
+
+  const headingSize = isMobile ? 40 : 72;
+
   return (
-    <div style={{ background: 'transparent', minHeight: '100vh', fontFamily: baseFont }}>
+    <div style={{ background: 'transparent', minHeight: '100vh', fontFamily: baseFont, paddingTop: isMobile ? 'calc(var(--navbar-height) + 12px)' : 'calc(var(--navbar-height) + 24px)' }}>
       {/* Hero (dark, full viewport height) */}
       <section
           id="home"
-          style={{
-            width: '100%',
-            height: '100vh',
-          padding: '0 5%',
-          background: '#000',
-          color: '#fff',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          gap: 40,
-          flexWrap: 'wrap',
-          boxSizing: 'border-box',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
+          style={heroStyle}
       >
-        <div style={{ flex: '1 1 520px', maxWidth: 680, zIndex: 2 }}>
-          <h1 style={{ ...header, fontSize: 72, lineHeight: 1.02, marginBottom: 8 }}>Evan Au</h1>
+        <div style={textContainerStyle}>
+          <h1 style={{ ...header, fontSize: headingSize, lineHeight: 1.02, marginBottom: 8 }}>Evan Au</h1>
           <p style={{ ...lead, fontSize: 22, margin: '12px 0 0 0', color: '#d0d0d0' }}>Full Stack Developer & Designer</p>
           <p style={{ marginTop: 16, color: '#bdbdbd', lineHeight: 1.6, maxWidth: 560 }}>
             I build modern web experiences and intuitive tools that make life easier. Passionate about hackathons, UX, and minimal design.
           </p>
         </div>
 
-        <div
-          style={{
-            position: 'absolute',
-            right: '18%',
-            top: '52%',
-            transform: 'translateY(-50%)',
-            width: '46vw',
-            maxWidth: 900,
-            minWidth: 300,
-            zIndex: 1,
-            pointerEvents: 'none',
-          }}
-        >
+        <div style={imageStyle}>
           <img
             src="/assets/images/transparentevan.png"
             alt="Evan Au"
             style={{
               width: '100%',
+              height: isMobile ? '100%' : 'auto',
               borderRadius: 12,
               boxShadow: '0 80px 200px rgba(0,0,0,0.85)',
               objectFit: 'cover',
+              objectPosition: 'bottom center',
               display: 'block',
             }}
           />
+          <div style={fadeStyle} />
         </div>
       </section>
     <section id="about" style={{ ...sectionLight, borderTop: '1px solid #e5e5e5' }}>
@@ -188,7 +232,7 @@ export default function SimpleSite() {
       {/* item */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: '200px 1fr',
+        gridTemplateColumns: isMobile ? '1fr' : '200px 1fr',
         gap: 32,
         paddingBottom: 32,
         borderBottom: '1px solid #e5e5e5',
@@ -222,7 +266,7 @@ export default function SimpleSite() {
 
       <div style={{
         display: 'grid',
-        gridTemplateColumns: '200px 1fr',
+        gridTemplateColumns: isMobile ? '1fr' : '200px 1fr',
         gap: 32,
         paddingTop: 32,
       }}>
@@ -276,7 +320,7 @@ export default function SimpleSite() {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: '180px 1fr',
+            gridTemplateColumns: isMobile ? '1fr' : '180px 1fr',
             gap: 32,
           }}>
 
@@ -355,7 +399,7 @@ export default function SimpleSite() {
     <div style={{ marginTop: 24 }}>
 
       <div style={{ display: 'grid', gap: 12, maxWidth: 720 }}>
-        <ContactForm />
+      <ContactForm isMobile={isMobile} />
 
         <div style={{ marginTop: 8, color: '#777' }}>
           Or email directly: evan.au206@gmail.com
@@ -376,7 +420,7 @@ export default function SimpleSite() {
   );
 }
 
-function ContactForm() {
+function ContactForm({ isMobile = false }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
@@ -408,9 +452,9 @@ function ContactForm() {
       <input style={input} value={subject} onChange={e => setSubject(e.target.value)} placeholder="Subject" />
       <textarea style={textarea} value={message} onChange={e => setMessage(e.target.value)} placeholder="Message" required />
 
-      <div style={{ display: 'flex', gap: 12 }}>
-        <button type="submit" style={primaryButton}>Send Message</button>
-        <button type="button" onClick={handleClear} style={secondaryButton}>Clear</button>
+      <div style={{ display: 'flex', gap: 12, flexDirection: isMobile ? 'column' : 'row' }}>
+        <button type="submit" style={{ ...primaryButton, width: isMobile ? '100%' : 'auto' }}>Send Message</button>
+        <button type="button" onClick={handleClear} style={{ ...secondaryButton, width: isMobile ? '100%' : 'auto' }}>Clear</button>
       </div>
 
       {status === 'opened' && (

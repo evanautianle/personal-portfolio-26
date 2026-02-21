@@ -183,11 +183,14 @@ const LINKS = [
     /* revert to normal flow on tablet so the center behaves like a normal flex item */
     .navbar-center { position: static; transform: none; flex: 1 1 auto; min-width: 0; pointer-events: auto; }
     .navbar-hamburger { display: block; }
+    /* On tablet and smaller, move simple links into drawer only */
+    .navbar-simple-links { display: none; }
   }
 
   /* Mobile: hide icon links in bar, show in drawer */
   @media (max-width: 520px) {
     .navbar-right .navbar-icon-link { display: none; }
+    .navbar-simple-links { display: none; }
   }
 
   /* Center links for SimpleSite: left/right with fade + slide */
@@ -226,6 +229,21 @@ export function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [howOpen, setHowOpen] = useState(false);
   const [howAnimateOut, setHowAnimateOut] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 900px)');
+    const handler = (e) => setIsMobile(e.matches);
+    try {
+      setIsMobile(mq.matches);
+      mq.addEventListener('change', handler);
+    } catch (e) {
+      mq.addListener(handler);
+    }
+    return () => {
+      try { mq.removeEventListener('change', handler); } catch (e) { mq.removeListener(handler); }
+    };
+  }, []);
 
   useEffect(() => {
     if (simpleView) {
@@ -315,19 +333,21 @@ export function Navbar() {
 
           {/* RIGHT */}
           <div className="navbar-right">
-            <div className={`navbar-simple-links ${simpleView ? 'active' : ''}`}>
-              {SIMPLE_LINKS.map(({ label, href }) => (
-                <a
-                  key={label}
-                  href={href}
-                  className="navbar-btn navbar-text-style"
-                  style={{ padding: '6px 10px' }}
-                  onClick={(e) => handleSimpleLinkClick(e, href)}
-                >
-                  {label}
-                </a>
-              ))}
-            </div>
+              {!isMobile && (
+                <div className={`navbar-simple-links ${simpleView ? 'active' : ''}`}>
+                  {SIMPLE_LINKS.map(({ label, href }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      className="navbar-btn navbar-text-style"
+                      style={{ padding: '6px 10px' }}
+                      onClick={(e) => handleSimpleLinkClick(e, href)}
+                    >
+                      {label}
+                    </a>
+                  ))}
+                </div>
+              )}
             {LINKS.map(({ icon, href, label }) => (
               <a
                 key={label}
@@ -362,20 +382,18 @@ export function Navbar() {
 
       {/* Drawer — slides in below the bar on tablet/mobile */}
       <div className={`navbar-drawer navbar-text-style${drawerOpen ? ' open' : ''}`}>
-        <div className="navbar-drawer-section">
-          <button
-            className="navbar-btn navbar-text-style"
-            onClick={() => { handleOpenHow(); setDrawerOpen(false); }}
-          >
-            HOW TO USE
-          </button>
-
-          <button
-            className="navbar-btn navbar-text-style"
-            onClick={() => { setSimpleView((s) => !s); setDrawerOpen(false); }}
-          >
-            {simpleView ? 'BRIDGE VIEW' : 'SIMPLE VIEW'}
-          </button>
+        <div className="navbar-drawer-section" style={{ gap: 12 }}>
+          {SIMPLE_LINKS.map(({ label, href }) => (
+            <a
+              key={label}
+              href={href}
+              className="navbar-btn navbar-text-style"
+              onClick={(e) => { handleSimpleLinkClick(e, href); setDrawerOpen(false); }}
+              style={{ padding: '8px 12px' }}
+            >
+              {label}
+            </a>
+          ))}
         </div>
         <div className="navbar-drawer-divider" />
         <div className="navbar-drawer-section" style={{ gap: 20 }}>
