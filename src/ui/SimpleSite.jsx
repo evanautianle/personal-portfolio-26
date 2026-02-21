@@ -126,9 +126,10 @@ export default function SimpleSite() {
     <div style={{ background: 'transparent', minHeight: '100vh', fontFamily: baseFont }}>
       {/* Hero (dark, full viewport height) */}
       <section
-        style={{
-          width: '100%',
-          height: '100vh',
+          id="home"
+          style={{
+            width: '100%',
+            height: '100vh',
           padding: '0 5%',
           background: '#000',
           color: '#fff',
@@ -176,7 +177,7 @@ export default function SimpleSite() {
           />
         </div>
       </section>
-<section style={{ ...sectionLight, borderTop: '1px solid #e5e5e5' }}>
+    <section id="about" style={{ ...sectionLight, borderTop: '1px solid #e5e5e5' }}>
 
   <div style={container}>
 
@@ -249,7 +250,7 @@ export default function SimpleSite() {
   </div>
 
 </section>
-<section style={{ ...sectionDark, borderTop: '1px solid #222' }}>
+<section id="projects" style={{ ...sectionDark, borderTop: '1px solid #222' }}>
 
   <div style={container}>
 
@@ -341,7 +342,7 @@ export default function SimpleSite() {
   </div>
 
 </section>
-<section style={{ ...sectionLight, borderTop: '1px solid #e5e5e5' }}>
+<section id="contact" style={{ ...sectionLight, borderTop: '1px solid #e5e5e5' }}>
 
     <div style={container}>
 

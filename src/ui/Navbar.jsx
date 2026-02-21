@@ -239,7 +239,7 @@ export function Navbar() {
 
   const SIMPLE_LINKS = [
     { label: 'Home', href: '#home' },
-    { label: 'About', href: '#about' },
+    { label: 'Experience', href: '#about' },
     { label: 'Projects', href: '#projects' },
     { label: 'Contact', href: '#contact' },
   ];
