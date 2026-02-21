@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSetAtom, useAtomValue } from 'jotai';
 import { navigationAtom } from '../state/navigationAtom';
 import { simpleViewAtom } from '../state/simpleViewAtom';
@@ -21,15 +21,24 @@ const LINKS = [
   },
 ];
 
-const styles = `
+  const styles = `
+  :root {
+    --navbar-height: clamp(48px, 6vh, 72px);
+    --navbar-side: clamp(12px, 2.5vw, 24px);
+    --navbar-padding: clamp(8px, 1.2vw, 20px);
+    --navbar-gap: clamp(8px, 1.2vw, 18px);
+    --center-min: clamp(140px, 26vw, 320px);
+  }
+
   .navbar-root {
     position: fixed;
-    top: 16px;
-    left: 16px;
-    right: 16px;
-    height: 64px;
+    top: var(--navbar-side);
+    left: var(--navbar-side);
+    right: var(--navbar-side);
+    height: var(--navbar-height);
     z-index: 1000;
     display: flex;
+    overflow: visible;
   }
 
   .navbar-bar {
@@ -40,43 +49,44 @@ const styles = `
     border: 1px solid #222;
     box-shadow: 0 0 12px rgba(0,0,0,0.6);
     align-items: center;
+    padding: 0 var(--navbar-padding);
+    gap: var(--navbar-gap);
+    overflow: visible;
   }
 
   .navbar-left {
-    flex: 1;
+    flex: 1 1 auto;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding-left: 20px;
-    border-right: 1px solid #222;
+    gap: calc(var(--navbar-gap) / 1.5);
+    padding-left: calc(var(--navbar-padding) / 1.2);
     height: 100%;
   }
 
   .navbar-center {
-    width: 260px;
-    flex-shrink: 0;
+    flex: 0 0 var(--center-min);
     display: flex;
     align-items: center;
     justify-content: center;
-    border-right: 1px solid #222;
-    border-left: 1px solid #222;
+    position: relative;
+    gap: calc(var(--navbar-gap) * 0.8);
     height: 100%;
   }
 
   .navbar-title {
-    font-size: 18px;
+    font-size: clamp(16px, 1.8vw, 20px);
     font-weight: 700;
     color: #e0e0e0;
-    letter-spacing: 4px;
+    letter-spacing: 0.25em;
   }
 
   .navbar-right {
-    flex: 1;
+    flex: 1 1 auto;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 18px;
-    padding-right: 20px;
+    gap: calc(var(--navbar-gap) * 1.1);
+    padding-right: calc(var(--navbar-padding) / 1.2);
     height: 100%;
   }
 
@@ -84,11 +94,13 @@ const styles = `
     background: transparent;
     color: #cfd8dc;
     border: 1px solid #2a2a2a;
-    padding: 6px 16px;
+    padding: clamp(6px, 0.8vh, 10px) clamp(10px, 1.6vw, 16px);
     font-weight: 600;
     cursor: pointer;
-    font-size: 13px;
-    letter-spacing: 1.2px;
+    font-size: clamp(12px, 1.2vw, 14px);
+    text-decoration: none;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
     transition: all 0.15s ease;
     white-space: nowrap;
   }
@@ -100,7 +112,7 @@ const styles = `
 
   .navbar-icon-link {
     color: #9e9e9e;
-    font-size: 22px;
+    font-size: clamp(18px, 2.2vw, 24px);
     display: flex;
     align-items: center;
     transition: all 0.15s ease;
@@ -108,7 +120,7 @@ const styles = `
   }
   .navbar-icon-link:hover {
     color: #4FC3F7;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
   }
 
   .navbar-hamburger {
@@ -117,10 +129,10 @@ const styles = `
     border: 1px solid #2a2a2a;
     color: #cfd8dc;
     cursor: pointer;
-    padding: 6px 10px;
-    font-size: 20px;
+    padding: clamp(6px,0.8vh,10px) clamp(8px,1.2vw,12px);
+    font-size: clamp(16px,2.4vw,22px);
     transition: all 0.15s ease;
-    margin-right: 16px;
+    margin-right: calc(var(--navbar-gap) / 1.2);
     line-height: 1;
   }
   .navbar-hamburger:hover {
@@ -131,16 +143,16 @@ const styles = `
   .navbar-drawer {
     display: none;
     position: fixed;
-    top: 96px;
-    left: 16px;
-    right: 16px;
+    top: calc(var(--navbar-height) + var(--navbar-side));
+    left: var(--navbar-side);
+    right: var(--navbar-side);
     background: #0a0a0a;
     border: 1px solid #222;
     box-shadow: 0 8px 24px rgba(0,0,0,0.7);
     z-index: 999;
     flex-direction: column;
-    padding: 16px 20px;
-    gap: 12px;
+    padding: calc(var(--navbar-padding) * 0.9);
+    gap: calc(var(--navbar-gap) * 0.8);
   }
   .navbar-drawer.open {
     display: flex;
@@ -148,7 +160,7 @@ const styles = `
   .navbar-drawer-section {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: calc(var(--navbar-gap) / 1.5);
     flex-wrap: wrap;
   }
   .navbar-drawer-divider {
@@ -157,41 +169,97 @@ const styles = `
     width: 100%;
   }
 
-  /* Tablet (<=900px): hide left buttons, show hamburger */
+  /* Tablet: hide left buttons, show hamburger */
   @media (max-width: 900px) {
-    .navbar-left {
-      display: none;
-    }
-    .navbar-center {
-      width: auto;
-      flex: 1;
-      border-left: none;
-      justify-content: flex-start;
-      padding-left: 20px;
-    }
-    .navbar-hamburger {
-      display: block;
-    }
+    .navbar-left { display: none; }
+    .navbar-center { flex: 1 1 auto; min-width: 0; }
+    .navbar-hamburger { display: block; }
   }
 
-  /* Mobile (<=520px): hide icon links in bar, show in drawer */
+  /* Mobile: hide icon links in bar, show in drawer */
   @media (max-width: 520px) {
-    .navbar-right .navbar-icon-link {
-      display: none;
-    }
-    .navbar-center {
-      border-right: none;
-    }
+    .navbar-right .navbar-icon-link { display: none; }
   }
+
+  /* Center links for SimpleSite: left/right with fade + slide */
+  .navbar-links {
+    display: flex;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(-50%) translateX(0);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    align-items: center;
+    white-space: nowrap;
+  }
+  .navbar-links.active {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+  .navbar-links.left { transform: translateY(-50%) translateX(-1.25rem); }
+  .navbar-links.right { transform: translateY(-50%) translateX(1.25rem); }
+
+  .navbar-simple-links {
+    display: flex;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(0);
+    transition: opacity 0.28s ease, transform 0.28s ease;
+    align-items: center;
+  }
+  .navbar-simple-links.active { opacity: 1; transform: translateY(0); }
 `;
 
 export function Navbar() {
   const setNavigation = useSetAtom(navigationAtom);
   const current = useAtomValue(navigationAtom);
+  const simpleView = useAtomValue(simpleViewAtom);
   const setSimpleView = useSetAtom(simpleViewAtom);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [howOpen, setHowOpen] = useState(false);
   const [howAnimateOut, setHowAnimateOut] = useState(false);
+
+  useEffect(() => {
+    if (simpleView) {
+      try {
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      } catch (e) {
+        // ignore in non-browser environments
+      }
+    }
+  }, [simpleView]);
+
+  const SIMPLE_LINKS = [
+    { label: 'Home', href: '#home' },
+    { label: 'About', href: '#about' },
+    { label: 'Projects', href: '#projects' },
+    { label: 'Contact', href: '#contact' },
+  ];
+
+  const handleSimpleLinkClick = (e, href) => {
+    if (!simpleView) return; // let normal anchors work when not in simple view
+    e.preventDefault();
+    try {
+      const overlay = document.getElementById('simplesite-overlay');
+      const target = overlay ? overlay.querySelector(href) : document.querySelector(href);
+      if (!target) return;
+      if (!overlay) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+      const overlayRect = overlay.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      const navbar = document.querySelector('.navbar-root');
+      const navbarHeight = navbar ? navbar.getBoundingClientRect().height : 64;
+      // dynamic margin based on navbar height for responsive layouts
+      const margin = Math.round(navbarHeight * 1.25);
+      const offset = navbarHeight + margin;
+      const scrollTop = overlay.scrollTop + (targetRect.top - overlayRect.top) - offset;
+      overlay.scrollTo({ top: Math.max(0, scrollTop), behavior: 'smooth' });
+    } catch (err) {
+      // fallback: let browser handle it
+      try { window.location.hash = href; } catch (e) {}
+    }
+  };
 
   const handleOpenHow = () => {
     setHowAnimateOut(false);
@@ -237,6 +305,19 @@ export function Navbar() {
 
           {/* RIGHT */}
           <div className="navbar-right">
+            <div className={`navbar-simple-links ${simpleView ? 'active' : ''}`}>
+              {SIMPLE_LINKS.map(({ label, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  className="navbar-btn navbar-text-style"
+                  style={{ padding: '6px 10px' }}
+                  onClick={(e) => handleSimpleLinkClick(e, href)}
+                >
+                  {label}
+                </a>
+              ))}
+            </div>
             {LINKS.map(({ icon, href, label }) => (
               <a
                 key={label}

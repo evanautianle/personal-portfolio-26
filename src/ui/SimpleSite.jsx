@@ -12,9 +12,11 @@ const projects = [
   { key: 'crypto-critters', title: 'Crypto Critters', event: 'Web3 Hackathon — April 2025', award: '1st Place — Kiwiana Prize', description: "A conservation-driven game where players use crypto as in-game currency.", tech: 'Solidity · React' },
 ]
 
+
+
 export default function SimpleSite() {
   return (
-    <div style={{ background: '#f4f6f8', minHeight: '100vh', paddingTop: 96 }}>
+    <div style={{ background: '#f4f6f8', minHeight: '100vh', paddingTop: 96, paddingBottom: 360 }}>
       <main>
         <section id="home" style={container}>
           <h1 style={{ ...header, fontSize: 36 }}>Evan Au</h1>

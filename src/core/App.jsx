@@ -15,7 +15,7 @@ import { navigationAtom } from '../state/navigationAtom';
 import { alertAtom } from '../state/alertAtom';
 
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 
 
@@ -48,6 +48,17 @@ export function App() {
   const helmImage = undefined; // e.g. '/assets/crew/helm.png'
   const [dialogueStack, setDialogueStack] = useDialogueStack(captainImage, helmImage);
   const simpleView = useAtomValue(simpleViewAtom);
+  const overlayRef = useRef(null);
+
+  React.useEffect(() => {
+    if (simpleView && overlayRef.current) {
+      try {
+        overlayRef.current.scrollTop = 0;
+      } catch (e) {
+        // ignore
+      }
+    }
+  }, [simpleView]);
 
   // When currentTab changes externally, update pendingTab and cardIndex
   React.useEffect(() => {
@@ -94,6 +105,8 @@ const arrowStyle = {
             overflowY: 'auto',
             WebkitOverflowScrolling: 'touch',
           }}
+          id="simplesite-overlay"
+          ref={overlayRef}
         >
           <SimpleSite />
         </div>

@@ -43,7 +43,7 @@ export default function LeftControlPanel({
           position: 'relative',
           width: '100%',
           maxWidth: 260,
-          height: 140,
+          height: 200,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
