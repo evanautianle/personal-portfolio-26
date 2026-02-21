@@ -48,6 +48,7 @@ export function App() {
   const helmImage = undefined; // e.g. '/assets/crew/helm.png'
   const [dialogueStack, setDialogueStack] = useDialogueStack(captainImage, helmImage);
   const simpleView = useAtomValue(simpleViewAtom);
+  const setSimpleView = useSetAtom(simpleViewAtom);
   const overlayRef = useRef(null);
   const [overlayShown, setOverlayShown] = useState(false);
   const hideOverlayTimer = useRef(null);
@@ -87,6 +88,23 @@ export function App() {
       }
     };
   }, [simpleView]);
+
+  // Auto-toggle simple view when the viewport is mobile-sized.
+  React.useEffect(() => {
+    if (typeof window === 'undefined' || !setSimpleView) return;
+    const mq = window.matchMedia('(max-width: 1600px)');
+    const handle = (e) => {
+      try { setSimpleView(e.matches); } catch (err) { /* ignore */ }
+    };
+    // initialize based on current size
+    try { setSimpleView(mq.matches); } catch (err) { /* ignore */ }
+    if (mq.addEventListener) mq.addEventListener('change', handle);
+    else mq.addListener(handle);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener('change', handle);
+      else mq.removeListener(handle);
+    };
+  }, [setSimpleView]);
 
   // When currentTab changes externally, update pendingTab and cardIndex
   React.useEffect(() => {
