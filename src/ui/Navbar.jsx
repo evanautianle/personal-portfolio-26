@@ -16,7 +16,7 @@ const LINKS = [
         <polyline points="2,4 12,14 22,4" />
       </svg>
     ),
-    href: 'mailto:evan.au@email.com',
+    href: 'mailto:evan.au206@gmail.com',
     label: 'Email',
   },
 ];

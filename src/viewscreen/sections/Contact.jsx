@@ -13,7 +13,9 @@ export function Contact({ enhanced }) {
   const handleSubmit = () => {
     const subject = encodeURIComponent(`Portfolio Contact from ${form.name}`);
     const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`);
-    window.location.href = `mailto:evan.au206@gmail.com?subject=${subject}&body=${body}`;
+    const mailto = `mailto:evan.au206@gmail.com?subject=${subject}&body=${body}`;
+    const newWin = window.open(mailto, '_blank');
+    if (newWin) newWin.opener = null;
     setSent(true);
   };
 
@@ -223,7 +225,9 @@ function EnhancedContact() {
   const handleSubmit = () => {
     const subject = encodeURIComponent(`Portfolio Contact from ${form.name}`);
     const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`);
-    window.location.href = `mailto:evan.au206@gmail.com?subject=${subject}&body=${body}`;
+    const mailto = `mailto:evan.au206@gmail.com?subject=${subject}&body=${body}`;
+    const newWin = window.open(mailto, '_blank');
+    if (newWin) newWin.opener = null;
     setSent(true);
   };
 

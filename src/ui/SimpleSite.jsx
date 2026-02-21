@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../ui/ui-text.css';
 
-const baseFont = 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", sans-serif';
+const baseFont = '"Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, Ubuntu, "Helvetica Neue", sans-serif';
 
 const sectionLight = {
   width: '100%',
@@ -33,15 +33,97 @@ const lead = {
 };
 
 const projects = [
-  { key: 'wdcc-uaic', title: 'WDCC — Web Dev & Consulting Club', description: 'Built features for a full-stack site supporting registration, events, and payments.', tech: 'React · Next.js · Tailwind · Payload CMS' },
-  { key: 'comic-library', title: 'Comic Library', description: 'Public-domain Golden Age comic library and reader.', tech: 'React · Vite · Tailwind · Supabase', link: 'https://evanautianle.github.io/COMIC-READER/' },
-  { key: 'book-of-fates', title: 'Book of Fates', description: 'A digital interactive 3D book.', tech: 'React · Three.js · @react-three/fiber' },
-  { key: 'crypto-critters', title: 'Crypto Critters', description: "A conservation-driven game using crypto as in-game currency.", tech: 'Solidity · React' },
+  { key: 'wdcc-uaic', title: 'WDCC — Web Development & Consulting Club', description: 'Built features for a full-stack site supporting registration, events, and online payments.', tech: 'React · Next.js · Tailwind CSS · Payload CMS · MongoDB', image: '/assets/images/project.png' },
+  { key: 'comic-library', title: 'Comic Library', description: 'Public-domain Golden Age comic library and reader. Features favorites, ratings, comments, and user profiles.', tech: 'React · Vite · Tailwind CSS · Supabase', link: 'https://evanautianle.github.io/COMIC-READER/', image: '/assets/images/project0.png' },
+  { key: 'book-of-fates', title: 'Book of Fates', description: 'A digital interactive 3D book. Explore a fully animated 3D environment with camera effects and controls.', tech: 'React · Three.js · @react-three/fiber · @react-three/drei · Tailwind · Vite · Jotai', link: 'https://evanautianle.github.io/3D-TEST-PROJECT-BOOK-OF-FATES/', image: '/assets/images/project3.png' },
+  { key: 'crypto-critters', title: 'Crypto Critters', description: "A conservation-driven game where players use crypto as in-game currency to protect native wildlife.", tech: 'Figma · React · Next.js · Tailwind · Solidity', image: '/assets/images/project1.png' },
+  { key: 'robin', title: 'Robin', description: 'An AI-powered rubbish detection system promoting correct waste disposal using real-time object recognition.', tech: 'TensorFlow · COCO-SSD · JavaScript · HTML · CSS', image: '/assets/images/project2.png' },
+  { key: 'piggyquest', title: 'PiggyQuest', description: 'A gamified household task app for kids, helping parents encourage positive habits through rewards and challenges.', tech: 'React · Tailwind', image: '/assets/images/project4.png' },
+  { key: 'findr', title: 'Findr', description: 'A planet-swiping web app themed around escaping Earth — Tinder, but for finding your next home planet.', tech: 'HTML · CSS · JavaScript', image: '/assets/images/project5.png' },
 ];
+const divider = {
+  borderTop: '1px solid #e5e5e5',
+};
 
+const container = {
+  maxWidth: 1200,
+  margin: '0 auto',
+};
+
+const card = {
+  background: '#fff',
+  border: '1px solid #e5e5e5',
+  padding: 28,
+  fontFamily: baseFont,
+};
+
+const cardDark = {
+  background: '#000',
+  border: '1px solid #222',
+  padding: 28,
+  fontFamily: baseFont,
+};
+
+const label = {
+  fontSize: 20,
+  letterSpacing: 1.5,
+  textTransform: 'uppercase',
+  color: '#333',
+  marginBottom: 12,
+};
+
+const title = {
+  fontSize: 28,
+  margin: 0,
+};
+
+const body = {
+  color: '#222',
+  lineHeight: 1.75,
+};
+
+const bodyDark = {
+  color: '#e5e5e5',
+  lineHeight: 1.75,
+};
+
+const input = {
+  width: '100%',
+  padding: '10px 12px',
+  borderRadius: 0,
+  border: '1px solid #ddd',
+  fontSize: 15,
+  boxSizing: 'border-box',
+};
+
+const textarea = {
+  ...input,
+  minHeight: 120,
+  resize: 'vertical',
+};
+
+const primaryButton = {
+  background: '#000',
+  color: '#fff',
+  border: 'none',
+  padding: '10px 16px',
+  borderRadius: 0,
+  cursor: 'pointer',
+  fontSize: 15,
+};
+
+const secondaryButton = {
+  background: 'transparent',
+  color: '#111',
+  border: '1px solid #ddd',
+  padding: '10px 16px',
+  borderRadius: 0,
+  cursor: 'pointer',
+  fontSize: 15,
+};
 export default function SimpleSite() {
   return (
-    <div style={{ background: '#fff', minHeight: '100vh' }}>
+    <div style={{ background: '#fff', minHeight: '100vh', fontFamily: baseFont }}>
       {/* Hero (dark, full viewport height) */}
       <section
         style={{
@@ -94,35 +176,140 @@ export default function SimpleSite() {
           />
         </div>
       </section>
+<section style={{ ...sectionLight, borderTop: '1px solid #e5e5e5' }}>
 
-      {/* About */}
-      <section style={sectionLight}>
-        <h2 style={{ ...header, fontSize: 28, marginBottom: 16 }}>About Me</h2>
-        <p style={{ ...lead, fontSize: 18 }}>
-          Third-year Computer Science student at the University of Auckland. Focused on creating practical, well-designed web apps that people enjoy using.
-        </p>
-      </section>
+  <div style={container}>
 
-      {/* Projects */}
-      <section style={sectionDark}>
-        <h2 style={{ ...header, fontSize: 28, marginBottom: 24 }}>Projects</h2>
-        <div style={{ display: 'grid', gap: 32, gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
-          {projects.map((p) => (
-            <div
-              key={p.key}
-              style={{
-                background: '#161616',
-                padding: 24,
-                borderRadius: 12,
-                transition: 'transform 0.3s, box-shadow 0.3s',
-                cursor: 'pointer',
-              }}
-              onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-6px)'}
-              onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
-            >
-              <h3 style={{ margin: 0 }}>{p.title}</h3>
-              <p style={{ margin: '12px 0', color: '#cfcfcf', lineHeight: 1.5 }}>{p.description}</p>
-              <p style={{ margin: 0, fontSize: 12, color: '#9a9a9a' }}>{p.tech}</p>
+    <div style={{ ...label }}>Experience</div>
+
+    <div style={{ marginTop: 32 }}>
+
+      {/* item */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '200px 1fr',
+        gap: 32,
+        paddingBottom: 32,
+        borderBottom: '1px solid #e5e5e5',
+      }}>
+
+        <div style={{ color: '#777', fontSize: 14 }}>
+          2025 — Present
+        </div>
+
+        <div>
+
+          <div style={{ ...title, fontWeight: 600 }}>
+            WDCC — Full Stack Developer
+          </div>
+
+          <div style={{ color: '#777', marginTop: 6 }}>
+            React · Next.js · Payload · MongoDB
+          </div>
+
+          <p style={{ ...body, marginTop: 12 }}>
+            Built full-stack features supporting user registration,
+            payments, and membership systems.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      {/* second item */}
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '200px 1fr',
+        gap: 32,
+        paddingTop: 32,
+      }}>
+
+        <div style={{ color: '#777', fontSize: 14 }}>
+          2023
+        </div>
+
+        <div>
+
+          <div style={{ ...title, fontWeight: 600 }}>
+            Feel Good Kicks — Frontend Developer
+          </div>
+
+          <p style={{ ...body, marginTop: 12 }}>
+            Designed and built ecommerce UI and product interfaces.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+<section style={{ ...sectionDark, borderTop: '1px solid #222' }}>
+
+  <div style={container}>
+
+    <div style={{ ...label, color: '#777' }}>
+      Projects
+    </div>
+
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: '1fr',
+      marginTop: 32,
+    }}>
+
+      {projects.map(p => (
+
+        <div key={p.key}
+          style={{
+            ...cardDark,
+            borderBottom: '1px solid #222',
+            borderTop: 'none',
+          }}
+        >
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '180px 1fr',
+            gap: 32,
+          }}>
+
+            {/* project image */}
+            <div style={{ width: '100%', height: 100, overflow: 'hidden' }}>
+              <img
+                src={p.image || '/assets/images/project.png'}
+                alt={p.title}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              />
+            </div>
+
+            {/* content */}
+            <div>
+
+              <h3 style={{ ...title, margin: 0 }}>
+                {p.title}
+              </h3>
+
+              <div style={{
+                color: '#777',
+                fontSize: 14,
+                marginTop: 6,
+              }}>
+                {p.tech}
+              </div>
+
+              <p style={{
+                ...bodyDark,
+                marginTop: 12,
+              }}>
+                {p.description}
+              </p>
+
               {p.link && (
                 <a
                   href={p.link}
@@ -133,28 +320,103 @@ export default function SimpleSite() {
                     marginTop: 12,
                     color: '#fff',
                     textDecoration: 'none',
-                    fontWeight: 600,
+                    borderBottom: '1px solid #fff',
+                    paddingBottom: 2,
                   }}
                 >
-                  View ↗
+                  View Project
                 </a>
               )}
-            </div>
-          ))}
-        </div>
-      </section>
 
-      {/* Contact */}
-      <section style={sectionLight}>
-        <h2 style={{ ...header, fontSize: 28, marginBottom: 16 }}>Contact</h2>
-        <p style={{ ...lead, fontSize: 18 }}>Let's work together or just say hi!</p>
-        <a
-          href="mailto:evan.au206@gmail.com"
-          style={{ fontWeight: 600, color: '#111', textDecoration: 'none', fontSize: 16 }}
-        >
-          evan.au206@gmail.com
-        </a>
-      </section>
+            </div>
+
+          </div>
+
+        </div>
+
+      ))}
+
     </div>
+
+  </div>
+
+</section>
+<section style={{ ...sectionLight, borderTop: '1px solid #e5e5e5' }}>
+
+    <div style={container}>
+
+    <div style={label}>Contact</div>
+
+    <h2 style={{ ...title, marginTop: 12 }}>
+      Get in touch
+    </h2>
+
+    <div style={{ marginTop: 24 }}>
+
+      <div style={{ display: 'grid', gap: 12, maxWidth: 720 }}>
+        <ContactForm />
+
+        <div style={{ marginTop: 8, color: '#777' }}>
+          Or email directly: evan.au206@gmail.com
+        </div>
+
+        <div style={{ marginTop: 4, color: '#777' }}>
+          Phone: (+64) 225388233 — Auckland, New Zealand
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+    </div>
+  );
+}
+
+function ContactForm() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+  const [status, setStatus] = useState('');
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    // Compose mailto fallback (client will open default mail client)
+    const to = 'evan.au206@gmail.com';
+    const fullSubject = subject || `Message from ${name || 'website visitor'}`;
+    const body = `Name: ${name}\nEmail: ${email}\n\n${message}`;
+    const mailto = `mailto:${to}?subject=${encodeURIComponent(fullSubject)}&body=${encodeURIComponent(body)}`;
+
+    // Try to open mail client
+    window.location.href = mailto;
+    setStatus('opened');
+  }
+
+  function handleClear() {
+    setName(''); setEmail(''); setSubject(''); setMessage(''); setStatus('');
+  }
+
+  return (
+    <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12 }}>
+      <input style={input} value={name} onChange={e => setName(e.target.value)} placeholder="Your name" required />
+      <input style={input} value={email} onChange={e => setEmail(e.target.value)} placeholder="Your email" type="email" required />
+      <input style={input} value={subject} onChange={e => setSubject(e.target.value)} placeholder="Subject" />
+      <textarea style={textarea} value={message} onChange={e => setMessage(e.target.value)} placeholder="Message" required />
+
+      <div style={{ display: 'flex', gap: 12 }}>
+        <button type="submit" style={primaryButton}>Send Message</button>
+        <button type="button" onClick={handleClear} style={secondaryButton}>Clear</button>
+      </div>
+
+      {status === 'opened' && (
+        <div style={{ color: '#666', fontSize: 13 }}>
+          Your mail client should open with a pre-filled message. To send automatically, I can set up a serverless endpoint or Formspree.
+        </div>
+      )}
+    </form>
   );
 }
