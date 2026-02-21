@@ -43,6 +43,7 @@ const LINKS = [
 
   .navbar-bar {
     display: flex;
+    position: relative;
     width: 100%;
     height: 100%;
     background: #0a0a0a;
@@ -68,10 +69,17 @@ const LINKS = [
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
+    /* absolutely center the title irrespective of left/right content */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     gap: calc(var(--navbar-gap) * 0.8);
     height: 100%;
+    pointer-events: none; /* allow clicks to pass through to left/right if needed */
   }
+
+  /* ensure children (the title) can still receive pointer events */
+  .navbar-center > * { pointer-events: auto; }
 
   .navbar-title {
     font-size: clamp(16px, 1.8vw, 20px);
@@ -172,7 +180,8 @@ const LINKS = [
   /* Tablet: hide left buttons, show hamburger */
   @media (max-width: 900px) {
     .navbar-left { display: none; }
-    .navbar-center { flex: 1 1 auto; min-width: 0; }
+    /* revert to normal flow on tablet so the center behaves like a normal flex item */
+    .navbar-center { position: static; transform: none; flex: 1 1 auto; min-width: 0; pointer-events: auto; }
     .navbar-hamburger { display: block; }
   }
 
