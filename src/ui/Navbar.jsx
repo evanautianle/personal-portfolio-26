@@ -336,6 +336,12 @@ export function Navbar() {
                 rel="noopener noreferrer"
                 aria-label={label}
                 className="navbar-icon-link"
+                onClick={(e) => {
+                  if (href && href.startsWith('mailto:')) {
+                    e.preventDefault();
+                    try { window.open(href, '_blank'); } catch (err) {}
+                  }
+                }}
               >
                 {icon}
               </a>
@@ -381,6 +387,12 @@ export function Navbar() {
               rel="noopener noreferrer"
               aria-label={label}
               className="navbar-icon-link"
+              onClick={(e) => {
+                if (href && href.startsWith('mailto:')) {
+                  e.preventDefault();
+                  try { window.open(href, '_blank'); } catch (err) {}
+                }
+              }}
             >
               {icon}
             </a>
