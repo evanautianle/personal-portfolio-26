@@ -1,3 +1,14 @@
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                style={{ marginRight: 24 }}
+              >
+                <circle cx="12" cy="12" r="12" fill="#000" />
+                <path d="M17.6 16.1c-.2.3-.6.4-.9.2-2.5-1.5-5.7-1.8-9.4-.9-.4.1-.7-.1-.8-.5-.1-.4.1-.7.5-.8 3.9-.9 7.4-.6 10.1 1.1.3.2.4.6.2.9zm1.3-2.7c-.2.3-.6.4-.9.2-2.9-1.8-7.3-2.2-10.1-1.1-.4.1-.8-.1-.9-.5-.1-.4.1-.8.5-.9 3.1-1.1 7.8-.7 11 1.2.3.2.4.6.2.9zm.1-2.8c-3.4-2-9.1-2.2-12.3-1.1-.5.2-1-.1-1.1-.6-.2-.5.1-1 .6-1.1 3.5-1.2 9.6-1 13.4 1.2.5.3.6.8.3 1.3-.3.4-.8.5-1.3.3z" fill="#fff" />
+              </svg>
 import React, { useRef, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { PhotoAlbumPopup } from "../ui/PhotoAlbumPopup";
@@ -249,8 +260,26 @@ function ScreenOverlay({ onOpenAlbum, overlayKey }) {
             textShadow: '0 2px 8px #000a',
             fontFamily: 'inherit',
           }}
-        >
-          BATTLE STATIONS
+          >
+            <a
+                href="https://open.spotify.com/user/unhappykirby?si=38ddd68bdce04490"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#fff', textDecoration: 'none', fontWeight: 600, display: 'flex', alignItems: 'center' }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1em"
+                  height="1em"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  style={{ marginRight: 24 }}
+                >
+                  <circle cx="12" cy="12" r="12" fill="#777777" />
+                  <path d="M17.6 16.1c-.2.3-.6.4-.9.2-2.5-1.5-5.7-1.8-9.4-.9-.4.1-.7-.1-.8-.5-.1-.4.1-.7.5-.8 3.9-.9 7.4-.6 10.1 1.1.3.2.4.6.2.9zm1.3-2.7c-.2.3-.6.4-.9.2-2.9-1.8-7.3-2.2-10.1-1.1-.4.1-.8-.1-.9-.5-.1-.4.1-.8.5-.9 3.1-1.1 7.8-.7 11 1.2.3.2.4.6.2.9zm.1-2.8c-3.4-2-9.1-2.2-12.3-1.1-.5.2-1-.1-1.1-.6-.2-.5.1-1 .6-1.1 3.5-1.2 9.6-1 13.4 1.2.5.3.6.8.3 1.3-.3.4-.8.5-1.3.3z" fill="#fff" />
+                </svg>
+                MY SPOTIFY
+              </a>
         </div>
       </Html>
 
