@@ -168,7 +168,8 @@ const arrowStyle = {
             pointerEvents: simpleView ? 'none' : 'auto',
           }}
         >
-          <CanvasRoot redAlert={redAlert} />
+          {/* Only load 3D components if not in simpleView */}
+          {!simpleView && <CanvasRoot redAlert={redAlert} />}
           {/* Stack dialogue boxes, newest at the bottom */}
           {!enhancedScreen && (
             <div style={{
