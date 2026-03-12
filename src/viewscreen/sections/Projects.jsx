@@ -1,6 +1,64 @@
 import { CruiseStarfield } from '../CruiseStarfield';
 import React, { useState } from 'react';
 
+// Shared style objects
+const styles = {
+  cover: {
+    fontSize: 'clamp(80px, 13vw, 144px)',
+    fontWeight: 900,
+    letterSpacing: '0.2em',
+    textTransform: 'uppercase',
+    color: '#fff',
+    display: 'block',
+    lineHeight: 1.2,
+  },
+  title: {
+    fontSize: 'clamp(56px, 9vw, 88px)',
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    letterSpacing: '0.1em',
+    margin: 0,
+    lineHeight: 1.1,
+  },
+  link: {
+    fontSize: 'clamp(18px, 2vw, 28px)',
+    color: '#fff',
+    textTransform: 'uppercase',
+    letterSpacing: '0.1em',
+    border: '2px solid #fff',
+    padding: '0.45em 1.4em',
+    textDecoration: 'none',
+    background: 'rgba(0,0,0,0.6)',
+    whiteSpace: 'nowrap',
+    transition: 'all 0.2s ease',
+  },
+  image: {
+    width: '100%',
+    maxHeight: '34vh',
+    maxWidth: '900px',
+    objectFit: 'contain',
+    display: 'block',
+    margin: '0 auto',
+  },
+  description: {
+    fontSize: 'clamp(36px, 4.2vw, 64px)',
+    lineHeight: 1.25,
+    textTransform: 'uppercase',
+    margin: 0,
+    opacity: 0.85,
+    wordBreak: 'break-word',
+    overflowWrap: 'break-word',
+    maxWidth: '1400px',
+  },
+  indicator: (active) => ({
+    width: 18,
+    height: 8,
+    borderRadius: 4,
+    background: active ? '#fff' : '#555',
+    opacity: active ? 1 : 0.5,
+  }),
+};
+
 const projectData = [
   {
     key: 'wdcc-uaic',
@@ -84,23 +142,8 @@ const projectData = [
 const slides = [
   {
     key: 'cover',
-    content: (
-      <span
-        style={{
-          fontSize: 'clamp(80px, 13vw, 144px)',
-          fontWeight: 900,
-          letterSpacing: '0.2em',
-          textTransform: 'uppercase',
-          color: '#fff',
-          display: 'block',
-          lineHeight: 1.2,
-        }}
-      >
-        Sector 674 — Projects
-      </span>
-    ),
+    content: <span style={styles.cover}>Sector 674 — Projects</span>,
   },
-
   ...projectData.map((p) => ({
     key: p.key,
     content: (
@@ -122,73 +165,24 @@ const slides = [
             flexWrap: 'wrap',
           }}
         >
-          <h2
-            style={{
-              fontSize: 'clamp(56px, 9vw, 88px)',
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              margin: 0,
-              lineHeight: 1.1,
-            }}
-          >
-            {p.title}
-          </h2>
-
+          <h2 style={styles.title}>{p.title}</h2>
           {p.link && (
             <a
               href={p.link}
               target="_blank"
               rel="noopener noreferrer"
-              style={{
-                fontSize: 'clamp(18px, 2vw, 28px)',
-                color: '#fff',
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                border: '2px solid #fff',
-                padding: '0.45em 1.4em',
-                textDecoration: 'none',
-                background: 'rgba(0,0,0,0.6)',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.2s ease',
-              }}
+              style={styles.link}
             >
               View ↗
             </a>
           )}
         </div>
-
         {/* Image */}
         <div style={{ width: '100%' }}>
-          <img
-            src={p.image}
-            alt={p.title}
-            style={{
-              width: '100%',
-              maxHeight: '34vh',
-              maxWidth: '900px',
-              objectFit: 'contain',
-              display: 'block',
-              margin: '0 auto',
-            }}
-          />
+          <img src={p.image} alt={p.title} style={styles.image} />
         </div>
-
         {/* Description */}
-        <p
-          style={{
-            fontSize: 'clamp(36px, 4.2vw, 64px)',
-            lineHeight: 1.25,
-            textTransform: 'uppercase',
-            margin: 0,
-            opacity: 0.85,
-            wordBreak: 'break-word',
-            overflowWrap: 'break-word',
-            maxWidth: '1400px',
-          }}
-        >
-          {p.description}
-        </p>
+        <p style={styles.description}>{p.description}</p>
       </div>
     ),
   })),
@@ -296,16 +290,7 @@ export function Projects({ enhanced }) {
           }}
         >
           {slides.map((s, i) => (
-            <div
-              key={s.key}
-              style={{
-                width: 18,
-                height: 8,
-                borderRadius: 4,
-                background: i === slide ? '#fff' : '#555',
-                opacity: i === slide ? 1 : 0.5,
-              }}
-            />
+            <div key={s.key} style={styles.indicator(i === slide)} />
           ))}
         </div>
       </div>
@@ -314,37 +299,87 @@ export function Projects({ enhanced }) {
 }
 
 function EnhancedProjects() {
-  const sectionStyle = {
-    border: '2px solid #fff',
-    padding: 24,
-    marginTop: 24,
-    background: 'rgba(0,0,0,0.7)',
-  };
-
-  const headerStyle = {
-    fontSize: 24,
-    fontWeight: 700,
-    margin: '0 0 12px 0',
-    textTransform: 'uppercase',
-    letterSpacing: 2,
-  };
-
-  const tagStyle = {
-    fontSize: 13,
-    opacity: 0.5,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    margin: '0 0 12px 0',
-  };
-
-  const paragraphStyle = { fontSize: 16, margin: 0, lineHeight: 1.6 };
-
-  const techStyle = {
-    fontSize: 14,
-    opacity: 0.6,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    marginTop: 12,
+  // Shared styles for EnhancedProjects
+  const enhancedStyles = {
+    section: {
+      border: '2px solid #fff',
+      padding: 24,
+      marginTop: 24,
+      background: 'rgba(0,0,0,0.7)',
+    },
+    header: {
+      fontSize: 24,
+      fontWeight: 700,
+      margin: '0 0 12px 0',
+      textTransform: 'uppercase',
+      letterSpacing: 2,
+    },
+    event: {
+      fontSize: 13,
+      opacity: 0.6,
+    },
+    award: {
+      fontSize: 13,
+      opacity: 0.85,
+      marginTop: 6,
+    },
+    paragraph: { fontSize: 16, margin: 0, lineHeight: 1.6 },
+    tech: {
+      fontSize: 14,
+      opacity: 0.6,
+      textTransform: 'uppercase',
+      letterSpacing: 1,
+      marginTop: 12,
+    },
+    projectLink: {
+      fontSize: 13,
+      color: '#fff',
+      textTransform: 'uppercase',
+      letterSpacing: 1,
+      marginTop: 12,
+      display: 'inline-block',
+      opacity: 0.7,
+    },
+    mainHeader: {
+      fontSize: 64,
+      fontWeight: 800,
+      color: '#fff',
+      display: 'block',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      lineHeight: 1.1,
+    },
+    mainTitle: {
+      fontSize: 38,
+      fontWeight: 900,
+      margin: 0,
+      textTransform: 'uppercase',
+    },
+    mainHeaderWrap: {
+      width: '100%',
+      padding: '24px 0',
+      textAlign: 'center',
+      letterSpacing: 6,
+      background: 'rgba(0,0,0,0.7)',
+    },
+    main: {
+      width: '100%',
+      maxWidth: 800,
+      margin: '32px auto 0 auto',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 24,
+      flex: 1,
+      paddingBottom: 64,
+    },
+    projectImg: {
+      width: '100%',
+      maxHeight: 220,
+      objectFit: 'cover',
+      marginBottom: 12,
+      display: 'block',
+    },
   };
 
   return (
@@ -377,72 +412,30 @@ function EnhancedProjects() {
           alignItems: 'center',
         }}
       >
-        <header
-          style={{
-            width: '100%',
-            padding: '24px 0',
-            textAlign: 'center',
-            letterSpacing: 6,
-            background: 'rgba(0,0,0,0.7)',
-          }}
-        >
-          <span
-            style={{
-              fontSize: 80,
-              fontWeight: 800,
-              color: '#fff',
-              display: 'block',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              lineHeight: 1.1,
-            }}
-          >
-            Sector 674 - Projects
-          </span>
-          <h1 style={{ fontSize: 48, fontWeight: 900, margin: 0, textTransform: 'uppercase' }}>
-            Projects
-          </h1>
+        <header style={enhancedStyles.mainHeaderWrap}>
+          <span style={enhancedStyles.mainHeader}>Sector 674 - Projects</span>
+          <h1 style={enhancedStyles.mainTitle}>Projects</h1>
         </header>
-
-        <main
-          style={{
-            width: '100%',
-            maxWidth: 800,
-            margin: '32px auto 0 auto',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 24,
-            flex: 1,
-            paddingBottom: 64,
-          }}
-        >
+        <main style={enhancedStyles.main}>
           {projectData.map((p) => (
-            <section key={p.key} style={sectionStyle}>
+            <section key={p.key} style={enhancedStyles.section}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 8, alignItems: 'baseline' }}>
-                <strong style={headerStyle}>{p.title}</strong>
+                <strong style={enhancedStyles.header}>{p.title}</strong>
                 <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: 13, opacity: 0.6 }}>{p.event}</div>
-                  {p.award && <div style={{ fontSize: 13, opacity: 0.85, marginTop: 6 }}>{p.award}</div>}
+                  <div style={enhancedStyles.event}>{p.event}</div>
+                  {p.award && <div style={enhancedStyles.award}>{p.award}</div>}
                 </div>
               </div>
-
               <div style={{ marginTop: 12 }}>
-                <img
-                  src={p.image}
-                  alt={p.title}
-                  style={{ width: '100%', maxHeight: 220, objectFit: 'cover', marginBottom: 12, display: 'block' }}
-                />
-
-                <p style={paragraphStyle}>{p.description}</p>
-                <p style={techStyle}>{p.tech}</p>
-
+                <img src={p.image} alt={p.title} style={enhancedStyles.projectImg} />
+                <p style={enhancedStyles.paragraph}>{p.description}</p>
+                <p style={enhancedStyles.tech}>{p.tech}</p>
                 {p.link && (
                   <a
                     href={p.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{ fontSize: 13, color: '#fff', textTransform: 'uppercase', letterSpacing: 1, marginTop: 12, display: 'inline-block', opacity: 0.7 }}
+                    style={enhancedStyles.projectLink}
                   >
                     View Project ↗
                   </a>
@@ -455,4 +448,4 @@ function EnhancedProjects() {
     </div>
   );
 }
-  export { EnhancedProjects };
+export { EnhancedProjects };
